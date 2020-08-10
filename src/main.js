@@ -332,7 +332,6 @@ export default Vue.component('combo-blocks', {
     },
     suggestionClick(suggestion, e) {
       e.preventDefault();
-      console.log('click');
       this.$emit('suggestion-click', suggestion, e);
       this.select(suggestion);
       this.hideList();

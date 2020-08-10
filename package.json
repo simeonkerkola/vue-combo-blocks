@@ -1,7 +1,6 @@
 {
   "name": "combo-blocks",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.2",
   "main": "dist/combo-blocks.common.js",
   "scripts": {
     "serve": "vue-cli-service serve",
