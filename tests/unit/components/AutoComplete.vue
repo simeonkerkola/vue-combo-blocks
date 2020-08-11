@@ -20,6 +20,7 @@
           selected,
           hoveredIndex,
           isOpen,
+          inputValue,
           getListProps,
           getListEventListeners,
           getItemProps,
@@ -30,7 +31,6 @@
         <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
           <input
             :id="id"
-
             v-bind="getInputProps()"
             :placeholder="placeholder"
             :label="label"
@@ -43,16 +43,23 @@
           <ul
             v-show="isOpen && (list.length || !miscSlotsAreEmpty())"
             class="list"
-
             v-bind="getListProps()"
             v-on="getListEventListeners()"
           >
             <slot name="append-item"></slot>
             <li
-              v-for="(item, index) in list"
+              v-for="(item, index) in filteredList(inputValue)"
               :key="item[valueAttribute]"
               class="list-item"
-
+              :style="{
+                backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
+                fontWeight:
+                  selected &&
+                  selected[displayAttribute] === item &&
+                  item[displayAttribute]
+                    ? 'bold'
+                    : 'normal'
+              }"
               v-bind="getItemProps({ item, index })"
               v-on="getItemEventListeners(item)"
             >
@@ -66,9 +73,12 @@
       </template>
     </ComboBlocks>
 
-    <button v-if="cancelButton && !!value"
-    :id="`${id}-cancel`"
-   label="cancel" @click="onCancel">
+    <button
+      v-if="cancelButton && !!value"
+      :id="`${id}-cancel`"
+      label="cancel"
+      @click="onCancel"
+    >
       cancel
     </button>
 
@@ -86,7 +96,7 @@
 <script>
 /* eslint-disable no-param-reassign */
 import { get } from 'lodash';
-import ComboBlocks from '../../../src/main';
+import ComboBlocks from '../../../src/combo-blocks';
 
 export default {
   components: {
@@ -168,6 +178,9 @@ export default {
   },
 
   methods: {
+    filteredList(text) {
+      return this.list.filter((item) => item[this.displayAttribute].includes(text));
+    },
     onHover(suggestion, element) {
       if (!element) {
         this.$nextTick(() => {
@@ -253,8 +266,8 @@ export default {
     isScopedSlotEmpty(slot) {
       if (slot) {
         const vNode = slot(this);
-        return !(Array.isArray(vNode)
-          || (vNode && (vNode.tag || vNode.context || vNode.text || vNode.children)));
+        return !(Array.isArray(vNode) || (vNode && (vNode.tag || vNode.context
+            || vNode.text || vNode.children)));
       }
       return true;
     },

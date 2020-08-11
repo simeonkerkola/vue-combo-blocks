@@ -1,7 +1,9 @@
 {
   "name": "combo-blocks",
-  "version": "0.1.3",
-  "main": "dist/combo-blocks.common.js",
+  "version": "0.1.4",
+  "main": "dist/combo-blocks.umd.js",
+  "module": "dist/combo-blocks.esm.js",
+  "unpkg": "dist/combo-blocks.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -9,7 +11,10 @@
     "test:unit:watch": "vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "build-package": "vue-cli-service build --target lib --name combo-blocks ./src/main.js"
+    "build-pkg": "rm -r dist & npm run build-pkg:umd & npm run build-pkg:es & npm run build-pkg:unpkg",
+    "build-pkg:umd": "rollup --config build/rollup.config.js --format umd --file dist/combo-blocks.umd.js",
+    "build-pkg:es": "rollup --config build/rollup.config.js --format es --file dist/combo-blocks.esm.js",
+    "build-pkg:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/combo-blocks.min.js"
   },
   "author": "Simeon Kerkola",
   "license": "MIT",
@@ -25,9 +30,12 @@
     "dist/*"
   ],
   "peerDependencies": {
-    "vue": "^2.6.11"
+    "vue": "^2.6.0"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@rollup/plugin-commonjs": "^11.1.0",
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-e2e-cypress": "~4.4.0",
     "@vue/cli-plugin-eslint": "~4.4.0",
@@ -41,6 +49,8 @@
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
     "lodash": "^4.17.19",
+    "rollup": "^1.17.0",
+    "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.11",
     "vue-cli-plugin-webpack-bundle-analyzer": "~2.0.0",
     "vue-template-compiler": "^2.6.11"
