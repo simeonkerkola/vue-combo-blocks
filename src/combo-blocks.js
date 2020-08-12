@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import {
-  defaultControls, fromPath, hasKeyCodeByCode, hasKeyCode,
+  defaultControls, hasKeyCodeByCode, hasKeyCode,
 } from './misc';
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
@@ -32,18 +32,22 @@ export default Vue.component('combo-blocks', {
       default: false,
     },
     value: {},
-    mode: {
-      type: String,
-      default: 'input',
+    itemToString: {
+      type: Function,
+      default: (item) => (item ? String(item) : ''),
     },
+    // mode: {
+    //   type: String,
+    //   default: 'input',
+    // },
   },
   data() {
     return {
       selected: this.value,
       hovered: null,
-      // suggestions: [],
+      // items: [],
       isOpen: false,
-      inputValue: this.displayProperty(this.value),
+      inputValue: this.itemToString(this.value),
       isPlainSuggestion: false,
       isClicking: false,
       isOverList: false,
@@ -53,11 +57,12 @@ export default Vue.component('combo-blocks', {
       inputId: `${this._uid}-combo-blocks-input`,
       labelId: `${this._uid}-combo-blocks-label`,
       hoveredIndex: -1,
+      selectedIndex: -1,
     };
   },
   computed: {
     // isSelectedUpToDate() {
-    //   return !!this.selected && this.displayProperty(this.selected) === this.inputValue;
+    //   return !!this.selected && this.itemToString(this.selected) === this.inputValue;
     // },
   },
   // Handle run-time mode changes (now working):
@@ -79,18 +84,14 @@ export default Vue.component('combo-blocks', {
     // },
     // list: {
     //   handler(current) {
-    //     this.suggestions = this.getSuggestions()
+    //     this.items = this.getSuggestions()
     //   },
     //   immediate: true
     // },
     value: {
       handler(current) {
-        if (typeof current !== 'string') {
-          const textValue = this.displayProperty(current);
-          this.updateTextOutside(textValue);
-        } else {
-          this.updateTextOutside(current);
-        }
+        const textValue = this.itemToString(current);
+        this.updateTextOutside(textValue);
       },
       immediate: true,
     },
@@ -113,7 +114,7 @@ export default Vue.component('combo-blocks', {
     getInputProps() {
       return {
         value: this.inputValue || '',
-        'aria-activedescendant': this.hovered ? this.getId(this.hovered, this.hoveredIndex) : '',
+        'aria-activedescendant': this.hovered ? this.getItemId(this.hoveredIndex) : '',
         'aria-autocomplete': 'list',
         'aria-controls': this.listId,
         id: this.inputId,
@@ -146,20 +147,27 @@ export default Vue.component('combo-blocks', {
     getListEventListeners() {
       const vm = this;
       return {
-        mouseenter: vm.onListMouseEnter,
-        mouseleave: vm.onListMouseLeave,
+        mouseenter(e) {
+          vm.hoverList(true);
+          vm.$emit('mouseenter', e);
+        },
+        mouseleave(e) {
+          vm.hoverList(false);
+          vm.$emit('mouseleave', e);
+        },
       };
     },
+
     getItemEventListeners(item) {
       const vm = this;
       return {
         // TODO: use onMouseMove
         mouseenter(e) {
-          vm.hover(item, e.target);
+          vm.setHoveredItem(item, e.target);
           vm.$emit('mouseenter', e);
         },
         mouseleave(e) {
-          vm.hover(undefined);
+          vm.setHoveredItem(undefined);
           vm.$emit('mouseleave', e);
         },
         mousedown(e) {
@@ -173,71 +181,69 @@ export default Vue.component('combo-blocks', {
     },
     getItemProps({ item, index } = {}) {
       if (index === undefined) {
-        this.suggestions.push(item);
+        this.items.push(item);
         // eslint-disable-next-line no-param-reassign
-        index = this.suggestions.indexOf(item);
+        index = this.items.indexOf(item);
       } else {
-        this.suggestions[index] = item;
+        this.items[index] = item;
       }
-      const id = this.getId(item, index);
+      const id = this.getItemId(index);
       return {
-        key: id,
         id,
         role: 'option',
-        'aria-selected': this.isHovered(item) || this.isSelected(item) ? 'true' : 'false',
+        'aria-selected': this.isHovered(index) || this.isSelected(index) ? 'true' : 'false',
       };
     },
-    onItemMouseEnter() {
-
+    // onListMouseEnter(e) {
+    //   this.hoverList(true);
+    //   this.$emit('mouseenter', e);
+    // },
+    // onListMouseLeave(e) {
+    //   this.hoverList(false);
+    //   this.$emit('mouseleave', e);
+    // },
+    // isEqual(suggestion, item) {
+    //   return item && this.valueProperty(suggestion) === this.valueProperty(item);
+    // },
+    isSelected(index) {
+      return index === this.selectedIndex;
     },
-    onListMouseEnter(e) {
-      this.hoverList(true);
-      this.$emit('mouseenter', e);
+    isHovered(index) {
+      return index === this.hoveredIndex;
     },
-    onListMouseLeave(e) {
-      this.hoverList(false);
-      this.$emit('mouseleave', e);
-    },
-    isEqual(suggestion, item) {
-      return item && this.valueProperty(suggestion) === this.valueProperty(item);
-    },
-    isSelected(suggestion) {
-      return this.isEqual(suggestion, this.selected);
-    },
-    isHovered(suggestion) {
-      return this.isEqual(suggestion, this.hovered);
-    },
-    getPropertyByAttribute(obj, attr) {
-      // eslint-disable-next-line no-nested-ternary
-      return this.isPlainSuggestion ? obj : typeof obj !== 'undefined' ? fromPath(obj, attr) : obj;
-    },
-    displayProperty(obj) {
-      if (this.isPlainSuggestion) {
-        return obj;
-      }
-      let display = this.getPropertyByAttribute(obj, this.displayAttribute);
-      if (typeof display === 'undefined') {
-        display = JSON.stringify(obj);
-      }
-      return String(display || '');
-    },
-    valueProperty(obj) {
-      if (this.isPlainSuggestion) {
-        return obj;
-      }
-      const value = this.getPropertyByAttribute(obj, this.valueAttribute);
-      if (typeof value === 'undefined') {
-        console.error(
-          `[vue-simple-suggest]: Please, check if you passed 'value-attribute' (default is 'id') and 'display-attribute' (default is 'title') props correctly.
-        Your list objects should always contain a unique identifier.`,
-        );
-      }
-      return value;
-    },
+    // getPropertyByAttribute(obj, attr) {
+    //   // eslint-disable-next-line no-nested-ternary
+    //   return this.isPlainSuggestion ?
+    //    obj : typeof obj !== 'undefined' ? fromPath(obj, attr) : obj;
+    // },
+    // displayProperty(obj) {
+    //   if (this.isPlainSuggestion) {
+    //     return obj;
+    //   }
+    //   let display = this.getPropertyByAttribute(obj, this.displayAttribute);
+    //   if (typeof display === 'undefined') {
+    //     display = JSON.stringify(obj);
+    //   }
+    //   return String(display || '');
+    // },
+    // valueProperty(obj) {
+    //   if (this.isPlainSuggestion) {
+    //     return obj;
+    //   }
+    //   const value = this.getPropertyByAttribute(obj, this.valueAttribute);
+    //   if (typeof value === 'undefined') {
+    //     console.error(
+    //       `[vue-simple-suggest]: Please, check if you passed 'value-attribute'
+    //        (default is 'id') and 'display-attribute' (default is 'title') props correctly.
+    //     Your list objects should always contain a unique identifier.`,
+    //     );
+    //   }
+    //   return value;
+    // },
     autocompleteText(suggestion) {
-      this.setText(this.displayProperty(suggestion));
+      this.setInputValue(this.itemToString(suggestion));
     },
-    setText(text) {
+    setInputValue(text) {
       this.$nextTick(() => {
         this.inputValue = text;
         this.$emit('input', text);
@@ -245,26 +251,28 @@ export default Vue.component('combo-blocks', {
     },
     clearSelection() {
       this.selected = null;
-      this.setText('');
+      this.selectedIndex = -1;
+      this.setInputValue('');
       this.$emit('change', null);
     },
     select(item) {
       if (this.selected !== item || (this.nullableSelect && !item)) {
         this.selected = item;
+        this.selectedIndex = this.hoveredIndex;
         this.$emit('change', item);
         if (item) {
           this.autocompleteText(item);
         }
       }
-      this.hover(null);
+      this.setHoveredItem(null);
     },
-    hover(item, elem) {
+    setHoveredItem(item, elem) {
       if (item && item !== this.hovered) {
         this.$emit('hover', item, elem);
       }
       this.hovered = item;
-      this.hoveredIndex = this.suggestions.findIndex(
-        (el) => item && this.valueProperty(item) === this.valueProperty(el),
+      this.hoveredIndex = this.items.findIndex(
+        (el) => item && this.itemToString(item) === this.itemToString(el),
       );
     },
     hoverList(isOverList) {
@@ -273,7 +281,7 @@ export default Vue.component('combo-blocks', {
     hideList() {
       if (this.isOpen) {
         this.isOpen = false;
-        this.hover(null);
+        this.setHoveredItem(null);
         this.$emit('hide-list');
       }
     },
@@ -289,24 +297,24 @@ export default Vue.component('combo-blocks', {
       }
     },
     moveSelection(e) {
-      if (!this.isOpen || !this.suggestions.length) return;
+      if (!this.isOpen || !this.items.length) return;
       if (hasKeyCode([this.controlScheme.selectionUp, this.controlScheme.selectionDown], e)) {
         e.preventDefault();
         const isMovingDown = hasKeyCode(this.controlScheme.selectionDown, e);
         const direction = isMovingDown * 2 - 1;
-        const listEdge = isMovingDown ? 0 : this.suggestions.length - 1;
+        const listEdge = isMovingDown ? 0 : this.items.length - 1;
         const hoversBetweenEdges = isMovingDown
-          ? this.hoveredIndex < this.suggestions.length - 1
+          ? this.hoveredIndex < this.items.length - 1
           : this.hoveredIndex > 0;
         let item = null;
 
         if (hoversBetweenEdges) {
-          item = this.suggestions[this.hoveredIndex + direction];
+          item = this.items[this.hoveredIndex + direction];
         } else {
-          item = this.suggestions[listEdge];
+          item = this.items[listEdge];
         }
 
-        this.hover(item);
+        this.setHoveredItem(item);
       }
     },
     onKeyDown(e) {
@@ -338,13 +346,13 @@ export default Vue.component('combo-blocks', {
       if (
         hasKeyCode(this.controlScheme.autocomplete, e)
         && (e.ctrlKey || e.shiftKey)
-        && this.suggestions.length > 0
-        && this.suggestions[0]
+        && this.items.length > 0
+        && this.items[0]
         && this.isOpen
       ) {
         e.preventDefault();
-        this.hover(this.suggestions[0]);
-        this.autocompleteText(this.suggestions[0]);
+        this.setHoveredItem(this.items[0]);
+        this.autocompleteText(this.items[0]);
       }
     },
     suggestionClick(suggestion, e) {
@@ -366,8 +374,8 @@ export default Vue.component('combo-blocks', {
           this.hideList();
           this.$emit('blur', e);
           if (this.selected) {
-            this.setText(this.displayProperty(this.selected));
-          } else this.setText('');
+            this.setInputValue(this.itemToString(this.selected));
+          } else this.setInputValue('');
         }
       } else {
         // this.inputElement.blur()
@@ -399,16 +407,16 @@ export default Vue.component('combo-blocks', {
         return;
       }
       this.inputValue = value;
-      if (this.hovered) this.hover(null);
+      if (this.hovered) this.setHoveredItem(null);
     },
     getSuggestions() {
       return [...this.list];
     },
     clearSuggestions() {
-      this.suggestions = [];
+      this.items = [];
     },
-    getId(value, i) {
-      return `${this._uid}-suggestion-${i}`;
+    getItemId(i) {
+      return `${this._uid}-combo-blocks-item-${i}`;
     },
   },
   render() {

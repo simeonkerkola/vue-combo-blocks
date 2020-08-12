@@ -8,13 +8,11 @@ const list = [
   { displayName: 'third', id: '789' },
 ];
 const factory = () => mount(AutoComplete,
-
   {
     propsData: {
       id: 'listId',
       list,
       displayAttribute: 'displayName',
-      valueAttribute: 'id',
     },
   });
 describe('AutoComplete', () => {
@@ -33,9 +31,9 @@ describe('AutoComplete', () => {
     const item1 = wrapper.findAll('li').at(1);
     const item2 = wrapper.findAll('li').at(2);
 
-    expect(item0.attributes().id).toBe(`${idPrefix}-suggestion-0`);
-    expect(item1.attributes().id).toBe(`${idPrefix}-suggestion-1`);
-    expect(item2.attributes().id).toBe(`${idPrefix}-suggestion-2`);
+    expect(item0.attributes().id).toBe(`${idPrefix}-combo-blocks-item-0`);
+    expect(item1.attributes().id).toBe(`${idPrefix}-combo-blocks-item-1`);
+    expect(item2.attributes().id).toBe(`${idPrefix}-combo-blocks-item-2`);
 
     expect(item0.attributes().role).toBe('option');
     expect(item1.attributes().role).toBe('option');

@@ -12,9 +12,9 @@ export const modes = {
   select: Object,
 };
 
-export function fromPath(obj, path) {
-  return path.split('.').reduce((o, i) => (o === Object(o) ? o[i] : o), obj);
-}
+// export function fromPath(obj, path) {
+//   return path.split('.').reduce((o, i) => (o === Object(o) ? o[i] : o), obj);
+// }
 
 export function hasKeyCodeByCode(arr, keyCode) {
   if (arr.length <= 0) return false;

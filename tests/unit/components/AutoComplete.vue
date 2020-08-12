@@ -3,8 +3,8 @@
     <ComboBlocks
       :ref="id"
       :value="value"
+      :itemToString="itemToString"
       :display-attribute="displayAttribute"
-      :value-attribute="valueAttribute"
       :controls="{
         autocomplete: [] // Disable (CTRL / SHFT) + Space autocomplete.
       }"
@@ -49,13 +49,13 @@
             <slot name="append-item"></slot>
             <li
               v-for="(item, index) in filteredList(inputValue)"
-              :key="item[valueAttribute]"
+              :key="index"
               class="list-item"
               :style="{
                 backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
                 fontWeight:
                   selected &&
-                  selected[displayAttribute] === item &&
+                  selected[displayAttribute] ===
                   item[displayAttribute]
                     ? 'bold'
                     : 'normal'
@@ -132,10 +132,6 @@ export default {
       type: String,
       default: 'name',
     },
-    valueAttribute: {
-      type: String,
-      default: 'id',
-    },
     cancelButton: {
       type: Boolean,
       default: false,
@@ -159,7 +155,7 @@ export default {
   },
   data() {
     return {
-      // inputValue: ''
+
     };
   },
   computed: {
@@ -178,6 +174,9 @@ export default {
   },
 
   methods: {
+    itemToString(item) {
+      return item ? item[this.displayAttribute] : '';
+    },
     filteredList(text) {
       return this.list.filter((item) => item[this.displayAttribute].includes(text));
     },

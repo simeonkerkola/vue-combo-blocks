@@ -1,9 +1,9 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 import { mount } from '@vue/test-utils';
-import main from '../../src/combo-blocks';
+import ComboBlocks from '../../src/combo-blocks';
 
-const factory = ({ propsData, scopedSlots, ...rest } = {}) => mount(main,
-
+const item = { name: 'name' };
+const factory = ({ propsData, scopedSlots, ...rest } = {}) => mount(ComboBlocks,
   {
     scopedSlots: {
       default: '<p></p>',
@@ -18,12 +18,13 @@ const factory = ({ propsData, scopedSlots, ...rest } = {}) => mount(main,
     ...rest,
   });
 
-describe('main.js', () => {
+describe('comboblocks.js', () => {
   it('does render', () => {
     const wrapper = factory();
     expect(wrapper.vm).toBeDefined();
   });
 
+  // Props
   it('returns getComboboxProps', () => {
     const wrapper = factory();
     const idPrefix = wrapper.vm._uid;
@@ -79,6 +80,21 @@ describe('main.js', () => {
       },
     );
   });
+  it('returns getItemProps and pushes item to items', () => {
+    const wrapper = factory();
+    const idPrefix = wrapper.vm._uid;
+    const item = { name: 'First', id: '123' };
+    const itemProps = wrapper.vm.getItemProps(item);
+    expect(itemProps).toEqual(
+      {
+        id: `${idPrefix}-combo-blocks-item-0`,
+        role: 'option',
+        'aria-selected': 'false',
+      },
+    );
+    expect(wrapper.vm.items.length).toBe(1);
+  });
+  // Event listeners
   it('InputEventListeners call right methods', () => {
     const wrapper = factory();
 
@@ -103,13 +119,61 @@ describe('main.js', () => {
   it('getListEventListeners call right methods', () => {
     const wrapper = factory();
 
-    wrapper.vm.onListMouseEnter = jest.fn();
-    wrapper.vm.onListMouseLeave = jest.fn();
+    wrapper.vm.hoverList = jest.fn();
 
     wrapper.vm.getListEventListeners().mouseenter();
-    wrapper.vm.getListEventListeners().mouseleave();
+    expect(wrapper.vm.hoverList).toHaveBeenLastCalledWith(true);
 
-    expect(wrapper.vm.onListMouseEnter).toHaveBeenCalled();
-    expect(wrapper.vm.onListMouseLeave).toHaveBeenCalled();
+    wrapper.vm.getListEventListeners().mouseleave();
+    expect(wrapper.vm.hoverList).toHaveBeenLastCalledWith(false);
+  });
+
+  // helpers
+  it('isSelected true', () => {
+    const wrapper = factory();
+    wrapper.vm.selectedIndex = 1;
+    const isSelected = wrapper.vm.isSelected(1);
+    expect(isSelected).toBe(true);
+  });
+  it('isSelected false', () => {
+    const wrapper = factory();
+    wrapper.vm.selectedIndex = 1;
+    const isSelected = wrapper.vm.isSelected(0);
+    expect(isSelected).toBe(false);
+  });
+  it('autocomplete calls setInputValue and itemToString', () => {
+    const wrapper = factory({ propsData: { itemToString: jest.fn(() => 'name') } });
+    wrapper.vm.setInputValue = jest.fn();
+
+    wrapper.vm.autocompleteText(item);
+    expect(wrapper.vm.setInputValue).toHaveBeenLastCalledWith('name');
+    expect(wrapper.vm.itemToString).toHaveBeenLastCalledWith(item);
+  });
+  it('set right input value and emit evt', (done) => {
+    const wrapper = factory();
+    const text = 'some text';
+    wrapper.vm.setInputValue(text);
+
+    // No input immedeately
+    expect(wrapper.emitted().input).toBeUndefined();
+    wrapper.vm.$nextTick(() => {
+    // input after next tick
+      expect(wrapper.emitted().input[0]).toEqual([text]);
+      done();
+    });
+  });
+  it('clears the selection and emit change evt', () => {
+    const wrapper = factory();
+
+    wrapper.vm.selected = item;
+    wrapper.vm.selectedIndex = 0;
+    wrapper.vm.setInputValue = jest.fn();
+
+    wrapper.vm.clearSelection();
+
+    expect(wrapper.vm.selected).toBeNull();
+    expect(wrapper.vm.selectedIndex).toBe(-1);
+    expect(wrapper.vm.setInputValue).toHaveBeenLastCalledWith('');
+    expect(wrapper.emitted().change[0]).toEqual([null]);
   });
 });

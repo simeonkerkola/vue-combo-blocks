@@ -18,14 +18,13 @@ export default {
     return {
 
       props: {
-        id: 'listId',
         list: [
           { displayName: 'first', id: '123' },
           { displayName: 'second', id: '456' },
           { displayName: 'third', id: '789' },
         ],
+        id: 'listId',
         displayAttribute: 'displayName',
-        valueAttribute: 'id',
       },
     };
   },
