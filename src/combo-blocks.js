@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import {
-  defaultControls, hasKeyCodeByCode, hasKeyCode,
+  defaultControls, hasKeyCodeByCode, hasKeyCode, getItemIndex, requiredProp,
 } from './misc';
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
@@ -15,18 +15,18 @@ export default Vue.component('combo-blocks', {
       type: Object,
       default: () => defaultControls,
     },
-    displayAttribute: {
-      type: String,
-      default: 'title',
-    },
-    valueAttribute: {
-      type: String,
-      default: 'id',
-    },
-    // list: {
-    //   type: [Function, Array],
-    //   default: () => [],
+    // displayAttribute: {
+    //   type: String,
+    //   default: 'title',
     // },
+    // valueAttribute: {
+    //   type: String,
+    //   default: 'id',
+    // },
+    items: {
+      type: Array,
+      required: true,
+    },
     nullableSelect: {
       type: Boolean,
       default: false,
@@ -57,7 +57,7 @@ export default Vue.component('combo-blocks', {
       inputId: `${this._uid}-combo-blocks-input`,
       labelId: `${this._uid}-combo-blocks-label`,
       hoveredIndex: -1,
-      selectedIndex: -1,
+      selectedIndex: this.items.indexOf(this.value),
     };
   },
   computed: {
@@ -74,7 +74,7 @@ export default Vue.component('combo-blocks', {
     //     if (this.$parent) this.$parent.$forceUpdate();
     //     this.$nextTick(() => {
     //       if (current === 'input') {
-    //         this.$emit('input', this.inputValue);
+    //         this.$emit('input-value-change', this.inputValue);
     //       } else {
     //         this.$emit('change', this.selected);
     //       }
@@ -158,12 +158,13 @@ export default Vue.component('combo-blocks', {
       };
     },
 
-    getItemEventListeners(item) {
+    getItemEventListeners({ item, index }) {
+      const itemIndex = getItemIndex(index, item, this.items);
       const vm = this;
       return {
         // TODO: use onMouseMove
         mouseenter(e) {
-          vm.setHoveredItem(item, e.target);
+          vm.setHoveredItem(item, itemIndex, e.target);
           vm.$emit('mouseenter', e);
         },
         mouseleave(e) {
@@ -175,23 +176,28 @@ export default Vue.component('combo-blocks', {
         },
         click(e) {
           vm.suggestionClick(item, e);
-          console.log('click');
         },
       };
     },
-    getItemProps({ item, index } = {}) {
-      if (index === undefined) {
-        this.items.push(item);
-        // eslint-disable-next-line no-param-reassign
-        index = this.items.indexOf(item);
-      } else {
-        this.items[index] = item;
-      }
-      const id = this.getItemId(index);
+    getItemProps({
+      index,
+      item = process.env.NODE_ENV === 'production' ? undefined
+        : requiredProp('getItemProps', 'item'),
+    } = {}) {
+      const itemIndex = getItemIndex(index, item, this.items);
+      // if (index === undefined) {
+      //   this.items.push(item);
+      //   // eslint-disable-next-line no-param-reassign
+      //   index = this.items.indexOf(item);
+      // } else {
+      //   this.items[index] = item;
+      // }
+
+      const id = this.getItemId(itemIndex);
       return {
         id,
         role: 'option',
-        'aria-selected': this.isHovered(index) || this.isSelected(index) ? 'true' : 'false',
+        'aria-selected': this.isHovered(itemIndex) || this.isSelected(itemIndex) ? 'true' : 'false',
       };
     },
     // onListMouseEnter(e) {
@@ -246,7 +252,7 @@ export default Vue.component('combo-blocks', {
     setInputValue(text) {
       this.$nextTick(() => {
         this.inputValue = text;
-        this.$emit('input', text);
+        this.$emit('input-value-change', text);
       });
     },
     clearSelection() {
@@ -256,24 +262,22 @@ export default Vue.component('combo-blocks', {
       this.$emit('change', null);
     },
     select(item) {
-      if (this.selected !== item || (this.nullableSelect && !item)) {
+      // if (this.selected !== item || (this.nullableSelect && !item)) {
+      if (this.selected !== item) {
         this.selected = item;
         this.selectedIndex = this.hoveredIndex;
         this.$emit('change', item);
-        if (item) {
-          this.autocompleteText(item);
-        }
       }
-      this.setHoveredItem(null);
+      this.autocompleteText(item);
+
+      // this.setHoveredItem(null);
     },
-    setHoveredItem(item, elem) {
+    setHoveredItem(item, index, elem) {
       if (item && item !== this.hovered) {
         this.$emit('hover', item, elem);
       }
       this.hovered = item;
-      this.hoveredIndex = this.items.findIndex(
-        (el) => item && this.itemToString(item) === this.itemToString(el),
-      );
+      this.hoveredIndex = typeof index === 'number' ? index : -1;
     },
     hoverList(isOverList) {
       this.isOverList = isOverList;
@@ -306,15 +310,9 @@ export default Vue.component('combo-blocks', {
         const hoversBetweenEdges = isMovingDown
           ? this.hoveredIndex < this.items.length - 1
           : this.hoveredIndex > 0;
-        let item = null;
-
-        if (hoversBetweenEdges) {
-          item = this.items[this.hoveredIndex + direction];
-        } else {
-          item = this.items[listEdge];
-        }
-
-        this.setHoveredItem(item);
+        const index = hoversBetweenEdges ? this.hoveredIndex + direction : listEdge;
+        const item = this.items[index];
+        this.setHoveredItem(item, index);
       }
     },
     onKeyDown(e) {
@@ -398,9 +396,10 @@ export default Vue.component('combo-blocks', {
     },
     onInput(inputEvent) {
       const value = !inputEvent.target ? inputEvent : inputEvent.target.value;
+
       this.updateTextOutside(value);
       this.showList();
-      this.$emit('input', value);
+      this.$emit('input-value-change', value);
     },
     updateTextOutside(value) {
       if (this.inputValue === value) {
@@ -420,7 +419,7 @@ export default Vue.component('combo-blocks', {
     },
   },
   render() {
-    this.clearSuggestions();
+    // this.clearSuggestions();
 
     return this.$scopedSlots.default({
       // prop getters

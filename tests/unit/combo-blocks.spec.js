@@ -3,6 +3,8 @@ import { mount } from '@vue/test-utils';
 import ComboBlocks from '../../src/combo-blocks';
 
 const item = { name: 'name' };
+const item2 = { name: 'item 2 name' };
+const items = [item, item2];
 const factory = ({ propsData, scopedSlots, ...rest } = {}) => mount(ComboBlocks,
   {
     scopedSlots: {
@@ -10,6 +12,7 @@ const factory = ({ propsData, scopedSlots, ...rest } = {}) => mount(ComboBlocks,
       ...scopedSlots,
     },
     propsData: {
+      items,
       id: 'listId',
       displayAttribute: 'displayName',
       valueAttribute: 'id',
@@ -80,19 +83,20 @@ describe('comboblocks.js', () => {
       },
     );
   });
-  it('returns getItemProps and pushes item to items', () => {
+  it('returns getItemProps', () => {
     const wrapper = factory();
     const idPrefix = wrapper.vm._uid;
-    const item = { name: 'First', id: '123' };
-    const itemProps = wrapper.vm.getItemProps(item);
+
+    const itemProps = wrapper.vm.getItemProps({ item: items[1] });
+
     expect(itemProps).toEqual(
       {
-        id: `${idPrefix}-combo-blocks-item-0`,
+        id: `${idPrefix}-combo-blocks-item-1`,
         role: 'option',
         'aria-selected': 'false',
       },
     );
-    expect(wrapper.vm.items.length).toBe(1);
+    expect(wrapper.vm.items.length).toBe(2);
   });
   // Event listeners
   it('InputEventListeners call right methods', () => {
@@ -158,7 +162,7 @@ describe('comboblocks.js', () => {
     expect(wrapper.emitted().input).toBeUndefined();
     wrapper.vm.$nextTick(() => {
     // input after next tick
-      expect(wrapper.emitted().input[0]).toEqual([text]);
+      expect(wrapper.emitted()['input-value-change'][0]).toEqual([text]);
       done();
     });
   });
@@ -175,5 +179,47 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm.selectedIndex).toBe(-1);
     expect(wrapper.vm.setInputValue).toHaveBeenLastCalledWith('');
     expect(wrapper.emitted().change[0]).toEqual([null]);
+  });
+  it('sets new selected item', () => {
+    const wrapper = factory();
+    wrapper.vm.hoveredIndex = 0;
+    wrapper.vm.autocompleteText = jest.fn();
+
+    wrapper.vm.select(item);
+
+    expect(wrapper.vm.selected).toEqual(item);
+    expect(wrapper.vm.selectedIndex).toBe(0);
+    expect(wrapper.vm.autocompleteText).toHaveBeenLastCalledWith(item);
+    expect(wrapper.emitted().change[0]).toEqual([item]);
+  });
+  it('selects same item again', () => {
+    const wrapper = factory();
+    wrapper.vm.hoveredIndex = 0;
+    wrapper.vm.autocompleteText = jest.fn();
+
+    wrapper.vm.select(item);
+    wrapper.vm.select(item);
+
+    expect(wrapper.vm.selected).toEqual(item);
+    expect(wrapper.vm.selectedIndex).toBe(0);
+    expect(wrapper.vm.autocompleteText).toHaveBeenLastCalledWith(item);
+    expect(wrapper.vm.autocompleteText).toHaveBeenCalledTimes(2);
+
+    // Only call once
+    expect(wrapper.emitted().change.length).toBe(1);
+  });
+  it('sets hovered item', () => {
+    const wrapper = factory();
+    wrapper.vm.getItemProps({ item });
+    wrapper.vm.getItemProps({ item: item2 });
+    const fakeElement = 'asdfasdf';
+    const item2ofItems = wrapper.vm.items.find(({ name }) => name === item2.name);
+    const item2Index = wrapper.vm.items.indexOf(item2ofItems);
+
+    wrapper.vm.setHoveredItem(item2ofItems, item2Index, fakeElement);
+
+    expect(wrapper.vm.hovered).toEqual(item2);
+    expect(wrapper.vm.hoveredIndex).toEqual(item2Index);
+    expect(wrapper.emitted().hover[0]).toEqual([item2, fakeElement]);
   });
 });

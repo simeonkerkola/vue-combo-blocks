@@ -1,10 +1,10 @@
 <template>
   <div :id="`${id}-autocomplete`">
     <ComboBlocks
-      :ref="id"
+    :ref="id"
       :value="value"
       :itemToString="itemToString"
-      :display-attribute="displayAttribute"
+      :items='filteredList'
       :controls="{
         autocomplete: [] // Disable (CTRL / SHFT) + Space autocomplete.
       }"
@@ -12,6 +12,7 @@
       @show-list="onShowList"
       @focus="onFocus"
       @hover="onHover"
+      @input-value-change="onInput"
     >
       <template
         v-slot="{
@@ -37,7 +38,6 @@
             autocomplete="off"
             single-line
             v-on="getInputEventListeners()"
-            @input="onInput"
           />
 
           <ul
@@ -48,20 +48,18 @@
           >
             <slot name="append-item"></slot>
             <li
-              v-for="(item, index) in filteredList(inputValue)"
+              v-for="(item, index) in filteredList"
               :key="index"
               class="list-item"
               :style="{
                 backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
                 fontWeight:
-                  selected &&
-                  selected[displayAttribute] ===
-                  item[displayAttribute]
+                  selected  === item
                     ? 'bold'
                     : 'normal'
               }"
               v-bind="getItemProps({ item, index })"
-              v-on="getItemEventListeners(item)"
+              v-on="getItemEventListeners({ item, index })"
             >
               <span :id="`${id}-suggest-item-${item[displayAttribute]}`">
                 {{ item[displayAttribute] }}
@@ -155,7 +153,7 @@ export default {
   },
   data() {
     return {
-
+      filteredList: this.list,
     };
   },
   computed: {
@@ -177,8 +175,9 @@ export default {
     itemToString(item) {
       return item ? item[this.displayAttribute] : '';
     },
-    filteredList(text) {
-      return this.list.filter((item) => item[this.displayAttribute].includes(text));
+    setFilteredList(text) {
+      console.log({ text });
+      this.filteredList = this.list.filter((item) => item[this.displayAttribute].includes(text));
     },
     onHover(suggestion, element) {
       if (!element) {
@@ -240,6 +239,7 @@ export default {
       this.autocompleteRef.hideList();
     },
     onInput(text) {
+      this.setFilteredList(text);
       // Send the input value to parent. For search etc.
       this.$emit('update:search-input', text);
       this.$emit('input', text);

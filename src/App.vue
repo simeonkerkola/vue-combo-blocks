@@ -15,14 +15,18 @@ export default {
     AutoComplete,
   },
   data() {
+    const list = [
+      { displayName: 'first', id: '123' },
+      { displayName: 'first', id: '123' },
+      { displayName: 'first', id: '123' },
+      { displayName: 'second', id: '456' },
+      { displayName: 'third', id: '789' },
+    ];
     return {
-
       props: {
-        list: [
-          { displayName: 'first', id: '123' },
-          { displayName: 'second', id: '456' },
-          { displayName: 'third', id: '789' },
-        ],
+        list,
+        value: list[1],
+
         id: 'listId',
         displayAttribute: 'displayName',
       },

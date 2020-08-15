@@ -7,10 +7,10 @@ export const defaultControls = {
   autocomplete: [32, 13],
 };
 
-export const modes = {
-  input: String,
-  select: Object,
-};
+// export const modes = {
+//   input: String,
+//   select: Object,
+// };
 
 // export function fromPath(obj, path) {
 //   return path.split('.').reduce((o, i) => (o === Object(o) ? o[i] : o), obj);
@@ -28,4 +28,18 @@ export function hasKeyCodeByCode(arr, keyCode) {
 
 export function hasKeyCode(arr, event) {
   return hasKeyCodeByCode(arr, event.keyCode);
+}
+export function getItemIndex(index, item, items) {
+  if (index !== undefined) {
+    return index;
+  }
+  if (items.length === 0) {
+    return -1;
+  }
+  return items.indexOf(item);
+}
+
+export function requiredProp(fnName, propName) {
+  // eslint-disable-next-line no-console
+  console.error(`The property "${propName}" is required in "${fnName}"`);
 }
