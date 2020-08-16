@@ -49,9 +49,9 @@ export default Vue.component('combo-blocks', {
       isOpen: false,
       inputValue: this.itemToString(this.value),
       isPlainSuggestion: false,
-      isClicking: false,
-      isOverList: false,
-      isInFocus: false,
+      // isClicking: false,
+      // isOverList: false,
+      // isInFocus: false,
       controlScheme: {},
       listId: `${this._uid}-combo-blocks-list`,
       inputId: `${this._uid}-combo-blocks-input`,
@@ -137,6 +137,10 @@ export default Vue.component('combo-blocks', {
     getInputEventListeners() {
       const vm = this;
       return {
+        touchleave: (e) => {
+          console.log('touch out');
+          vm.onBlur(e);
+        },
         blur: vm.onBlur,
         focus: vm.onFocus,
         input: vm.onInput,
@@ -157,7 +161,6 @@ export default Vue.component('combo-blocks', {
         },
       };
     },
-
     getItemEventListeners({ item, index }) {
       const itemIndex = getItemIndex(index, item, this.items);
       const vm = this;
@@ -175,7 +178,7 @@ export default Vue.component('combo-blocks', {
           e.preventDefault();
         },
         click(e) {
-          vm.suggestionClick(item, e);
+          vm.itemClick(item, itemIndex, e);
         },
       };
     },
@@ -261,11 +264,11 @@ export default Vue.component('combo-blocks', {
       this.setInputValue('');
       this.$emit('change', null);
     },
-    select(item) {
+    select(item, index) {
       // if (this.selected !== item || (this.nullableSelect && !item)) {
       if (this.selected !== item) {
         this.selected = item;
-        this.selectedIndex = this.hoveredIndex;
+        this.selectedIndex = index;
         this.$emit('change', item);
       }
       this.autocompleteText(item);
@@ -279,8 +282,8 @@ export default Vue.component('combo-blocks', {
       this.hovered = item;
       this.hoveredIndex = typeof index === 'number' ? index : -1;
     },
-    hoverList(isOverList) {
-      this.isOverList = isOverList;
+    hoverList() {
+      // this.isOverList = isOverList;
     },
     hideList() {
       if (this.isOpen) {
@@ -323,7 +326,7 @@ export default Vue.component('combo-blocks', {
         e.preventDefault();
       }
       if (e.key === 'Tab' && this.hovered) {
-        this.select(this.hovered);
+        this.select(this.hovered, this.hoveredIndex);
       }
       this.onShowList(e);
       this.moveSelection(e);
@@ -335,7 +338,7 @@ export default Vue.component('combo-blocks', {
       if (this.isOpen && hasKeyCode([select, hideList], e)) {
         e.preventDefault();
         if (hasKeyCode(select, e)) {
-          this.select(this.hovered);
+          this.select(this.hovered, this.hoveredIndex);
         }
         this.hideList();
       }
@@ -353,42 +356,38 @@ export default Vue.component('combo-blocks', {
         this.autocompleteText(this.items[0]);
       }
     },
-    suggestionClick(suggestion, e) {
+    itemClick(item, index, e) {
       e.preventDefault();
-      this.$emit('suggestion-click', suggestion, e);
-      this.select(suggestion);
+      this.$emit('item-click', item, e);
+      this.select(item, index);
       this.hideList();
       // / Ensure, that all needed flags are off before finishing the click.
-      this.isClicking = false;
-      this.isOverList = false;
+      // this.isClicking = false;
+      // this.isOverList = false;
     },
     onBlur(e) {
-      if (this.isInFocus) {
-        // / Clicking starts here, because input's blur occurs before the suggestionClick
-        // / and exactly when the user clicks the mouse button or taps the screen.
-        this.isClicking = this.isOverList;
-        if (!this.isClicking) {
-          this.isInFocus = false;
-          this.hideList();
-          this.$emit('blur', e);
-          if (this.selected) {
-            this.setInputValue(this.itemToString(this.selected));
-          } else this.setInputValue('');
-        }
-      } else {
-        // this.inputElement.blur()
-        // console.error(
-        //   `This should never happen!
-        //   If you encountered this error, please make sure that your input component
-        //   emits 'focus' events properly.
-        //   For more info see https://github.com/KazanExpress/vue-simple-suggest#custom-input.
-        //   If your 'vue-simple-suggest' setup does not include a custom input component - please,
-        //   report to https://github.com/KazanExpress/vue-simple-suggest/issues/new`
-        // )
-      }
+      // if (this.isInFocus) {
+      // / Clicking starts here, because input's blur occurs before the itemClick
+      // / and exactly when the user clicks the mouse button or taps the screen.
+      // this.isClicking = this.isOverList;
+      // if (!this.isClicking) {
+      // this.isInFocus = false;
+      this.hideList();
+      this.$emit('blur', e);
+      if (this.selected) {
+        this.setInputValue(this.itemToString(this.selected));
+      } else this.setInputValue('');
+      // }
+      // } else {
+      //   // this.inputElement.blur()
+      //   // console.error(
+      //   //   `This should never happen!
+      //   `
+      //   // )
+      // }
     },
     onFocus(e) {
-      this.isInFocus = true;
+      // this.isInFocus = true;
       // Only emit, if it was a native input focus
       if (e) {
         this.$emit('focus', e);
@@ -438,6 +437,9 @@ export default Vue.component('combo-blocks', {
       selected: this.selected,
       hoveredIndex: this.hoveredIndex,
       inputValue: this.inputValue,
+
+      // actions
+      clearSelection: this.clearSelection,
     });
   },
 });

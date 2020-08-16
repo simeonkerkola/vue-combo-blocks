@@ -3,6 +3,7 @@
     <AutoComplete v-bind="props">
 
     </AutoComplete>
+
   </div>
 </template>
 
@@ -17,15 +18,15 @@ export default {
   data() {
     const list = [
       { displayName: 'first', id: '123' },
-      { displayName: 'first', id: '123' },
-      { displayName: 'first', id: '123' },
       { displayName: 'second', id: '456' },
       { displayName: 'third', id: '789' },
+      { displayName: 'duplicate', id: '789' },
+      { displayName: 'duplicate', id: '789' },
     ];
     return {
       props: {
         list,
-        value: list[1],
+        value: list[0],
 
         id: 'listId',
         displayAttribute: 'displayName',
@@ -42,6 +43,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  padding-top: 60px;
+  height: 100vh;
 }
 </style>

@@ -131,6 +131,21 @@ describe('comboblocks.js', () => {
     wrapper.vm.getListEventListeners().mouseleave();
     expect(wrapper.vm.hoverList).toHaveBeenLastCalledWith(false);
   });
+  it('getItemEventListeners call right methods', () => {
+    const wrapper = factory();
+    wrapper.vm.setHoveredItem = jest.fn();
+    wrapper.vm.itemClick = jest.fn();
+    const fakeEvent = { target: null };
+
+    wrapper.vm.getItemEventListeners({ item }).mouseenter(fakeEvent);
+    expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(item, 0, fakeEvent.target);
+
+    wrapper.vm.getItemEventListeners({ item }).mouseleave(fakeEvent);
+    expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(undefined);
+
+    wrapper.vm.getItemEventListeners({ item }).click(fakeEvent);
+    expect(wrapper.vm.itemClick).toHaveBeenLastCalledWith(item, 0, fakeEvent);
+  });
 
   // helpers
   it('isSelected true', () => {
@@ -185,10 +200,10 @@ describe('comboblocks.js', () => {
     wrapper.vm.hoveredIndex = 0;
     wrapper.vm.autocompleteText = jest.fn();
 
-    wrapper.vm.select(item);
+    wrapper.vm.select(item, wrapper.vm.hoveredIndex);
 
     expect(wrapper.vm.selected).toEqual(item);
-    expect(wrapper.vm.selectedIndex).toBe(0);
+    expect(wrapper.vm.selectedIndex).toBe(wrapper.vm.hoveredIndex);
     expect(wrapper.vm.autocompleteText).toHaveBeenLastCalledWith(item);
     expect(wrapper.emitted().change[0]).toEqual([item]);
   });
@@ -197,11 +212,11 @@ describe('comboblocks.js', () => {
     wrapper.vm.hoveredIndex = 0;
     wrapper.vm.autocompleteText = jest.fn();
 
-    wrapper.vm.select(item);
-    wrapper.vm.select(item);
+    wrapper.vm.select(item, wrapper.vm.hoveredIndex);
+    wrapper.vm.select(item, wrapper.vm.hoveredIndex);
 
     expect(wrapper.vm.selected).toEqual(item);
-    expect(wrapper.vm.selectedIndex).toBe(0);
+    expect(wrapper.vm.selectedIndex).toBe(wrapper.vm.hoveredIndex);
     expect(wrapper.vm.autocompleteText).toHaveBeenLastCalledWith(item);
     expect(wrapper.vm.autocompleteText).toHaveBeenCalledTimes(2);
 

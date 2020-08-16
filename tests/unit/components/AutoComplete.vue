@@ -26,11 +26,14 @@
           getListEventListeners,
           getItemProps,
           getItemEventListeners,
-          getComboboxProps
+          getComboboxProps,
+          clearSelection
         }"
       >
         <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
+            <button @click="clearSelection" data-testid="clear-button">clear</button>
           <input
+            data-testid="combobox-input"
             :id="id"
             v-bind="getInputProps()"
             :placeholder="placeholder"
@@ -48,9 +51,11 @@
           >
             <slot name="append-item"></slot>
             <li
+            :data-testid="`combo-blocks-item-${index}`"
               v-for="(item, index) in filteredList"
               :key="index"
               class="list-item"
+              :class="{'selected':selected  === item, 'hovered':hoveredIndex === index}"
               :style="{
                 backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
                 fontWeight:
@@ -162,13 +167,10 @@ export default {
     },
   },
   watch: {
-    value(selected) {
-      // Set the input text value to the displayAttribute of the selected item.
-      if (!selected) this.autocompleteRef.clearSelection();
-    },
+
   },
   mounted() {
-    if (this.value) this.autocompleteRef.select(this.value);
+    // if (this.value) this.autocompleteRef.select(this.value);
   },
 
   methods: {
@@ -226,17 +228,17 @@ export default {
     onCancel() {
       this.$emit('change', null);
       if (this.autocompleteRef) {
-        this.autocompleteRef.clearSelection();
+        // this.autocompleteRef.clearSelection();
       }
 
       // Send the text to vue-simple-suggest as well to trigger a research
       this.processAndShowList();
     },
     showList() {
-      this.autocompleteRef.showList();
+      // this.autocompleteRef.showList();
     },
     hideList() {
-      this.autocompleteRef.hideList();
+      // this.autocompleteRef.hideList();
     },
     onInput(text) {
       this.setFilteredList(text);
@@ -257,10 +259,10 @@ export default {
       console.log('repositionList');
     },
     async processAndShowList() {
-      if (this.autocompleteRef) {
-        this.autocompleteRef.inputElement.focus();
-        this.autocompleteRef.showList();
-      }
+      // if (this.autocompleteRef) {
+      //   this.autocompleteRef.inputElement.focus();
+      //   this.autocompleteRef.showList();
+      // }
     },
     isScopedSlotEmpty(slot) {
       if (slot) {
