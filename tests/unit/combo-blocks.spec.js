@@ -237,4 +237,23 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm.hoveredIndex).toEqual(item2Index);
     expect(wrapper.emitted().hover[0]).toEqual([item2, fakeElement]);
   });
+  it('opens list', () => {
+    const wrapper = factory();
+    wrapper.vm.setHoveredItem = jest.fn();
+    wrapper.vm.isOpen = false;
+
+    wrapper.vm.showList();
+
+    expect(wrapper.vm.isOpen).toBe(true);
+  });
+  it('hides list', () => {
+    const wrapper = factory();
+    wrapper.vm.setHoveredItem = jest.fn();
+    wrapper.vm.isOpen = true;
+
+    wrapper.vm.hideList();
+
+    expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(null);
+    expect(wrapper.vm.isOpen).toBe(false);
+  });
 });

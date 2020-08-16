@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import {
-  defaultControls, hasKeyCodeByCode, hasKeyCode, getItemIndex, requiredProp,
+  controls, hasKeyCode, getItemIndex, requiredProp,
 } from './misc';
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
@@ -11,10 +11,6 @@ export default Vue.component('combo-blocks', {
     event: 'change',
   },
   props: {
-    controls: {
-      type: Object,
-      default: () => defaultControls,
-    },
     // displayAttribute: {
     //   type: String,
     //   default: 'title',
@@ -26,10 +22,6 @@ export default Vue.component('combo-blocks', {
     items: {
       type: Array,
       required: true,
-    },
-    nullableSelect: {
-      type: Boolean,
-      default: false,
     },
     value: {},
     itemToString: {
@@ -95,9 +87,6 @@ export default Vue.component('combo-blocks', {
       },
       immediate: true,
     },
-  },
-  created() {
-    this.controlScheme = { ...defaultControls, ...this.controls };
   },
   mounted() {
     // this.inputElement = this.$refs.inputSlot.querySelector('input')
@@ -299,15 +288,18 @@ export default Vue.component('combo-blocks', {
       }
     },
     onShowList(e) {
-      if (hasKeyCode(this.controlScheme.showList, e)) {
+      if (hasKeyCode(controls.arrowDownKey, e)) {
         this.showList();
       }
     },
     moveSelection(e) {
       if (!this.isOpen || !this.items.length) return;
-      if (hasKeyCode([this.controlScheme.selectionUp, this.controlScheme.selectionDown], e)) {
+      if (
+        hasKeyCode(controls.arrowDownKey, e)
+        || hasKeyCode(controls.arrowUpKey, e)
+      ) {
         e.preventDefault();
-        const isMovingDown = hasKeyCode(this.controlScheme.selectionDown, e);
+        const isMovingDown = hasKeyCode(controls.arrowDownKey, e);
         const direction = isMovingDown * 2 - 1;
         const listEdge = isMovingDown ? 0 : this.items.length - 1;
         const hoversBetweenEdges = isMovingDown
@@ -319,10 +311,8 @@ export default Vue.component('combo-blocks', {
       }
     },
     onKeyDown(e) {
-      const { select } = this.controlScheme;
-      const { hideList } = this.controlScheme;
       // prevent form submit on keydown if Enter key registered in the keyup list
-      if (e.key === 'Enter' && this.isOpen && hasKeyCodeByCode([select, hideList], 13)) {
+      if (e.key === 'Enter' && this.isOpen) {
         e.preventDefault();
       }
       if (e.key === 'Tab' && this.hovered) {
@@ -330,32 +320,33 @@ export default Vue.component('combo-blocks', {
       }
       this.onShowList(e);
       this.moveSelection(e);
-      this.onAutocomplete(e);
+      // this.onAutocomplete(e);
     },
     onListKeyUp(e) {
-      const { select } = this.controlScheme;
-      const { hideList } = this.controlScheme;
-      if (this.isOpen && hasKeyCode([select, hideList], e)) {
-        e.preventDefault();
-        if (hasKeyCode(select, e)) {
+      const { enterKey, escKey } = controls;
+      if (this.isOpen) {
+        if (hasKeyCode(enterKey, e)) {
+          e.preventDefault();
           this.select(this.hovered, this.hoveredIndex);
+          this.hideList();
+        } else if (hasKeyCode(escKey, e)) {
+          this.hideList();
         }
-        this.hideList();
       }
     },
-    onAutocomplete(e) {
-      if (
-        hasKeyCode(this.controlScheme.autocomplete, e)
-        && (e.ctrlKey || e.shiftKey)
-        && this.items.length > 0
-        && this.items[0]
-        && this.isOpen
-      ) {
-        e.preventDefault();
-        this.setHoveredItem(this.items[0]);
-        this.autocompleteText(this.items[0]);
-      }
-    },
+    // onAutocomplete(e) {
+    //   if (
+    //     hasKeyCode(controls.autocomplete, e)
+    //     && (e.ctrlKey || e.shiftKey)
+    //     && this.items.length > 0
+    //     && this.items[0]
+    //     && this.isOpen
+    //   ) {
+    //     e.preventDefault();
+    //     this.setHoveredItem(this.items[0]);
+    //     this.autocompleteText(this.items[0]);
+    //   }
+    // },
     itemClick(item, index, e) {
       e.preventDefault();
       this.$emit('item-click', item, e);
