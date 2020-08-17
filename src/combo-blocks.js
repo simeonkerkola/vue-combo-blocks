@@ -2,8 +2,7 @@ import Vue from 'vue';
 import {
   controls, hasKeyCode, getItemIndex, requiredProp,
 } from './misc';
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable guard-for-in */
+
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 export default Vue.component('combo-blocks', {
   model: {
@@ -11,14 +10,6 @@ export default Vue.component('combo-blocks', {
     event: 'change',
   },
   props: {
-    // displayAttribute: {
-    //   type: String,
-    //   default: 'title',
-    // },
-    // valueAttribute: {
-    //   type: String,
-    //   default: 'id',
-    // },
     items: {
       type: Array,
       required: true,
@@ -28,22 +19,18 @@ export default Vue.component('combo-blocks', {
       type: Function,
       default: (item) => (item ? String(item) : ''),
     },
-    // mode: {
-    //   type: String,
-    //   default: 'input',
-    // },
+    selectedItemChanged: {
+      type: Function,
+      default: (prevItem, item) => (prevItem !== item),
+    },
   },
   data() {
     return {
       selected: this.value,
       hovered: null,
-      // items: [],
       isOpen: false,
       inputValue: this.itemToString(this.value),
       isPlainSuggestion: false,
-      // isClicking: false,
-      // isOverList: false,
-      // isInFocus: false,
       controlScheme: {},
       listId: `${this._uid}-combo-blocks-list`,
       inputId: `${this._uid}-combo-blocks-input`,
@@ -52,44 +39,14 @@ export default Vue.component('combo-blocks', {
       selectedIndex: this.items.indexOf(this.value),
     };
   },
-  computed: {
-    // isSelectedUpToDate() {
-    //   return !!this.selected && this.itemToString(this.selected) === this.inputValue;
-    // },
-  },
-  // Handle run-time mode changes (now working):
   watch: {
-    // mode: {
-    //   handler(current) {
-    //     this.constructor.options.model.event = current;
-    //     // Can be null if the component is root
-    //     if (this.$parent) this.$parent.$forceUpdate();
-    //     this.$nextTick(() => {
-    //       if (current === 'input') {
-    //         this.$emit('input-value-change', this.inputValue);
-    //       } else {
-    //         this.$emit('change', this.selected);
-    //       }
-    //     });
-    //   },
-    //   immediate: true,
-    // },
-    // list: {
-    //   handler(current) {
-    //     this.items = this.getSuggestions()
-    //   },
-    //   immediate: true
-    // },
     value: {
       handler(current) {
         const textValue = this.itemToString(current);
-        this.updateTextOutside(textValue);
+        this.upDateInputValue(textValue);
       },
       immediate: true,
     },
-  },
-  mounted() {
-    // this.inputElement = this.$refs.inputSlot.querySelector('input')
   },
   methods: {
     getComboboxProps() {
@@ -140,9 +97,9 @@ export default Vue.component('combo-blocks', {
     getListEventListeners() {
       const vm = this;
       return {
-        mouseenter(e) {
+        mousemove(e) {
           vm.hoverList(true);
-          vm.$emit('mouseenter', e);
+          vm.$emit('mousemove', e);
         },
         mouseleave(e) {
           vm.hoverList(false);
@@ -154,10 +111,9 @@ export default Vue.component('combo-blocks', {
       const itemIndex = getItemIndex(index, item, this.items);
       const vm = this;
       return {
-        // TODO: use onMouseMove
-        mouseenter(e) {
+        mousemove(e) {
           vm.setHoveredItem(item, itemIndex, e.target);
-          vm.$emit('mouseenter', e);
+          vm.$emit('mousemove', e);
         },
         mouseleave(e) {
           vm.setHoveredItem(undefined);
@@ -177,14 +133,6 @@ export default Vue.component('combo-blocks', {
         : requiredProp('getItemProps', 'item'),
     } = {}) {
       const itemIndex = getItemIndex(index, item, this.items);
-      // if (index === undefined) {
-      //   this.items.push(item);
-      //   // eslint-disable-next-line no-param-reassign
-      //   index = this.items.indexOf(item);
-      // } else {
-      //   this.items[index] = item;
-      // }
-
       const id = this.getItemId(itemIndex);
       return {
         id,
@@ -192,54 +140,14 @@ export default Vue.component('combo-blocks', {
         'aria-selected': this.isHovered(itemIndex) || this.isSelected(itemIndex) ? 'true' : 'false',
       };
     },
-    // onListMouseEnter(e) {
-    //   this.hoverList(true);
-    //   this.$emit('mouseenter', e);
-    // },
-    // onListMouseLeave(e) {
-    //   this.hoverList(false);
-    //   this.$emit('mouseleave', e);
-    // },
-    // isEqual(suggestion, item) {
-    //   return item && this.valueProperty(suggestion) === this.valueProperty(item);
-    // },
     isSelected(index) {
       return index === this.selectedIndex;
     },
     isHovered(index) {
       return index === this.hoveredIndex;
     },
-    // getPropertyByAttribute(obj, attr) {
-    //   // eslint-disable-next-line no-nested-ternary
-    //   return this.isPlainSuggestion ?
-    //    obj : typeof obj !== 'undefined' ? fromPath(obj, attr) : obj;
-    // },
-    // displayProperty(obj) {
-    //   if (this.isPlainSuggestion) {
-    //     return obj;
-    //   }
-    //   let display = this.getPropertyByAttribute(obj, this.displayAttribute);
-    //   if (typeof display === 'undefined') {
-    //     display = JSON.stringify(obj);
-    //   }
-    //   return String(display || '');
-    // },
-    // valueProperty(obj) {
-    //   if (this.isPlainSuggestion) {
-    //     return obj;
-    //   }
-    //   const value = this.getPropertyByAttribute(obj, this.valueAttribute);
-    //   if (typeof value === 'undefined') {
-    //     console.error(
-    //       `[vue-simple-suggest]: Please, check if you passed 'value-attribute'
-    //        (default is 'id') and 'display-attribute' (default is 'title') props correctly.
-    //     Your list objects should always contain a unique identifier.`,
-    //     );
-    //   }
-    //   return value;
-    // },
-    autocompleteText(suggestion) {
-      this.setInputValue(this.itemToString(suggestion));
+    autocompleteText(item) {
+      this.setInputValue(this.itemToString(item));
     },
     setInputValue(text) {
       this.$nextTick(() => {
@@ -254,15 +162,12 @@ export default Vue.component('combo-blocks', {
       this.$emit('change', null);
     },
     select(item, index) {
-      // if (this.selected !== item || (this.nullableSelect && !item)) {
-      if (this.selected !== item) {
+      if (this.selectedItemChanged(this.selected, item)) {
         this.selected = item;
         this.selectedIndex = index;
         this.$emit('change', item);
       }
       this.autocompleteText(item);
-
-      // this.setHoveredItem(null);
     },
     setHoveredItem(item, index, elem) {
       if (item && item !== this.hovered) {
@@ -320,7 +225,6 @@ export default Vue.component('combo-blocks', {
       }
       this.onShowList(e);
       this.moveSelection(e);
-      // this.onAutocomplete(e);
     },
     onListKeyUp(e) {
       const { enterKey, escKey } = controls;
@@ -334,51 +238,19 @@ export default Vue.component('combo-blocks', {
         }
       }
     },
-    // onAutocomplete(e) {
-    //   if (
-    //     hasKeyCode(controls.autocomplete, e)
-    //     && (e.ctrlKey || e.shiftKey)
-    //     && this.items.length > 0
-    //     && this.items[0]
-    //     && this.isOpen
-    //   ) {
-    //     e.preventDefault();
-    //     this.setHoveredItem(this.items[0]);
-    //     this.autocompleteText(this.items[0]);
-    //   }
-    // },
     itemClick(item, index, e) {
       e.preventDefault();
-      this.$emit('item-click', item, e);
       this.select(item, index);
       this.hideList();
-      // / Ensure, that all needed flags are off before finishing the click.
-      // this.isClicking = false;
-      // this.isOverList = false;
     },
     onBlur(e) {
-      // if (this.isInFocus) {
-      // / Clicking starts here, because input's blur occurs before the itemClick
-      // / and exactly when the user clicks the mouse button or taps the screen.
-      // this.isClicking = this.isOverList;
-      // if (!this.isClicking) {
-      // this.isInFocus = false;
       this.hideList();
       this.$emit('blur', e);
       if (this.selected) {
         this.setInputValue(this.itemToString(this.selected));
       } else this.setInputValue('');
-      // }
-      // } else {
-      //   // this.inputElement.blur()
-      //   // console.error(
-      //   //   `This should never happen!
-      //   `
-      //   // )
-      // }
     },
     onFocus(e) {
-      // this.isInFocus = true;
       // Only emit, if it was a native input focus
       if (e) {
         this.$emit('focus', e);
@@ -387,30 +259,22 @@ export default Vue.component('combo-blocks', {
     onInput(inputEvent) {
       const value = !inputEvent.target ? inputEvent : inputEvent.target.value;
 
-      this.updateTextOutside(value);
+      this.upDateInputValue(value);
       this.showList();
       this.$emit('input-value-change', value);
     },
-    updateTextOutside(value) {
+    upDateInputValue(value) {
       if (this.inputValue === value) {
         return;
       }
       this.inputValue = value;
       if (this.hovered) this.setHoveredItem(null);
     },
-    getSuggestions() {
-      return [...this.list];
-    },
-    clearSuggestions() {
-      this.items = [];
-    },
     getItemId(i) {
       return `${this._uid}-combo-blocks-item-${i}`;
     },
   },
   render() {
-    // this.clearSuggestions();
-
     return this.$scopedSlots.default({
       // prop getters
       getInputProps: this.getInputProps,

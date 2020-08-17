@@ -125,7 +125,7 @@ describe('comboblocks.js', () => {
 
     wrapper.vm.hoverList = jest.fn();
 
-    wrapper.vm.getListEventListeners().mouseenter();
+    wrapper.vm.getListEventListeners().mousemove();
     expect(wrapper.vm.hoverList).toHaveBeenLastCalledWith(true);
 
     wrapper.vm.getListEventListeners().mouseleave();
@@ -137,7 +137,7 @@ describe('comboblocks.js', () => {
     wrapper.vm.itemClick = jest.fn();
     const fakeEvent = { target: null };
 
-    wrapper.vm.getItemEventListeners({ item }).mouseenter(fakeEvent);
+    wrapper.vm.getItemEventListeners({ item }).mousemove(fakeEvent);
     expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(item, 0, fakeEvent.target);
 
     wrapper.vm.getItemEventListeners({ item }).mouseleave(fakeEvent);
@@ -255,5 +255,14 @@ describe('comboblocks.js', () => {
 
     expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(null);
     expect(wrapper.vm.isOpen).toBe(false);
+  });
+  it('calls showList on arrow down key', () => {
+    const wrapper = factory();
+    const fakeKeyEvt = { keyCode: 40 };
+    wrapper.vm.showList = jest.fn();
+
+    wrapper.vm.onShowList(fakeKeyEvt);
+
+    expect(wrapper.vm.showList).toHaveBeenCalled();
   });
 });

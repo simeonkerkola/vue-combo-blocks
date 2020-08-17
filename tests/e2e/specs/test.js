@@ -90,12 +90,13 @@ describe('My First Test', () => {
     cy.findByTestId('combo-blocks-item-1').should('have.class', 'selected');
     cy.findByTestId('combo-blocks-item-2').should('not.have.class', 'selected');
   });
-  it('autocompletes when tabbed', () => {
-    cy.findByTestId('combobox-input')
-      .type('sec{downarrow}{tab}')
-      .findByTestId('combobox-input')
-      .should('have.value', 'first');
-  });
+  // TODO: tabbing is not currently supported in cypress
+  // it('autocompletes the hovered when tabbed', () => {
+  //   cy.findByTestId('combobox-input')
+  //     .type('sec{downarrow}').tab();
+  //   cy.findByTestId('combobox-input')
+  //     .should('have.value', 'first');
+  // });
   it('shows hovered item styles', () => {
     cy.findByTestId('combobox-input')
       .type('{downarrow}{downarrow}');
