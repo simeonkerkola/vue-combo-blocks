@@ -109,7 +109,11 @@ export default Vue.component('vue-combo-blocks', {
         },
       };
     },
-    getItemEventListeners({ item, index }) {
+    getItemEventListeners({
+      index,
+      item = process.env.NODE_ENV === 'production' ? undefined
+        : requiredProp('getItemProps', 'item'),
+    } = {}) {
       const itemIndex = getItemIndex(index, item, this.items);
       const vm = this;
       return {

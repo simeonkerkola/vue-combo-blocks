@@ -6,7 +6,7 @@ import buble from 'rollup-plugin-buble';
 export default {
   input: 'src/vue-combo-blocks.js', // Path relative to package.json
   output: {
-    name: 'MyComponent',
+    name: 'VueComboBlocks',
     exports: 'named',
   },
   plugins: [
