@@ -1,7 +1,7 @@
 <template>
   <div :id="`${id}-autocomplete`">
     <VueComboBlocks
-    :ref="id"
+      :ref="id"
       :value="value"
       :itemToString="itemToString"
       :items='filteredList'
@@ -13,67 +13,63 @@
       @focus="onFocus"
       @hover="onHover"
       @input-value-change="onInput"
-    >
-      <template
-        v-slot="{
-          getInputProps,
-          getInputEventListeners,
-          selected,
-          hoveredIndex,
-          isOpen,
-          inputValue,
-          getListProps,
-          getListEventListeners,
-          getItemProps,
-          getItemEventListeners,
-          getComboboxProps,
-          clearSelection
-        }"
+      v-slot="{
+        getInputProps,
+        getInputEventListeners,
+        selected,
+        hoveredIndex,
+        isOpen,
+        inputValue,
+        getListProps,
+        getListEventListeners,
+        getItemProps,
+        getItemEventListeners,
+        getComboboxProps,
+        clearSelection
+      }"
       >
-        <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
-            <button @click="clearSelection" data-testid="clear-button">clear</button>
-          <input
-            data-testid="combobox-input"
-            :id="id"
-            v-bind="getInputProps()"
-            :placeholder="placeholder"
-            :label="label"
-            autocomplete="off"
-            single-line
-            v-on="getInputEventListeners()"
-          />
-
-          <ul
-            v-show="isOpen && (list.length || !miscSlotsAreEmpty())"
-            class="list"
-            v-bind="getListProps()"
-            v-on="getListEventListeners()"
+      <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
+          <button @click="clearSelection" data-testid="clear-button">clear</button>
+        <input
+          data-testid="combobox-input"
+          :id="id"
+          v-bind="getInputProps()"
+          :placeholder="placeholder"
+          :label="label"
+          autocomplete="off"
+          single-line
+          v-on="getInputEventListeners()"
+        />
+        <ul
+          v-show="isOpen && (list.length || !miscSlotsAreEmpty())"
+          class="list"
+          v-bind="getListProps()"
+          v-on="getListEventListeners()"
+        >
+          <slot name="append-item"></slot>
+          <li
+          :data-testid="`vue-combo-blocks-item-${index}`"
+            v-for="(item, index) in filteredList"
+            :key="index"
+            class="list-item"
+            :class="{'selected':selected  === item, 'hovered':hoveredIndex === index}"
+            :style="{
+              backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
+              fontWeight:
+                selected  === item
+                  ? 'bold'
+                  : 'normal'
+            }"
+            v-bind="getItemProps({ item, index })"
+            v-on="getItemEventListeners({ item, index })"
           >
-            <slot name="append-item"></slot>
-            <li
-            :data-testid="`vue-combo-blocks-item-${index}`"
-              v-for="(item, index) in filteredList"
-              :key="index"
-              class="list-item"
-              :class="{'selected':selected  === item, 'hovered':hoveredIndex === index}"
-              :style="{
-                backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
-                fontWeight:
-                  selected  === item
-                    ? 'bold'
-                    : 'normal'
-              }"
-              v-bind="getItemProps({ item, index })"
-              v-on="getItemEventListeners({ item, index })"
-            >
-              <span :id="`${id}-suggest-item-${item[displayAttribute]}`">
-                {{ item[displayAttribute] }}
-              </span>
-            </li>
-            <slot name="prepend-item"></slot>
-          </ul>
-        </div>
-      </template>
+            <span :id="`${id}-suggest-item-${item[displayAttribute]}`">
+              {{ item[displayAttribute] }}
+            </span>
+          </li>
+          <slot name="prepend-item"></slot>
+        </ul>
+      </div>
     </VueComboBlocks>
 
     <button

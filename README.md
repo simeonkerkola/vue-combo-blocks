@@ -9,47 +9,38 @@ npm i vue-combo-blocks
 Usage
 
 ```vue
-<vue-combo-blocks
-  :ref="id"
-  :value="value"
-  :itemToString="itemToString"
-  :items="filteredList"
-  @input-value-change="updateList"
->
-  <template
+<template>
+  <vue-combo-blocks
+    :ref="id"
+    :value="value"
+    :itemToString="itemToString"
+    :items="filteredList"
+    @input-value-change="updateList"
     v-slot="{
-          getInputProps,
-          getInputEventListeners,
-          selected,
-          hoveredIndex,
-          isOpen,
-          inputValue,
-          getListProps,
-          getListEventListeners,
-          getItemProps,
-          getItemEventListeners,
-          getComboboxProps,
-          clearSelection
-        }"
+      getInputProps,
+      getInputEventListeners,
+      selected,
+      hoveredIndex,
+      isOpen,
+      getListProps,
+      getListEventListeners,
+      getItemProps,
+      getItemEventListeners,
+      getComboboxProps,
+      clearSelection,
+    }"
   >
     <div v-bind="getComboboxProps()">
       <button @click="clearSelection">clear</button>
-      <input v-bind="getInputProps()" placeholder="Search" v-on="getInputEventListeners()" />
-      <ul
-        v-show="isOpen && (list.length || !miscSlotsAreEmpty())"
-        v-bind="getListProps()"
-        v-on="getListEventListeners()"
-      >
+      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search" />
+      <ul v-show="isOpen" v-bind="getListProps()" v-on="getListEventListeners()">
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"
           :style="{
-                backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
-                fontWeight:
-                  selected  === item
-                    ? 'bold'
-                    : 'normal'
-              }"
+            backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
+            fontWeight: selected === item ? 'bold' : 'normal',
+          }"
           v-bind="getItemProps({ item, index })"
           v-on="getItemEventListeners({ item, index })"
         >
@@ -57,11 +48,11 @@ Usage
         </li>
       </ul>
     </div>
-  </template>
-</vue-combo-blocks>
-```
+  </vue-combo-blocks>
+</template>
 
-```js
+<script>
+import VueComboBlocks from 'vue-combo-blocks';
 export default {
   components: {
     VueComboBlocks,
@@ -74,25 +65,24 @@ export default {
     return {
       filteredList: [],
       list: [
-      { value: 'first', id: '123' },
-      { value: 'second', id: '456' },
-      { value: 'third', id: '789' },
-      { value: 'duplicate', id: '789' },
-      { value: 'duplicate', id: '789' },
-    ]
+        { value: 'first', id: '123' },
+        { value: 'second', id: '456' },
+        { value: 'third', id: '789' },
+        { value: 'duplicate', id: '789' },
+        { value: 'duplicate', id: '789' },
+      ],
     };
   },
   methods: {
     itemToString(item) {
-      return item => (item ? item.value : "")
+      return (item) => (item ? item.value : '');
     },
     updateList(text) {
-     this.filteredList = this.list.filter((item) => item[this.displayAttribute].includes(text));
+      this.filteredList = this.list.filter((item) => item[this.displayAttribute].includes(text));
     },
   },
 };
 </script>
-
 ```
 
 ## Props
