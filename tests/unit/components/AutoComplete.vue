@@ -1,6 +1,6 @@
 <template>
   <div :id="`${id}-autocomplete`">
-    <ComboBlocks
+    <VueComboBlocks
     :ref="id"
       :value="value"
       :itemToString="itemToString"
@@ -74,7 +74,7 @@
           </ul>
         </div>
       </template>
-    </ComboBlocks>
+    </VueComboBlocks>
 
     <button
       v-if="cancelButton && !!value"
@@ -99,11 +99,11 @@
 <script>
 /* eslint-disable no-param-reassign */
 import { get } from 'lodash';
-import ComboBlocks from '../../../src/vue-combo-blocks';
+import VueComboBlocks from '../../../src/vue-combo-blocks';
 
 export default {
   components: {
-    ComboBlocks,
+    VueComboBlocks,
   },
   model: {
     prop: 'value',

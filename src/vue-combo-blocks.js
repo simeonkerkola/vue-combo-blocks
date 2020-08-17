@@ -14,12 +14,14 @@ export default Vue.component('vue-combo-blocks', {
       type: Array,
       required: true,
     },
-    value: {},
+    value: {
+      default: null,
+    },
     itemToString: {
       type: Function,
       default: (item) => (item ? String(item) : ''),
     },
-    selectedItemChanged: {
+    isSelectedItemChanged: {
       type: Function,
       default: (prevItem, item) => (prevItem !== item),
     },
@@ -162,7 +164,7 @@ export default Vue.component('vue-combo-blocks', {
       this.$emit('change', null);
     },
     select(item, index) {
-      if (this.selectedItemChanged(this.selected, item)) {
+      if (this.isSelectedItemChanged(this.selected, item)) {
         this.selected = item;
         this.selectedIndex = index;
         this.$emit('change', item);
