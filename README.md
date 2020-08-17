@@ -1,18 +1,32 @@
-# vue-combo-blocks
+# Vue Combo Blocks 🧰
 
-Downshift like autocomplete for Vue
+**_A very Downshift like autocomplete solution for Vue_**
+
+Provides all the building blocks needed for accessible autocomplete,
+combobox, or typeahead component.
+
+## The problem
+
+You want to build an autocomplete/combobox component, and it needs to be
+accessible, lightweight and you don't really want extra dependencies or styling
+you would not use, or you'd have to hack around to to make it your own.
+
+## The solution
+
+This library provides you the state and the controls for your combobox.
+You provide the elements and styles to build the thing you
+need.
+
+## Usage
 
 ```
 npm i vue-combo-blocks
 ```
 
-Usage
-
 ```vue
 <template>
   <vue-combo-blocks
-    :ref="id"
-    :value="value"
+    v-model="selected"
     :itemToString="itemToString"
     :items="filteredList"
     @input-value-change="updateList"
@@ -57,12 +71,9 @@ export default {
   components: {
     VueComboBlocks,
   },
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
   data() {
     return {
+      selected: null,
       filteredList: [],
       list: [
         { value: 'first', id: '123' },
@@ -87,22 +98,59 @@ export default {
 
 ## Props
 
-| Name                  | Type     | Default                                   | description             |
-| --------------------- | -------- | ----------------------------------------- | ----------------------- |
-| items                 | Array    | **required**                              |                         |
-| isSelectedItemChanged | Function | `(prevItem, item) => (prevItem !== item)` |                         |
-| itemToString          | Function | `(item) => (item ? String(item) : '')`    |                         |
-| value                 | Any      | `null`                                    | Sets the selected item. |
+| Name                  | Type     | Default                                   | description                                  |
+| --------------------- | -------- | ----------------------------------------- | -------------------------------------------- |
+| items                 | Array    | **required**                              |                                              |
+| isSelectedItemChanged | Function | `(prevItem, item) => (prevItem !== item)` |                                              |
+| itemToString          | Function | `(item) => (item ? String(item) : '')`    |                                              |
+| value                 | Any      | `null`                                    | Sets the selected item. Prop part of v-model |
 
-## Default Slot
+## Events
 
-Default slot returns prop getters, event listeners, component state and actions
+| Name               | Type   | Description                            |
+| ------------------ | ------ | -------------------------------------- |
+| change             | Any    | Emitted when the selected item changes |
+| input-value-change | String | Emitted when the input value changes   |
+
+## Default Slot & returned props
+
+Default slot's scope contains: prop getters, event listeners, component state and actions.
 
 ### Prop getters
 
-| Name             | Type         | Description                                                                                    |
-| ---------------- | ------------ | ---------------------------------------------------------------------------------------------- |
-| getComboboxProps | function({}) | returns the props you should apply to an element that wraps the input element that you render. |
-| getInputProps    | function({}) | returns the props you should apply to the input element that you render.                       |
-| getItemProps     | function({}) | returns the props you should apply to any menu item elements you render.                       |
-| getMenuProps     | function({}) | returns the props you should apply to the ul element (or root of your menu) that you render.   |
+Bind the prop getters to their elements with `v-bind` and event listeners with
+`v-on`. You can add your own event listeners to these elements too and any other props needed.
+
+```html
+<input v-bind="getInputProps()" v-on="getInputEventListeners()" />
+```
+
+| Name             | Type                                   | Description                                                                                               |
+| ---------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| getComboboxProps | function()                             | returns the props you should apply to an element that wraps the input element that you render.            |
+| getInputProps    | function()                             | returns the props you should apply to the input element that you render.                                  |
+| getItemProps     | function({ item: any, index: number }) | returns the props you should apply to any menu item elements you render. `item` property is **required**! |
+| getListProps     | function()                             | returns the props you should apply to the ul element (or root of your menu) that you render.              |
+
+### Event listeners
+
+| Name                   | Type                                   | Description                                                      |
+| ---------------------- | -------------------------------------- | ---------------------------------------------------------------- |
+| getInputEventListeners | function()                             | Bind these to the `input` element.                               |
+| getItemEventListeners  | function({ item: any, index: number }) | Bind these to the `li` element. `item` property is **required**! |
+| getListEventListeners  | function()                             | Bind these to the `ul` element.                                  |
+
+### State
+
+| Name         | Type    | Description                 |
+| ------------ | ------- | --------------------------- |
+| isOpen       | Boolean | the list open state         |
+| selected     | Any     | the currently selected item |
+| hoveredIndex | Number  | the currently hovered item  |
+| inputValue   | String  | the value in the input      |
+
+### Actions
+
+| Name           | Type       | Description                                         |
+| -------------- | ---------- | --------------------------------------------------- |
+| clearSelection | function() | Clears the selected item, and reset the input value |
