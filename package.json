@@ -1,9 +1,9 @@
 {
-  "name": "combo-blocks",
+  "name": "vue-combo-blocks",
   "version": "0.1.4",
-  "main": "dist/combo-blocks.umd.js",
-  "module": "dist/combo-blocks.esm.js",
-  "unpkg": "dist/combo-blocks.min.js",
+  "main": "dist/vue-combo-blocks.umd.js",
+  "module": "dist/vue-combo-blocks.esm.js",
+  "unpkg": "dist/vue-combo-blocks.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -12,20 +12,20 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "build-pkg": "rm -r dist & npm run build-pkg:umd & npm run build-pkg:es & npm run build-pkg:unpkg",
-    "build-pkg:umd": "rollup --config build/rollup.config.js --format umd --file dist/combo-blocks.umd.js",
-    "build-pkg:es": "rollup --config build/rollup.config.js --format es --file dist/combo-blocks.esm.js",
-    "build-pkg:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/combo-blocks.min.js"
+    "build-pkg:umd": "rollup --config build/rollup.config.js --format umd --file dist/vue-combo-blocks.umd.js",
+    "build-pkg:es": "rollup --config build/rollup.config.js --format es --file dist/vue-combo-blocks.esm.js",
+    "build-pkg:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vue-combo-blocks.min.js"
   },
   "author": "Simeon Kerkola",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sssmi/combo-blocks.git"
+    "url": "https://github.com/sssmi/vue-combo-blocks.git"
   },
   "bugs": {
-    "url": "https://github.com/sssmi/combo-blocks/issues"
+    "url": "https://github.com/sssmi/vue-combo-blocks/issues"
   },
-  "homepage": "https://github.com/sssmi/combo-blocks#readme",
+  "homepage": "https://github.com/sssmi/vue-combo-blocks#readme",
   "files": [
     "dist/*"
   ],

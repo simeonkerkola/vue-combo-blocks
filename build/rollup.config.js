@@ -3,7 +3,7 @@ import vue from 'rollup-plugin-vue'; // Handle .vue SFC files
 import babel from '@rollup/plugin-babel';
 // Transpile/polyfill with reasonable browser support
 export default {
-  input: 'src/combo-blocks.js', // Path relative to package.json
+  input: 'src/vue-combo-blocks.js', // Path relative to package.json
   output: {
     name: 'MyComponent',
     exports: 'named',

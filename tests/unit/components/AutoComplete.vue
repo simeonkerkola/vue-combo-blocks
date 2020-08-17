@@ -51,7 +51,7 @@
           >
             <slot name="append-item"></slot>
             <li
-            :data-testid="`combo-blocks-item-${index}`"
+            :data-testid="`vue-combo-blocks-item-${index}`"
               v-for="(item, index) in filteredList"
               :key="index"
               class="list-item"
@@ -99,7 +99,7 @@
 <script>
 /* eslint-disable no-param-reassign */
 import { get } from 'lodash';
-import ComboBlocks from '../../../src/combo-blocks';
+import ComboBlocks from '../../../src/vue-combo-blocks';
 
 export default {
   components: {

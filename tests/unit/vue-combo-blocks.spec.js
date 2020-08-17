@@ -1,6 +1,6 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 import { mount } from '@vue/test-utils';
-import ComboBlocks from '../../src/combo-blocks';
+import ComboBlocks from '../../src/vue-combo-blocks';
 
 const item = { name: 'name' };
 const item2 = { name: 'item 2 name' };
@@ -37,7 +37,7 @@ describe('comboblocks.js', () => {
       {
         role: 'combobox',
         'aria-haspopup': 'listbox',
-        'aria-owns': `${idPrefix}-combo-blocks-list`,
+        'aria-owns': `${idPrefix}-vue-combo-blocks-list`,
         'aria-expanded': 'false',
       },
     );
@@ -52,8 +52,8 @@ describe('comboblocks.js', () => {
         value: '',
         'aria-activedescendant': '',
         'aria-autocomplete': 'list',
-        'aria-controls': `${idPrefix}-combo-blocks-list`,
-        id: `${idPrefix}-combo-blocks-input`,
+        'aria-controls': `${idPrefix}-vue-combo-blocks-list`,
+        id: `${idPrefix}-vue-combo-blocks-input`,
         autocomplete: 'off',
       },
     );
@@ -65,9 +65,9 @@ describe('comboblocks.js', () => {
     const comboboxProps = wrapper.vm.getListProps();
     expect(comboboxProps).toEqual(
       {
-        id: `${idPrefix}-combo-blocks-list`,
+        id: `${idPrefix}-vue-combo-blocks-list`,
         role: 'listbox',
-        'aria-labelledby': `${idPrefix}-combo-blocks-label`,
+        'aria-labelledby': `${idPrefix}-vue-combo-blocks-label`,
       },
     );
   });
@@ -78,8 +78,8 @@ describe('comboblocks.js', () => {
     const comboboxProps = wrapper.vm.getLabelProps();
     expect(comboboxProps).toEqual(
       {
-        id: `${idPrefix}-combo-blocks-label`,
-        for: `${idPrefix}-combo-blocks-input`,
+        id: `${idPrefix}-vue-combo-blocks-label`,
+        for: `${idPrefix}-vue-combo-blocks-input`,
       },
     );
   });
@@ -91,7 +91,7 @@ describe('comboblocks.js', () => {
 
     expect(itemProps).toEqual(
       {
-        id: `${idPrefix}-combo-blocks-item-1`,
+        id: `${idPrefix}-vue-combo-blocks-item-1`,
         role: 'option',
         'aria-selected': 'false',
       },

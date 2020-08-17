@@ -4,7 +4,7 @@ import {
 } from './misc';
 
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
-export default Vue.component('combo-blocks', {
+export default Vue.component('vue-combo-blocks', {
   model: {
     prop: 'value',
     event: 'change',
@@ -32,9 +32,9 @@ export default Vue.component('combo-blocks', {
       inputValue: this.itemToString(this.value),
       isPlainSuggestion: false,
       controlScheme: {},
-      listId: `${this._uid}-combo-blocks-list`,
-      inputId: `${this._uid}-combo-blocks-input`,
-      labelId: `${this._uid}-combo-blocks-label`,
+      listId: `${this._uid}-vue-combo-blocks-list`,
+      inputId: `${this._uid}-vue-combo-blocks-input`,
+      labelId: `${this._uid}-vue-combo-blocks-label`,
       hoveredIndex: -1,
       selectedIndex: this.items.indexOf(this.value),
     };
@@ -271,7 +271,7 @@ export default Vue.component('combo-blocks', {
       if (this.hovered) this.setHoveredItem(null);
     },
     getItemId(i) {
-      return `${this._uid}-combo-blocks-item-${i}`;
+      return `${this._uid}-vue-combo-blocks-item-${i}`;
     },
   },
   render() {

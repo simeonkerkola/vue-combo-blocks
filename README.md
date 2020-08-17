@@ -1,4 +1,4 @@
-# combo-blocks
+# vue-combo-blocks
 
 ## Project setup
 ```

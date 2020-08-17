@@ -49,12 +49,12 @@ describe('My First Test', () => {
   });
   it('can use the mouse to click an item', () => {
     cy.findByTestId('combobox-input').type('second');
-    cy.findByTestId('combo-blocks-item-0').click();
+    cy.findByTestId('vue-combo-blocks-item-0').click();
     cy.findByTestId('combobox-input').should('have.value', 'second');
   });
   it('does not reset the input when mouseup outside while the input is focused', () => {
     cy.findByTestId('combobox-input').type('first');
-    cy.findByTestId('combo-blocks-item-0').click();
+    cy.findByTestId('vue-combo-blocks-item-0').click();
     cy.findByTestId('combobox-input')
       .should('have.value', 'first')
       .type('{backspace}{backspace}')
@@ -77,18 +77,18 @@ describe('My First Test', () => {
       // https://github.com/kentcdodds/cypress-testing-library/issues/13
       .wait(1)
       .should('have.value', '')
-      .findByTestId('combo-blocks-item-0', { timeout: 10 })
+      .findByTestId('vue-combo-blocks-item-0', { timeout: 10 })
       .should('not.be.visible');
   });
   it('shows selected item styles', () => {
     cy.findByTestId('combobox-input')
       .type('sec');
-    cy.findByTestId('combo-blocks-item-0').click();
+    cy.findByTestId('vue-combo-blocks-item-0').click();
     cy.findByTestId('combobox-input').clear()
       .type('{downarrow}');
-    cy.findByTestId('combo-blocks-item-0').should('not.have.class', 'selected');
-    cy.findByTestId('combo-blocks-item-1').should('have.class', 'selected');
-    cy.findByTestId('combo-blocks-item-2').should('not.have.class', 'selected');
+    cy.findByTestId('vue-combo-blocks-item-0').should('not.have.class', 'selected');
+    cy.findByTestId('vue-combo-blocks-item-1').should('have.class', 'selected');
+    cy.findByTestId('vue-combo-blocks-item-2').should('not.have.class', 'selected');
   });
   // TODO: tabbing is not currently supported in cypress
   // it('autocompletes the hovered when tabbed', () => {
@@ -100,9 +100,9 @@ describe('My First Test', () => {
   it('shows hovered item styles', () => {
     cy.findByTestId('combobox-input')
       .type('{downarrow}{downarrow}');
-    cy.findByTestId('combo-blocks-item-0').should('not.have.class', 'hovered');
-    cy.findByTestId('combo-blocks-item-1').should('have.class', 'hovered');
-    cy.findByTestId('combo-blocks-item-2').should('not.have.class', 'hovered');
+    cy.findByTestId('vue-combo-blocks-item-0').should('not.have.class', 'hovered');
+    cy.findByTestId('vue-combo-blocks-item-1').should('have.class', 'hovered');
+    cy.findByTestId('vue-combo-blocks-item-2').should('not.have.class', 'hovered');
   });
   it('does not reset when swiping outside to scroll a touch screen', () => {
     cy.findByTestId('combobox-input')
@@ -111,7 +111,7 @@ describe('My First Test', () => {
       .trigger('touchstart', bodyX, bodyY)
       .trigger('touchmove', bodyX, bodyY + 20)
       .trigger('touchend', bodyX, bodyY + 20);
-    cy.findByTestId('combo-blocks-item-0', { timeout: 10 }).should('be.visible');
+    cy.findByTestId('vue-combo-blocks-item-0', { timeout: 10 }).should('be.visible');
   });
 
   // TODO: Touch event support
@@ -121,7 +121,7 @@ describe('My First Test', () => {
   //     .get('body')
   //     .trigger('touchstart', bodyX, bodyY)
   //     .trigger('touchend', bodyX, bodyY);
-  //   cy.findByTestId('combo-blocks-item-0', { timeout: 100 }).should('not.be.visible');
+  //   cy.findByTestId('vue-combo-blocks-item-0', { timeout: 100 }).should('not.be.visible');
   // });
 
   // TODO: Implement toggle buttons
