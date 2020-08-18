@@ -52,6 +52,14 @@ describe('My First Test', () => {
     cy.findByTestId('vue-combo-blocks-item-0').click();
     cy.findByTestId('combobox-input').should('have.value', 'second');
   });
+  it('keeps the list open when focus is inside the list', () => {
+    cy.findByTestId('combobox-input').type('asdfasdf');
+    cy.findByTestId('no-results').click().click();
+    cy.findByTestId('combobox-input').should('have.value', 'asdfasdf');
+    cy.get('body')
+      .click(bodyX, bodyY);
+    cy.findByTestId('combobox-input').should('have.value', '');
+  });
   it('does not reset the input when mouseup outside while the input is focused', () => {
     cy.findByTestId('combobox-input').type('first');
     cy.findByTestId('vue-combo-blocks-item-0').click();
