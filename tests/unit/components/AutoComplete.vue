@@ -46,7 +46,9 @@
           v-bind="getListProps()"
           v-on="getListEventListeners()"
         >
-          <slot name="append-item"></slot>
+          <li v-if="!filteredList.length" data-testid="no-results">
+            No results
+          </li>
           <li
           :data-testid="`vue-combo-blocks-item-${index}`"
             v-for="(item, index) in filteredList"

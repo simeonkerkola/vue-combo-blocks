@@ -31,6 +31,7 @@ export default Vue.component('vue-combo-blocks', {
       selected: this.value,
       hovered: null,
       isOpen: false,
+      isOverList: false,
       inputValue: this.itemToString(this.value),
       listId: `${this._uid}-vue-combo-blocks-list`,
       inputId: `${this._uid}-vue-combo-blocks-input`,
@@ -110,6 +111,13 @@ export default Vue.component('vue-combo-blocks', {
           vm.hoverList(false);
           vm.$emit('mouseleave', e);
         },
+        // TODO: Prevent list to close when clicking something
+        // on a list but not necessarily list item.
+        // This does the trick, but now you can't select and copy any text
+        // in the list.
+        mousedown(e) {
+          e.preventDefault();
+        },
       };
     },
     getItemEventListeners({
@@ -184,8 +192,8 @@ export default Vue.component('vue-combo-blocks', {
       this.hovered = item;
       this.hoveredIndex = typeof index === 'number' ? index : -1;
     },
-    hoverList() {
-      // this.isOverList = isOverList;
+    hoverList(isOverList) {
+      this.isOverList = isOverList;
     },
     hideList() {
       if (this.isOpen) {
@@ -252,11 +260,13 @@ export default Vue.component('vue-combo-blocks', {
       this.hideList();
     },
     onBlur(e) {
+      // if (!this.isOverList) {
       this.hideList();
       this.$emit('blur', e);
       if (this.selected) {
         this.setInputValue(this.itemToString(this.selected));
       } else this.setInputValue('');
+      // }
     },
     onFocus(e) {
       // Only emit, if it was a native input focus
