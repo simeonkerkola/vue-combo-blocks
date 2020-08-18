@@ -32,8 +32,6 @@ export default Vue.component('vue-combo-blocks', {
       hovered: null,
       isOpen: false,
       inputValue: this.itemToString(this.value),
-      isPlainSuggestion: false,
-      controlScheme: {},
       listId: `${this._uid}-vue-combo-blocks-list`,
       inputId: `${this._uid}-vue-combo-blocks-input`,
       labelId: `${this._uid}-vue-combo-blocks-label`,
@@ -42,6 +40,12 @@ export default Vue.component('vue-combo-blocks', {
     };
   },
   watch: {
+    inputValue: {
+      handler(current, old) {
+        if (current !== old) this.$emit('input-value-change', current);
+      },
+      // immediate: true,
+    },
     value: {
       handler(current) {
         const textValue = this.itemToString(current);
@@ -86,7 +90,6 @@ export default Vue.component('vue-combo-blocks', {
       const vm = this;
       return {
         touchleave: (e) => {
-          console.log('touch out');
           vm.onBlur(e);
         },
         blur: vm.onBlur,
@@ -112,7 +115,7 @@ export default Vue.component('vue-combo-blocks', {
     getItemEventListeners({
       index,
       item = process.env.NODE_ENV === 'production' ? undefined
-        : requiredProp('getItemProps', 'item'),
+        : requiredProp('getItemEventListeners', 'item'),
     } = {}) {
       const itemIndex = getItemIndex(index, item, this.items);
       const vm = this;
@@ -156,10 +159,9 @@ export default Vue.component('vue-combo-blocks', {
       this.setInputValue(this.itemToString(item));
     },
     setInputValue(text) {
-      this.$nextTick(() => {
-        this.inputValue = text;
-        this.$emit('input-value-change', text);
-      });
+      // this.$nextTick(() => {
+      this.inputValue = text;
+      // });
     },
     clearSelection() {
       this.selected = null;
@@ -267,7 +269,6 @@ export default Vue.component('vue-combo-blocks', {
 
       this.upDateInputValue(value);
       this.showList();
-      this.$emit('input-value-change', value);
     },
     upDateInputValue(value) {
       if (this.inputValue === value) {

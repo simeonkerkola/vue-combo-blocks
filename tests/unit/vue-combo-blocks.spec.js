@@ -174,7 +174,7 @@ describe('comboblocks.js', () => {
     wrapper.vm.setInputValue(text);
 
     // No input immedeately
-    expect(wrapper.emitted().input).toBeUndefined();
+    expect(wrapper.emitted()['input-value-change']).toBeUndefined();
     wrapper.vm.$nextTick(() => {
     // input after next tick
       expect(wrapper.emitted()['input-value-change'][0]).toEqual([text]);
