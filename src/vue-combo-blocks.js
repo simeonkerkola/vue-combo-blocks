@@ -181,6 +181,7 @@ export default Vue.component('vue-combo-blocks', {
       if (this.isSelectedItemChanged(this.selected, item)) {
         this.selected = item;
         this.selectedIndex = index;
+        this.hideList();
         this.$emit('change', item);
       }
       this.autocompleteText(item);
@@ -248,7 +249,6 @@ export default Vue.component('vue-combo-blocks', {
         if (hasKeyCode(enterKey, e)) {
           e.preventDefault();
           this.select(this.hovered, this.hoveredIndex);
-          this.hideList();
         } else if (hasKeyCode(escKey, e)) {
           this.hideList();
         }
@@ -257,7 +257,6 @@ export default Vue.component('vue-combo-blocks', {
     itemClick(item, index, e) {
       e.preventDefault();
       this.select(item, index);
-      this.hideList();
     },
     onBlur(e) {
       // if (!this.isOverList) {
