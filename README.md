@@ -19,9 +19,7 @@ need.
 
 ## Usage
 
-```
-npm i vue-combo-blocks
-```
+[Try it out in codesandbox](https://codesandbox.io/s/autocomplete-with-vue-combo-blocks-ejpur?file=/src/components/Autocomplete.vue)
 
 ```vue
 <template>
@@ -46,7 +44,7 @@ npm i vue-combo-blocks
   >
     <div v-bind="getComboboxProps()">
       <button @click="clearSelection">clear</button>
-      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search" />
+      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
       <ul v-show="isOpen" v-bind="getListProps()" v-on="getListEventListeners()">
         <li
           v-for="(item, index) in filteredList"
@@ -66,32 +64,34 @@ npm i vue-combo-blocks
 </template>
 
 <script>
-import VueComboBlocks from 'vue-combo-blocks';
+import VueComboBlocks from "vue-combo-blocks";
 export default {
   components: {
-    VueComboBlocks,
+    VueComboBlocks
   },
   data() {
     return {
       selected: null,
       filteredList: [],
       list: [
-        { value: 'first', id: '123' },
-        { value: 'second', id: '456' },
-        { value: 'third', id: '789' },
-        { value: 'duplicate', id: '789' },
-        { value: 'duplicate', id: '789' },
-      ],
+        { value: "Gretsch", id: "1" },
+        { value: "Ludwig", id: "2" },
+        { value: "Mapex", id: "3" },
+        { value: "Pearl", id: "4" },
+        { value: "Sonor", id: "5" },
+        { value: "Tama", id: "6" },
+        { value: "Zildjian", id: "7" }
+      ]
     };
   },
   methods: {
     itemToString(item) {
-      return (item) => (item ? item.value : '');
+      return item ? item.value : "";
     },
     updateList(text) {
-      this.filteredList = this.list.filter((item) => item[this.displayAttribute].includes(text));
-    },
-  },
+      this.filteredList = this.list.filter(item => item.value.includes(text));
+    }
+  }
 };
 </script>
 ```

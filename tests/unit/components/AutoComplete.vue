@@ -5,9 +5,6 @@
       :value="value"
       :itemToString="itemToString"
       :items='filteredList'
-      :controls="{
-        autocomplete: [] // Disable (CTRL / SHFT) + Space autocomplete.
-      }"
       @change="onChange"
       @show-list="onShowList"
       @focus="onFocus"
@@ -172,6 +169,10 @@ export default {
   },
 
   methods: {
+    stateReducer(oldState, { changes, type }) {
+      console.log({ type });
+      return changes;
+    },
     itemToString(item) {
       return item ? item[this.displayAttribute] : '';
     },

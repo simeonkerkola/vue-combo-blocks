@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 import { mount } from '@vue/test-utils';
 import ComboBlocks from '../../src/vue-combo-blocks';
+import * as sct from '../../src/stateChangeTypes';
 
 const item = { name: 'name' };
 const item2 = { name: 'item 2 name' };
@@ -14,6 +15,7 @@ const factory = ({ propsData, scopedSlots, ...rest } = {}) => mount(ComboBlocks,
     propsData: {
       items,
       id: 'listId',
+      itemToString: (i) => (i ? String(i.name) : ''),
       displayAttribute: 'displayName',
       valueAttribute: 'id',
       ...propsData,
@@ -102,49 +104,50 @@ describe('comboblocks.js', () => {
   it('InputEventListeners call right methods', () => {
     const wrapper = factory();
 
-    wrapper.vm.onBlur = jest.fn();
+    wrapper.vm.onInputBlur = jest.fn();
     wrapper.vm.onInput = jest.fn();
     wrapper.vm.onListKeyUp = jest.fn();
-    wrapper.vm.onFocus = jest.fn();
     wrapper.vm.onKeyDown = jest.fn();
 
     wrapper.vm.getInputEventListeners().blur();
-    wrapper.vm.getInputEventListeners().focus();
     wrapper.vm.getInputEventListeners().input();
     wrapper.vm.getInputEventListeners().keydown();
     wrapper.vm.getInputEventListeners().keyup();
 
-    expect(wrapper.vm.onBlur).toHaveBeenCalled();
+    expect(wrapper.vm.onInputBlur).toHaveBeenCalled();
     expect(wrapper.vm.onInput).toHaveBeenCalled();
     expect(wrapper.vm.onListKeyUp).toHaveBeenCalled();
-    expect(wrapper.vm.onFocus).toHaveBeenCalled();
     expect(wrapper.vm.onKeyDown).toHaveBeenCalled();
   });
   it('getListEventListeners call right methods', () => {
     const wrapper = factory();
 
-    wrapper.vm.hoverList = jest.fn();
+    wrapper.vm.hovered = item;
 
     wrapper.vm.getListEventListeners().mousemove();
-    expect(wrapper.vm.hoverList).toHaveBeenLastCalledWith(true);
+    expect(wrapper.vm.hovered).toEqual(item);
 
     wrapper.vm.getListEventListeners().mouseleave();
-    expect(wrapper.vm.hoverList).toHaveBeenLastCalledWith(false);
+    expect(wrapper.vm.hovered).toBeNull();
   });
   it('getItemEventListeners call right methods', () => {
+    const fakeEvent = { preventDefault: () => {} };
     const wrapper = factory();
-    wrapper.vm.setHoveredItem = jest.fn();
-    wrapper.vm.itemClick = jest.fn();
-    const fakeEvent = { target: null };
+    wrapper.vm.inputValue = '';
+    wrapper.vm.selected = null;
+    wrapper.vm.isOpen = true;
+    wrapper.vm.hoveredIndex = 0;
+    wrapper.vm.hovered = item;
 
     wrapper.vm.getItemEventListeners({ item }).mousemove(fakeEvent);
-    expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(item, 0, fakeEvent.target);
-
-    wrapper.vm.getItemEventListeners({ item }).mouseleave(fakeEvent);
-    expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(undefined);
+    expect(wrapper.vm.hovered).toEqual(item);
 
     wrapper.vm.getItemEventListeners({ item }).click(fakeEvent);
-    expect(wrapper.vm.itemClick).toHaveBeenLastCalledWith(item, 0, fakeEvent);
+    expect(wrapper.vm.selected).toEqual(item);
+    expect(wrapper.vm.isOpen).toEqual(false);
+    expect(wrapper.vm.hovered).toEqual(null);
+    expect(wrapper.vm.hoveredIndex).toEqual(-1);
+    expect(wrapper.vm.inputValue).toBe(item.name);
   });
 
   // helpers
@@ -168,60 +171,50 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm.setInputValue).toHaveBeenLastCalledWith('name');
     expect(wrapper.vm.itemToString).toHaveBeenLastCalledWith(item);
   });
-  it('set right input value and emit evt', (done) => {
+  it('set right input value and emit evt', () => {
     const wrapper = factory();
     const text = 'some text';
-    wrapper.vm.setInputValue(text);
+    wrapper.vm.setState({ inputValue: text });
 
-    // No input immedeately
-    expect(wrapper.emitted()['input-value-change']).toBeUndefined();
-    wrapper.vm.$nextTick(() => {
-    // input after next tick
-      expect(wrapper.emitted()['input-value-change'][0]).toEqual([text]);
-      done();
-    });
+    expect(wrapper.emitted()['input-value-change'][0]).toEqual([text]);
   });
   it('clears the selection and emit change evt', () => {
     const wrapper = factory();
 
     wrapper.vm.selected = item;
     wrapper.vm.selectedIndex = 0;
-    wrapper.vm.setInputValue = jest.fn();
-
     wrapper.vm.clearSelection();
 
     expect(wrapper.vm.selected).toBeNull();
     expect(wrapper.vm.selectedIndex).toBe(-1);
-    expect(wrapper.vm.setInputValue).toHaveBeenLastCalledWith('');
+    expect(wrapper.vm.inputValue).toBe('');
     expect(wrapper.emitted().change[0]).toEqual([null]);
   });
   it('sets new selected item', () => {
     const wrapper = factory();
     wrapper.vm.hoveredIndex = 0;
-    wrapper.vm.autocompleteText = jest.fn();
 
-    wrapper.vm.select(item, wrapper.vm.hoveredIndex);
+    wrapper.vm.select(item);
 
     expect(wrapper.vm.selected).toEqual(item);
-    expect(wrapper.vm.selectedIndex).toBe(wrapper.vm.hoveredIndex);
-    expect(wrapper.vm.autocompleteText).toHaveBeenLastCalledWith(item);
     expect(wrapper.emitted().change[0]).toEqual([item]);
   });
-  it('selects same item again', () => {
+  it('selects same item again', (done) => {
     const wrapper = factory();
     wrapper.vm.hoveredIndex = 0;
-    wrapper.vm.autocompleteText = jest.fn();
+    // wrapper.vm.setState = jest.fn();
 
     wrapper.vm.select(item, wrapper.vm.hoveredIndex);
     wrapper.vm.select(item, wrapper.vm.hoveredIndex);
 
-    expect(wrapper.vm.selected).toEqual(item);
-    expect(wrapper.vm.selectedIndex).toBe(wrapper.vm.hoveredIndex);
-    expect(wrapper.vm.autocompleteText).toHaveBeenLastCalledWith(item);
-    expect(wrapper.vm.autocompleteText).toHaveBeenCalledTimes(2);
+    setTimeout(() => {
+      // expect(wrapper.vm.setState).toHaveBeenCalledTimes(2);
+      expect(wrapper.vm.selected).toEqual(item);
+      expect(wrapper.emitted().change.length).toBe(1);
+      done();
+    }, 1);
 
     // Only call once
-    expect(wrapper.emitted().change.length).toBe(1);
   });
   it('sets hovered item', () => {
     const wrapper = factory();
@@ -239,30 +232,18 @@ describe('comboblocks.js', () => {
   });
   it('opens list', () => {
     const wrapper = factory();
-    wrapper.vm.setHoveredItem = jest.fn();
     wrapper.vm.isOpen = false;
 
-    wrapper.vm.showList();
+    wrapper.vm.openList();
 
     expect(wrapper.vm.isOpen).toBe(true);
   });
   it('hides list', () => {
     const wrapper = factory();
-    wrapper.vm.setHoveredItem = jest.fn();
     wrapper.vm.isOpen = true;
 
-    wrapper.vm.hideList();
+    wrapper.vm.closeList();
 
-    expect(wrapper.vm.setHoveredItem).toHaveBeenLastCalledWith(null);
     expect(wrapper.vm.isOpen).toBe(false);
-  });
-  it('calls showList on arrow down key', () => {
-    const wrapper = factory();
-    const fakeKeyEvt = { keyCode: 40 };
-    wrapper.vm.showList = jest.fn();
-
-    wrapper.vm.onShowList(fakeKeyEvt);
-
-    expect(wrapper.vm.showList).toHaveBeenCalled();
   });
 });

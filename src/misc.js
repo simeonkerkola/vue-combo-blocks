@@ -14,7 +14,7 @@ export function getItemIndex(index, item, items) {
   if (index !== undefined) {
     return index;
   }
-  if (items.length === 0) {
+  if (!items.length) {
     return -1;
   }
   return items.indexOf(item);
