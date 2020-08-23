@@ -12,9 +12,9 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "build-pkg": "rm -r dist & npm run build-pkg:umd & npm run build-pkg:es & npm run build-pkg:unpkg",
-    "build-pkg:umd": "rollup --config build/rollup.config.js --format umd --file dist/vue-combo-blocks.umd.js",
-    "build-pkg:es": "rollup --config build/rollup.config.js --format es --file dist/vue-combo-blocks.esm.js",
-    "build-pkg:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vue-combo-blocks.min.js"
+    "build-pkg:umd": "rollup --config rollup.config.js --format umd --file build/vue-combo-blocks.umd.js",
+    "build-pkg:es": "rollup --config rollup.config.js --format es --file build/vue-combo-blocks.esm.js",
+    "build-pkg:unpkg": "rollup --config rollup.config.js --format iife --file build/vue-combo-blocks.min.js"
   },
   "author": "Simeon Kerkola (https://simeon.fyi)",
   "license": "MIT",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/sssmi/vue-combo-blocks#readme",
   "files": [
-    "dist/*"
+    "build/*"
   ],
   "peerDependencies": {
     "vue": "^2.6.0"
