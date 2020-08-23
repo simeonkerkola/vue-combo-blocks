@@ -1,6 +1,6 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 import { mount } from '@vue/test-utils';
-import AutoComplete from './components/AutoComplete.vue';
+import AutoComplete from '../../dev/components/AutoComplete.vue';
 
 const list = [
   { displayName: 'first', id: '123' },
