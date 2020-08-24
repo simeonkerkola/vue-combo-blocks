@@ -232,7 +232,7 @@ export default Vue.component('vue-combo-blocks', {
     //   this.inputValue = text;
     //   // });
     // },
-    clearSelection() {
+    reset() {
       this.setState({
         selected: null,
         selectedIndex: -1,
@@ -412,7 +412,7 @@ export default Vue.component('vue-combo-blocks', {
       inputValue: this.inputValue,
 
       // actions
-      clearSelection: this.clearSelection,
+      reset: this.reset,
       setInputValue: this.setInputValue,
       openList: this.openList,
       closeList: this.closeList,

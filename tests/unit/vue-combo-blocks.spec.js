@@ -183,7 +183,7 @@ describe('comboblocks.js', () => {
 
     wrapper.vm.selected = item;
     wrapper.vm.selectedIndex = 0;
-    wrapper.vm.clearSelection();
+    wrapper.vm.reset();
 
     expect(wrapper.vm.selected).toBeNull();
     expect(wrapper.vm.selectedIndex).toBe(-1);
