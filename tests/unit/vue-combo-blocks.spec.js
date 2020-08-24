@@ -149,16 +149,11 @@ describe('comboblocks.js', () => {
   // helpers
   it('isSelected true', () => {
     const wrapper = factory();
-    wrapper.vm.selectedIndex = 1;
+    wrapper.vm.selected = item2;
     const isSelected = wrapper.vm.isSelected(1);
     expect(isSelected).toBe(true);
   });
-  it('isSelected false', () => {
-    const wrapper = factory();
-    wrapper.vm.selectedIndex = 1;
-    const isSelected = wrapper.vm.isSelected(0);
-    expect(isSelected).toBe(false);
-  });
+
   it('autocomplete calls setInputValue and itemToString', () => {
     const wrapper = factory({ propsData: { itemToString: jest.fn(() => 'name') } });
     wrapper.vm.setInputValue = jest.fn();
@@ -178,7 +173,7 @@ describe('comboblocks.js', () => {
     const wrapper = factory();
 
     wrapper.vm.selected = item;
-    wrapper.vm.selectedIndex = 0;
+
     wrapper.vm.reset();
 
     expect(wrapper.vm.selected).toBeNull();

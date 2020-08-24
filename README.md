@@ -1,9 +1,11 @@
 # Vue Combo Blocks 🧰
 
-**_A very Downshift like autocomplete solution for Vue_**
-
 Provides all the building blocks needed for accessible autocomplete,
 combobox, or typeahead component.
+
+**_A very Downshift like autocomplete solution for Vue_**
+
+**_Downshift for Vue.js_**
 
 ## The problem
 
@@ -44,7 +46,7 @@ need.
   >
     <div v-bind="getComboboxProps()">
       <button @click="clearSelection">clear</button>
-      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
+      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search" />
       <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
         <li
           v-for="(item, index) in filteredList"
@@ -64,53 +66,54 @@ need.
 </template>
 
 <script>
-import VueComboBlocks from "vue-combo-blocks";
+import VueComboBlocks from 'vue-combo-blocks';
 export default {
   components: {
-    VueComboBlocks
+    VueComboBlocks,
   },
   data() {
     return {
       selected: null,
       filteredList: [],
       list: [
-        { value: "Gretsch", id: "1" },
-        { value: "Ludwig", id: "2" },
-        { value: "Mapex", id: "3" },
-        { value: "Pearl", id: "4" },
-        { value: "Sonor", id: "5" },
-        { value: "Tama", id: "6" },
-        { value: "Zildjian", id: "7" }
-      ]
+        { value: 'Gretsch', id: '1' },
+        { value: 'Ludwig', id: '2' },
+        { value: 'Mapex', id: '3' },
+        { value: 'Pearl', id: '4' },
+        { value: 'Sonor', id: '5' },
+        { value: 'Tama', id: '6' },
+        { value: 'Zildjian', id: '7' },
+      ],
     };
   },
   methods: {
     itemToString(item) {
-      return item ? item.value : "";
+      return item ? item.value : '';
     },
     updateList(text) {
-      this.filteredList = this.list.filter(item => item.value.includes(text));
-    }
-  }
+      this.filteredList = this.list.filter((item) => item.value.includes(text));
+    },
+  },
 };
 </script>
 ```
 
 ## Props
 
-| Name                  | Type     | Default                                   | description                                  |
-| --------------------- | -------- | ----------------------------------------- | -------------------------------------------- |
-| items                 | Array    | **required**                              |                                              |
-| isSelectedItemChanged | Function | `(prevItem, item) => (prevItem !== item)` |                                              |
-| itemToString          | Function | `(item) => (item ? String(item) : '')`    |                                              |
-| value                 | Any      | `null`                                    | Sets the selected item. Prop part of v-model |
+| Name         | Type                                              | Default                                | description                                                                                                                                             |
+| ------------ | ------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| items        | Array                                             | **required**                           |                                                                                                                                                         |
+| itemToString | Function                                          | `(item) => (item ? String(item) : '')` |                                                                                                                                                         |
+| value        | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                            |
+| stateReducer | Function(state: object, actionAndChanges: object) | optional                               | Very handy feature that gives you a complete control of the `vue-combo-blocks` state. Read more about it in the [State Reducer section](#state-reducer) |
 
 ## Events
 
-| Name               | Type   | Description                            |
-| ------------------ | ------ | -------------------------------------- |
-| change             | Any    | Emitted when the selected item changes |
-| input-value-change | String | Emitted when the input value changes   |
+| Name               | Type   | Description                                              |
+| ------------------ | ------ | -------------------------------------------------------- |
+| change             | Any    | Emitted when the selected item changes                   |
+| input-value-change | String | Emitted when the input value changes                     |
+| state-change       | Object | Emitted when the state changes. Contains all the changes |
 
 ## Default Slot & returned props
 
@@ -151,6 +154,68 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 
 ### Actions
 
-| Name           | Type       | Description                                         |
-| -------------- | ---------- | --------------------------------------------------- |
-| clearSelection | function() | Clears the selected item, and reset the input value |
+| Name          | Type                         | Description                                         |
+| ------------- | ---------------------------- | --------------------------------------------------- |
+| reset         | function()                   | Clears the selected item, and reset the input value |
+| select        | function(item: any)          | Selects an item                                     |
+| setInputValue | function(inputValue: string) | Sets the input value                                |
+| openMenu      | function()                   | Opens the menu                                      |
+| closeMenu     | function()                   | Closes the menu                                     |
+
+## State Reducer
+
+`function(state: object, actionAndChanges: object`
+This function is called each time `vue-combo-blocks` sets its internal state.
+It gives you the current state and the state that will be set, and you return the state that you want to set.
+
+- `state`: The full current state of vue-combo-blocks.
+- `actionAndChanges`: Object that contains the action type, props needed to return a new state based on that type and the changes suggested by the vue-combo-blocks default reducer. About the type property you can learn more about in the [stateChangeTypes section](#stateChangeTypes).
+
+In this example, we want to keep the menu open after the item is selected,
+and keep the input value empty
+
+```vue
+<template>
+  <vue-combo-blocks :stateReducer="stateReducer" ****>
+    ****
+  </vue-combo-blocks>
+</template>
+```
+
+```javascript
+  methods: {
+    stateReducer(oldState, { changes, type }) {
+      switch (type) {
+        case stateChangeTypes.InputKeyUpEnter:
+        case stateChangeTypes.ItemClick:
+          return {
+            ...changes,
+            isOpen: true,
+            inputValue: '',
+          };
+        default:
+          return changes;
+      }
+    },
+  }
+```
+
+## stateChangeTypes
+
+The list of all possible values this `type` property can take is defined in [this file](https://github.com/sssmi/vue-combo-blocks/blob/master/src/stateChangeTypes.js) and is as follows:
+
+- `VueComboBlocks.stateChangeTypes.InputKeyDownArrowDown`
+- `VueComboBlocks.stateChangeTypes.InputKeyDownArrowUp`
+- `VueComboBlocks.stateChangeTypes.InputKeyDownTab`
+- `VueComboBlocks.stateChangeTypes.InputKeyUpEscape`
+- `VueComboBlocks.stateChangeTypes.InputKeyUpEnter`
+- `VueComboBlocks.stateChangeTypes.InputChange`
+- `VueComboBlocks.stateChangeTypes.InputBlur`
+- `VueComboBlocks.stateChangeTypes.MenuMouseLeave`
+- `VueComboBlocks.stateChangeTypes.ItemMouseMove`
+- `VueComboBlocks.stateChangeTypes.ItemClick`
+- `VueComboBlocks.stateChangeTypes.FunctionOpenMenu`
+- `VueComboBlocks.stateChangeTypes.FunctionCloseMenu`
+- `VueComboBlocks.stateChangeTypes.FunctionSelectItem`
+- `VueComboBlocks.stateChangeTypes.FunctionSetInputValue`
+- `VueComboBlocks.stateChangeTypes.FunctionReset`

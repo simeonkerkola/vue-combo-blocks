@@ -35,13 +35,14 @@ export default Vue.component('vue-combo-blocks', {
       isOpen: false,
       inputValue: this.itemToString(this.value),
       hoveredIndex: -1,
-      selectedIndex: this.items.indexOf(this.value),
+
     };
   },
   computed: {
     menuId() { return `${this._uid}-vue-combo-blocks-menu`; },
     inputId() { return `${this._uid}-vue-combo-blocks-input`; },
     labelId() { return `${this._uid}-vue-combo-blocks-label`; },
+    selectedIndex() { return this.items.indexOf(this.selected); },
   },
   methods: {
     emitStateChanges(key, changes) {
@@ -66,7 +67,7 @@ export default Vue.component('vue-combo-blocks', {
           this.emitStateChanges(key, newState);
         }
       });
-      this.$emit('stateChange', newState);
+      this.$emit('state-change', newState);
     },
     getComboboxProps() {
       return {
@@ -148,7 +149,6 @@ export default Vue.component('vue-combo-blocks', {
           vm.setState({
             inputValue: vm.itemToString(item),
             selected: item,
-            selectedIndex: itemIndex,
             isOpen: false,
             hoveredIndex: -1,
             hovered: null,
@@ -181,15 +181,12 @@ export default Vue.component('vue-combo-blocks', {
     reset() {
       this.setState({
         selected: null,
-        selectedIndex: -1,
         inputValue: '',
       }, sct.FunctionReset);
     },
-    select(item, index) {
-      const itemIndex = getItemIndex(index, item, this.items);
+    select(item) {
       this.setState({
         selected: item,
-        selectedIndex: itemIndex,
         isOpen: false,
         hoveredIndex: -1,
         hovered: null,
@@ -242,7 +239,6 @@ export default Vue.component('vue-combo-blocks', {
         this.setState({
           inputValue: this.itemToString(this.hovered),
           selected: this.hovered,
-          selectedIndex: this.hoveredIndex,
           isOpen: false,
         }, sct.InputKeyDownTab);
       } else if (hasKeyCode(controls.arrowDownKey, e) && !this.isOpen) {
@@ -258,7 +254,6 @@ export default Vue.component('vue-combo-blocks', {
           this.setState({
             inputValue: this.itemToString(this.hovered),
             selected: this.hovered,
-            selectedIndex: this.hoveredIndex,
             isOpen: false,
           }, sct.InputKeyUpEnter);
         } else if (hasKeyCode(escKey, e)) {
@@ -319,6 +314,7 @@ export default Vue.component('vue-combo-blocks', {
 
       // actions
       reset: this.reset,
+      select: this.select,
       setInputValue: this.setInputValue,
       openMenu: this.openMenu,
       closeMenu: this.closeMenu,

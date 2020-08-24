@@ -1,6 +1,6 @@
 {
   "name": "vue-combo-blocks",
-  "version": "0.1.82",
+  "version": "0.2.0",
   "main": "dist/vue-combo-blocks.umd.js",
   "module": "dist/vue-combo-blocks.esm.js",
   "unpkg": "dist/vue-combo-blocks.min.js",
@@ -11,7 +11,7 @@
     "test:unit:watch": "vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "build-pkg": "rm -r dist & npm run build-pkg:umd & npm run build-pkg:es & npm run build-pkg:unpkg",
+    "build-pkg": "rm -r build & npm run build-pkg:umd & npm run build-pkg:es & npm run build-pkg:unpkg",
     "build-pkg:umd": "rollup --config rollup.config.js --format umd --file build/vue-combo-blocks.umd.js",
     "build-pkg:es": "rollup --config rollup.config.js --format es --file build/vue-combo-blocks.esm.js",
     "build-pkg:unpkg": "rollup --config rollup.config.js --format iife --file build/vue-combo-blocks.min.js"
