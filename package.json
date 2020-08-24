@@ -1,9 +1,9 @@
 {
   "name": "vue-combo-blocks",
-  "version": "0.2.0",
-  "main": "dist/vue-combo-blocks.umd.js",
-  "module": "dist/vue-combo-blocks.esm.js",
-  "unpkg": "dist/vue-combo-blocks.min.js",
+  "version": "0.2.1",
+  "main": "build/vue-combo-blocks.umd.js",
+  "module": "build/vue-combo-blocks.esm.js",
+  "unpkg": "build/vue-combo-blocks.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
