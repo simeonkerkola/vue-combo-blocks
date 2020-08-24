@@ -1,7 +1,6 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 import { mount } from '@vue/test-utils';
 import ComboBlocks from '../../src/vue-combo-blocks';
-import * as sct from '../../src/stateChangeTypes';
 
 const item = { name: 'name' };
 const item2 = { name: 'item 2 name' };
@@ -123,9 +122,6 @@ describe('comboblocks.js', () => {
     const wrapper = factory();
 
     wrapper.vm.hovered = item;
-
-    wrapper.vm.getListEventListeners().mousemove();
-    expect(wrapper.vm.hovered).toEqual(item);
 
     wrapper.vm.getListEventListeners().mouseleave();
     expect(wrapper.vm.hovered).toBeNull();
