@@ -51,7 +51,7 @@ describe('AutoComplete', () => {
 
     const wrapperdList = wrapper.find('ul');
 
-    expect(wrapperdList.attributes().id).toBe(`${idPrefix}-vue-combo-blocks-list`);
+    expect(wrapperdList.attributes().id).toBe(`${idPrefix}-vue-combo-blocks-menu`);
     expect(wrapperdList.attributes().role).toBe('listbox');
     expect(wrapperdList.attributes('aria-labelledby')).toBe(`${idPrefix}-vue-combo-blocks-label`);
   });
@@ -65,7 +65,7 @@ describe('AutoComplete', () => {
 
     expect(input.attributes('aria-activedescendant')).toBe('');
     expect(input.attributes('aria-autocomplete')).toBe('list');
-    expect(input.attributes('aria-controls')).toBe(`${idPrefix}-vue-combo-blocks-list`);
+    expect(input.attributes('aria-controls')).toBe(`${idPrefix}-vue-combo-blocks-menu`);
   });
 
   it('applies the combobox props as html attributes', () => {
@@ -78,6 +78,6 @@ describe('AutoComplete', () => {
     expect(combobox.attributes('role')).toBe('combobox');
     expect(combobox.attributes('aria-haspopup')).toBe('listbox');
     expect(combobox.attributes('aria-expanded')).toBe('false');
-    expect(combobox.attributes('aria-owns')).toBe(`${idPrefix}-vue-combo-blocks-list`);
+    expect(combobox.attributes('aria-owns')).toBe(`${idPrefix}-vue-combo-blocks-menu`);
   });
 });

@@ -34,8 +34,8 @@ need.
       selected,
       hoveredIndex,
       isOpen,
-      getListProps,
-      getListEventListeners,
+      getMenuProps,
+      getMenuEventListeners,
       getItemProps,
       getItemEventListeners,
       getComboboxProps,
@@ -45,7 +45,7 @@ need.
     <div v-bind="getComboboxProps()">
       <button @click="clearSelection">clear</button>
       <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
-      <ul v-show="isOpen" v-bind="getListProps()" v-on="getListEventListeners()">
+      <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"
@@ -130,7 +130,7 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 | getComboboxProps | function()                             | returns the props you should apply to an element that wraps the input element that you render.            |
 | getInputProps    | function()                             | returns the props you should apply to the input element that you render.                                  |
 | getItemProps     | function({ item: any, index: number }) | returns the props you should apply to any menu item elements you render. `item` property is **required**! |
-| getListProps     | function()                             | returns the props you should apply to the ul element (or root of your menu) that you render.              |
+| getMenuProps     | function()                             | returns the props you should apply to the ul element (or root of your menu) that you render.              |
 
 ### Event listeners
 
@@ -138,7 +138,7 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 | ---------------------- | -------------------------------------- | ---------------------------------------------------------------- |
 | getInputEventListeners | function()                             | Bind these to the `input` element.                               |
 | getItemEventListeners  | function({ item: any, index: number }) | Bind these to the `li` element. `item` property is **required**! |
-| getListEventListeners  | function()                             | Bind these to the `ul` element.                                  |
+| getMenuEventListeners  | function()                             | Bind these to the `ul` element.                                  |
 
 ### State
 

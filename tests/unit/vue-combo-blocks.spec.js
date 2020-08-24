@@ -38,7 +38,7 @@ describe('comboblocks.js', () => {
       {
         role: 'combobox',
         'aria-haspopup': 'listbox',
-        'aria-owns': `${idPrefix}-vue-combo-blocks-list`,
+        'aria-owns': `${idPrefix}-vue-combo-blocks-menu`,
         'aria-expanded': 'false',
       },
     );
@@ -53,20 +53,20 @@ describe('comboblocks.js', () => {
         value: '',
         'aria-activedescendant': '',
         'aria-autocomplete': 'list',
-        'aria-controls': `${idPrefix}-vue-combo-blocks-list`,
+        'aria-controls': `${idPrefix}-vue-combo-blocks-menu`,
         id: `${idPrefix}-vue-combo-blocks-input`,
         autocomplete: 'off',
       },
     );
   });
-  it('returns getListProps', () => {
+  it('returns getMenuProps', () => {
     const wrapper = factory();
     const idPrefix = wrapper.vm._uid;
 
-    const comboboxProps = wrapper.vm.getListProps();
+    const comboboxProps = wrapper.vm.getMenuProps();
     expect(comboboxProps).toEqual(
       {
-        id: `${idPrefix}-vue-combo-blocks-list`,
+        id: `${idPrefix}-vue-combo-blocks-menu`,
         role: 'listbox',
         'aria-labelledby': `${idPrefix}-vue-combo-blocks-label`,
       },
@@ -105,8 +105,8 @@ describe('comboblocks.js', () => {
 
     wrapper.vm.onInputBlur = jest.fn();
     wrapper.vm.onInput = jest.fn();
-    wrapper.vm.onListKeyUp = jest.fn();
-    wrapper.vm.onKeyDown = jest.fn();
+    wrapper.vm.onInputKeyUp = jest.fn();
+    wrapper.vm.onInputKeyDown = jest.fn();
 
     wrapper.vm.getInputEventListeners().blur();
     wrapper.vm.getInputEventListeners().input();
@@ -115,15 +115,15 @@ describe('comboblocks.js', () => {
 
     expect(wrapper.vm.onInputBlur).toHaveBeenCalled();
     expect(wrapper.vm.onInput).toHaveBeenCalled();
-    expect(wrapper.vm.onListKeyUp).toHaveBeenCalled();
-    expect(wrapper.vm.onKeyDown).toHaveBeenCalled();
+    expect(wrapper.vm.onInputKeyUp).toHaveBeenCalled();
+    expect(wrapper.vm.onInputKeyDown).toHaveBeenCalled();
   });
-  it('getListEventListeners call right methods', () => {
+  it('getMenuEventListeners call right methods', () => {
     const wrapper = factory();
 
     wrapper.vm.hovered = item;
 
-    wrapper.vm.getListEventListeners().mouseleave();
+    wrapper.vm.getMenuEventListeners().mouseleave();
     expect(wrapper.vm.hovered).toBeNull();
   });
   it('getItemEventListeners call right methods', () => {
@@ -230,7 +230,7 @@ describe('comboblocks.js', () => {
     const wrapper = factory();
     wrapper.vm.isOpen = false;
 
-    wrapper.vm.openList();
+    wrapper.vm.openMenu();
 
     expect(wrapper.vm.isOpen).toBe(true);
   });
@@ -238,7 +238,7 @@ describe('comboblocks.js', () => {
     const wrapper = factory();
     wrapper.vm.isOpen = true;
 
-    wrapper.vm.closeList();
+    wrapper.vm.closeMenu();
 
     expect(wrapper.vm.isOpen).toBe(false);
   });

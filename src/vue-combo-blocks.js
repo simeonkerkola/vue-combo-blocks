@@ -33,14 +33,13 @@ export default Vue.component('vue-combo-blocks', {
       selected: this.value,
       hovered: null,
       isOpen: false,
-      isOverList: false,
       inputValue: this.itemToString(this.value),
       hoveredIndex: -1,
       selectedIndex: this.items.indexOf(this.value),
     };
   },
   computed: {
-    listId() { return `${this._uid}-vue-combo-blocks-list`; },
+    menuId() { return `${this._uid}-vue-combo-blocks-menu`; },
     inputId() { return `${this._uid}-vue-combo-blocks-input`; },
     labelId() { return `${this._uid}-vue-combo-blocks-label`; },
   },
@@ -73,7 +72,7 @@ export default Vue.component('vue-combo-blocks', {
       return {
         role: 'combobox',
         'aria-haspopup': 'listbox',
-        'aria-owns': this.listId,
+        'aria-owns': this.menuId,
         'aria-expanded': this.isOpen ? 'true' : 'false',
       };
     },
@@ -82,14 +81,14 @@ export default Vue.component('vue-combo-blocks', {
         value: this.inputValue || '',
         'aria-activedescendant': this.hovered ? this.getItemId(this.hoveredIndex) : '',
         'aria-autocomplete': 'list',
-        'aria-controls': this.listId,
+        'aria-controls': this.menuId,
         id: this.inputId,
         autocomplete: 'off',
       };
     },
-    getListProps() {
+    getMenuProps() {
       return {
-        id: this.listId,
+        id: this.menuId,
         role: 'listbox',
         'aria-labelledby': this.labelId,
       };
@@ -105,11 +104,11 @@ export default Vue.component('vue-combo-blocks', {
       return {
         blur: vm.onInputBlur,
         input: vm.onInput,
-        keydown: vm.onKeyDown,
-        keyup: vm.onListKeyUp,
+        keydown: vm.onInputKeyDown,
+        keyup: vm.onInputKeyUp,
       };
     },
-    getListEventListeners() {
+    getMenuEventListeners() {
       const vm = this;
       return {
         mouseleave() {
@@ -118,10 +117,10 @@ export default Vue.component('vue-combo-blocks', {
             hovered: null,
           }, sct.MenuMouseLeave);
         },
-        // TODO: Prevent list to close when clicking something
-        // on a list but not necessarily list item.
+        // TODO: Prevent menu to close when clicking something
+        // on a menu but not necessarily menu item.
         // This does the trick, but now you can't select and copy any text
-        // in the list.
+        // in the menu.
         mousedown(e) {
           e.preventDefault();
         },
@@ -203,20 +202,17 @@ export default Vue.component('vue-combo-blocks', {
       this.hovered = item;
       this.hoveredIndex = typeof index === 'number' ? index : -1;
     },
-    hoverList(isOverList) {
-      this.isOverList = isOverList;
-    },
-    closeList() {
+    closeMenu() {
       this.setState({
         isOpen: false,
         hoveredIndex: -1,
         hovered: null,
-      }, sct.FunctionCloseList);
+      }, sct.FunctionCloseMenu);
     },
-    openList() {
+    openMenu() {
       this.setState({
         isOpen: true,
-      }, sct.FunctionOpenList);
+      }, sct.FunctionOpenMenu);
     },
     moveSelection(e) {
       if (!this.isOpen || !this.items.length) return;
@@ -226,11 +222,11 @@ export default Vue.component('vue-combo-blocks', {
       if (isMovingDown || isMovingUp) {
         e.preventDefault();
         const direction = isMovingDown * 2 - 1;
-        const listEdge = isMovingDown ? 0 : this.items.length - 1;
+        const menuEdge = isMovingDown ? 0 : this.items.length - 1;
         const hoversBetweenEdges = isMovingDown
           ? this.hoveredIndex < this.items.length - 1
           : this.hoveredIndex > 0;
-        const index = hoversBetweenEdges ? this.hoveredIndex + direction : listEdge;
+        const index = hoversBetweenEdges ? this.hoveredIndex + direction : menuEdge;
         const item = this.items[index];
         this.setState({
           hoveredIndex: index,
@@ -238,8 +234,8 @@ export default Vue.component('vue-combo-blocks', {
         }, isMovingDown ? sct.InputKeyDownArrowDown : sct.InputKeyDownArrowUp);
       }
     },
-    onKeyDown(e) {
-      // prevent form submit on keydown if Enter key registered in the keyup list
+    onInputKeyDown(e) {
+      // prevent form submit on keydown if Enter key registered in the keyup
       if (e.key === 'Enter' && this.isOpen) {
         e.preventDefault();
       } else if (e.key === 'Tab' && this.hovered) {
@@ -254,7 +250,7 @@ export default Vue.component('vue-combo-blocks', {
         this.moveSelection(e);
       } else this.moveSelection(e);
     },
-    onListKeyUp(e) {
+    onInputKeyUp(e) {
       const { enterKey, escKey } = controls;
       if (this.isOpen) {
         if (hasKeyCode(enterKey, e)) {
@@ -307,12 +303,12 @@ export default Vue.component('vue-combo-blocks', {
       // prop getters
       getInputProps: this.getInputProps,
       getItemProps: this.getItemProps,
-      getListProps: this.getListProps,
+      getMenuProps: this.getMenuProps,
       getComboboxProps: this.getComboboxProps,
 
       // event listeners
       getInputEventListeners: this.getInputEventListeners,
-      getListEventListeners: this.getListEventListeners,
+      getMenuEventListeners: this.getMenuEventListeners,
       getItemEventListeners: this.getItemEventListeners,
 
       // state
@@ -324,8 +320,8 @@ export default Vue.component('vue-combo-blocks', {
       // actions
       reset: this.reset,
       setInputValue: this.setInputValue,
-      openList: this.openList,
-      closeList: this.closeList,
+      openMenu: this.openMenu,
+      closeMenu: this.closeMenu,
     });
   },
 });
