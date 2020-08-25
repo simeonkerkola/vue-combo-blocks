@@ -41,11 +41,11 @@ need.
       getItemProps,
       getItemEventListeners,
       getComboboxProps,
-      clearSelection,
+      reset,
     }"
   >
     <div v-bind="getComboboxProps()">
-      <button @click="clearSelection">clear</button>
+      <button @click="reset">reset</button>
       <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search" />
       <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
         <li
@@ -186,8 +186,8 @@ and keep the input value empty
   methods: {
     stateReducer(oldState, { changes, type }) {
       switch (type) {
-        case stateChangeTypes.InputKeyUpEnter:
-        case stateChangeTypes.ItemClick:
+        case VueComboBlocks.stateChangeTypes.InputKeyUpEnter:
+        case VueComboBlocks.stateChangeTypes.ItemClick:
           return {
             ...changes,
             isOpen: true,

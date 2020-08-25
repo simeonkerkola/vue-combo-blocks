@@ -5,8 +5,7 @@ import {
 } from './misc';
 import * as sct from './stateChangeTypes';
 
-export const stateChangeTypes = sct;
-export default Vue.component('vue-combo-blocks', {
+const VueComboBlocks = Vue.component('vue-combo-blocks', {
   model: {
     prop: 'value',
     event: 'change',
@@ -321,3 +320,6 @@ export default Vue.component('vue-combo-blocks', {
     });
   },
 });
+
+VueComboBlocks.stateChangeTypes = sct;
+export default VueComboBlocks;

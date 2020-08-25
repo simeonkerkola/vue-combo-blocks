@@ -22,11 +22,11 @@
         getItemProps,
         getItemEventListeners,
         getComboboxProps,
-        clearSelection
+        reset
       }"
       >
       <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
-          <button @click="clearSelection" data-testid="clear-button">clear</button>
+          <button @click="reset" data-testid="clear-button">clear</button>
         <input
           data-testid="combobox-input"
           :id="id"
@@ -93,7 +93,7 @@
 
 <script>
 /* eslint-disable no-param-reassign */
-import VueComboBlocks, { stateChangeTypes } from '../../src/vue-combo-blocks';
+import VueComboBlocks from '../../src/vue-combo-blocks';
 
 export default {
   components: {
@@ -162,8 +162,8 @@ export default {
   methods: {
     stateReducer(oldState, { changes, type }) {
       switch (type) {
-        case stateChangeTypes.InputKeyUpEnter:
-        case stateChangeTypes.ItemClick:
+        case VueComboBlocks.stateChangeTypes.InputKeyUpEnter:
+        case VueComboBlocks.stateChangeTypes.ItemClick:
           return {
             ...changes,
             isOpen: true,
