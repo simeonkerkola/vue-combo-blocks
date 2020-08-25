@@ -7,6 +7,8 @@ combobox, or typeahead component.
 
 **_Downshift for Vue.js_**
 
+[![size][size-badge]][pundle-phobia-dist] [![gzip size][gzip-badge]][pundle-phobia-dist] [![downloads][downloads-badge]][npm-link]
+
 ## The problem
 
 You want to build an autocomplete/combobox component, and it needs to be
@@ -219,3 +221,12 @@ The list of all possible values this `type` property can take is defined in [thi
 - `VueComboBlocks.stateChangeTypes.FunctionSelectItem`
 - `VueComboBlocks.stateChangeTypes.FunctionSetInputValue`
 - `VueComboBlocks.stateChangeTypes.FunctionReset`
+
+[downloads-badge]:
+https://img.shields.io/npm/dm/vue-combo-blocks?color=indigo
+[gzip-badge]:
+  https://img.shields.io/bundlephobia/minzip/vue-combo-blocks?color=blue&label=gzipped
+[size-badge]:
+  https://img.shields.io/bundlephobia/min/vue-combo-blocks?color=seagreen&label=minified
+[pundle-phobia-dist]: https://bundlephobia.com/result?p=vue-combo-blocks
+[npm-link]: https://www.npmjs.com/package/vue-combo-blocks
