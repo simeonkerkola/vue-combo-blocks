@@ -68,6 +68,17 @@ need.
 
 <script>
 import VueComboBlocks from 'vue-combo-blocks';
+
+// This list could come from an external api
+const list = [
+  { value: 'Gretsch', id: '1' },
+  { value: 'Ludwig', id: '2' },
+  { value: 'Mapex', id: '3' },
+  { value: 'Pearl', id: '4' },
+  { value: 'Sonor', id: '5' },
+  { value: 'Tama', id: '6' },
+  { value: 'Zildjian', id: '7' },
+];
 export default {
   components: {
     VueComboBlocks,
@@ -75,24 +86,16 @@ export default {
   data() {
     return {
       selected: null,
-      filteredList: [],
-      list: [
-        { value: 'Gretsch', id: '1' },
-        { value: 'Ludwig', id: '2' },
-        { value: 'Mapex', id: '3' },
-        { value: 'Pearl', id: '4' },
-        { value: 'Sonor', id: '5' },
-        { value: 'Tama', id: '6' },
-        { value: 'Zildjian', id: '7' },
-      ],
+      filteredList: list,
     };
   },
   methods: {
     itemToString(item) {
       return item ? item.value : '';
     },
+    // This could be a call to an api that returns the oprions
     updateList(text) {
-      this.filteredList = this.list.filter((item) => item.value.includes(text));
+      this.filteredList = list.filter((item) => item.value.includes(text));
     },
   },
 };
