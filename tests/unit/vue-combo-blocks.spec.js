@@ -130,7 +130,7 @@ describe('comboblocks.js', () => {
     const fakeEvent = { preventDefault: () => {} };
     const wrapper = factory();
     wrapper.vm.inputValue = '';
-    wrapper.vm.selected = null;
+    wrapper.vm.selectedItem = null;
     wrapper.vm.isOpen = true;
     wrapper.vm.hoveredIndex = 0;
     wrapper.vm.hovered = item;
@@ -139,7 +139,7 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm.hovered).toEqual(item);
 
     wrapper.vm.getItemEventListeners({ item }).click(fakeEvent);
-    expect(wrapper.vm.selected).toEqual(item);
+    expect(wrapper.vm.selectedItem).toEqual(item);
     expect(wrapper.vm.isOpen).toEqual(false);
     expect(wrapper.vm.hovered).toEqual(null);
     expect(wrapper.vm.hoveredIndex).toEqual(-1);
@@ -149,7 +149,7 @@ describe('comboblocks.js', () => {
   // helpers
   it('isSelected true', () => {
     const wrapper = factory();
-    wrapper.vm.selected = item2;
+    wrapper.vm.selectedItem = item2;
     const isSelected = wrapper.vm.isSelected(1);
     expect(isSelected).toBe(true);
   });
@@ -172,22 +172,22 @@ describe('comboblocks.js', () => {
   it('clears the selection and emit change evt', () => {
     const wrapper = factory();
 
-    wrapper.vm.selected = item;
+    wrapper.vm.selectedItem = item;
 
     wrapper.vm.reset();
 
-    expect(wrapper.vm.selected).toBeNull();
+    expect(wrapper.vm.selectedItem).toBeNull();
     expect(wrapper.vm.selectedIndex).toBe(-1);
     expect(wrapper.vm.inputValue).toBe('');
     expect(wrapper.emitted().change[0]).toEqual([null]);
   });
-  it('sets new selected item', () => {
+  it('sets new selectedItem item', () => {
     const wrapper = factory();
     wrapper.vm.hoveredIndex = 0;
 
     wrapper.vm.select(item);
 
-    expect(wrapper.vm.selected).toEqual(item);
+    expect(wrapper.vm.selectedItem).toEqual(item);
     expect(wrapper.emitted().change[0]).toEqual([item]);
   });
   it('selects same item again', (done) => {
@@ -200,7 +200,7 @@ describe('comboblocks.js', () => {
 
     setTimeout(() => {
       // expect(wrapper.vm.setState).toHaveBeenCalledTimes(2);
-      expect(wrapper.vm.selected).toEqual(item);
+      expect(wrapper.vm.selectedItem).toEqual(item);
       expect(wrapper.emitted().change.length).toBe(1);
       done();
     }, 1);

@@ -1,23 +1,23 @@
 <template>
   <div id="app">
-    <!-- <AutoComplete v-bind="props">
-    </AutoComplete> -->
+    <AutoComplete v-bind="props">
+    </AutoComplete>
 
-    <MultiSelect v-bind="props">
-    </MultiSelect>
+    <!-- <MultiSelect v-bind="props">
+    </MultiSelect> -->
 
   </div>
 </template>
 
 <script>
-// import AutoComplete from './components/AutoComplete.vue';
-import MultiSelect from './components/MultiSelect.vue';
+import AutoComplete from './components/AutoComplete.vue';
+// import MultiSelect from './components/MultiSelect.vue';
 
 export default {
   name: 'App',
   components: {
-    MultiSelect,
-    // AutoComplete,
+    // MultiSelect,
+    AutoComplete,
   },
   data() {
     const list = [

@@ -29,7 +29,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
   },
   data() {
     return {
-      selected: this.value,
+      selectedItem: this.value,
       hovered: null,
       isOpen: false,
       inputValue: this.itemToString(this.value),
@@ -41,12 +41,12 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     menuId() { return `${this._uid}-vue-combo-blocks-menu`; },
     inputId() { return `${this._uid}-vue-combo-blocks-input`; },
     labelId() { return `${this._uid}-vue-combo-blocks-label`; },
-    selectedIndex() { return this.items.indexOf(this.selected); },
+    selectedIndex() { return this.items.indexOf(this.selectedItem); },
   },
   methods: {
     emitStateChanges(key, changes) {
       switch (key) {
-        case 'selected':
+        case 'selectedItem':
           this.$emit('change', changes[key]);
           break;
         case 'inputValue':
@@ -147,7 +147,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           e.preventDefault();
           vm.setState({
             inputValue: vm.itemToString(item),
-            selected: item,
+            selectedItem: item,
             isOpen: false,
             hoveredIndex: -1,
             hovered: null,
@@ -179,13 +179,13 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     reset() {
       this.setState({
-        selected: null,
+        selectedItem: null,
         inputValue: '',
       }, sct.FunctionReset);
     },
     select(item) {
       this.setState({
-        selected: item,
+        selectedItem: item,
         isOpen: false,
         hoveredIndex: -1,
         hovered: null,
@@ -237,7 +237,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       } else if (e.key === 'Tab' && this.hovered) {
         this.setState({
           inputValue: this.itemToString(this.hovered),
-          selected: this.hovered,
+          selectedItem: this.hovered,
           isOpen: false,
         }, sct.InputKeyDownTab);
       } else if (hasKeyCode(controls.arrowDownKey, e) && !this.isOpen) {
@@ -252,7 +252,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           e.preventDefault();
           this.setState({
             inputValue: this.itemToString(this.hovered),
-            selected: this.hovered,
+            selectedItem: this.hovered,
             isOpen: false,
           }, sct.InputKeyUpEnter);
         } else if (hasKeyCode(escKey, e)) {
@@ -267,7 +267,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     onInputBlur() {
       this.setState({
         isOpen: false,
-        inputValue: this.itemToString(this.selected),
+        inputValue: this.itemToString(this.selectedItem),
         hovered: null,
         hoveredIndex: -1,
       }, sct.InputBlur);
@@ -307,7 +307,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
 
       // state
       isOpen: this.isOpen,
-      selected: this.selected,
+      selectedItem: this.selectedItem,
       hoveredIndex: this.hoveredIndex,
       inputValue: this.inputValue,
 

@@ -13,7 +13,7 @@
       v-slot="{
         getInputProps,
         getInputEventListeners,
-        selected,
+        selectedItem,
         hoveredIndex,
         isOpen,
         inputValue,
@@ -51,11 +51,11 @@
             v-for="(item, index) in filteredList"
             :key="index"
             class="list-item"
-            :class="{'selected':selected  === item, 'hovered':hoveredIndex === index}"
+            :class="{'selected':selectedItem  === item, 'hovered':hoveredIndex === index}"
             :style="{
               backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
               fontWeight:
-                selected  === item
+                selectedItem  === item
                   ? 'bold'
                   : 'normal'
             }"

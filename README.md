@@ -35,7 +35,6 @@ need.
     v-slot="{
       getInputProps,
       getInputEventListeners,
-      selected,
       hoveredIndex,
       isOpen,
       getMenuProps,
@@ -150,7 +149,7 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 | Name         | Type    | Description                 |
 | ------------ | ------- | --------------------------- |
 | isOpen       | Boolean | the list open state         |
-| selected     | Any     | the currently selected item |
+| selectedItem | Any     | the currently selected item |
 | hoveredIndex | Number  | the currently hovered item  |
 | inputValue   | String  | the value in the input      |
 
@@ -222,11 +221,8 @@ The list of all possible values this `type` property can take is defined in [thi
 - `VueComboBlocks.stateChangeTypes.FunctionSetInputValue`
 - `VueComboBlocks.stateChangeTypes.FunctionReset`
 
-[downloads-badge]:
-https://img.shields.io/npm/dm/vue-combo-blocks?color=indigo
-[gzip-badge]:
-  https://img.shields.io/bundlephobia/minzip/vue-combo-blocks?color=blue&label=gzipped
-[size-badge]:
-  https://img.shields.io/bundlephobia/min/vue-combo-blocks?color=seagreen&label=minified
+[downloads-badge]: https://img.shields.io/npm/dm/vue-combo-blocks?color=indigo
+[gzip-badge]: https://img.shields.io/bundlephobia/minzip/vue-combo-blocks?color=blue&label=gzipped
+[size-badge]: https://img.shields.io/bundlephobia/min/vue-combo-blocks?color=seagreen&label=minified
 [pundle-phobia-dist]: https://bundlephobia.com/result?p=vue-combo-blocks
 [npm-link]: https://www.npmjs.com/package/vue-combo-blocks
