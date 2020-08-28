@@ -52,6 +52,12 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         case 'inputValue':
           this.$emit('input-value-change', changes[key]);
           break;
+        case 'isOpen':
+          this.$emit('is-open-change', changes[key]);
+          break;
+        case 'hoveredIndex':
+          this.$emit('hovered-index-change', changes[key]);
+          break;
         default:
           break;
       }

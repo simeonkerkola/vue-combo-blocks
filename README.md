@@ -1,4 +1,4 @@
-# Vue Combo Blocks 🧰
+# Vue Combo Blocks 🧱
 
 Provides all the building blocks needed for accessible autocomplete,
 combobox, or typeahead component.
@@ -113,11 +113,13 @@ export default {
 
 ## Events
 
-| Name               | Type   | Description                                              |
-| ------------------ | ------ | -------------------------------------------------------- |
-| change             | Any    | Emitted when the selected item changes                   |
-| input-value-change | String | Emitted when the input value changes                     |
-| state-change       | Object | Emitted when the state changes. Contains all the changes |
+| Name                 | Type    | Description                                              |
+| -------------------- | ------- | -------------------------------------------------------- |
+| change               | Any     | Emitted when the selected item changes                   |
+| input-value-change   | String  | Emitted when the input value changes                     |
+| is-open-change       | Boolean | Emitted when the isOpen value changes                    |
+| hovered-index-change | Number  | Emitted when the hoveredIndex value changes              |
+| state-change         | Object  | Emitted when the state changes. Contains all the changes |
 
 ## Default Slot & returned props
 
