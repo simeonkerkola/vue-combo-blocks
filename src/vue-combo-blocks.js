@@ -279,8 +279,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       }, sct.InputBlur);
     },
     onInput(e) {
+      // Custom input component might return just the value
+      const inputValue = e.target ? e.target.value : e;
       this.setState({
-        inputValue: e.target.value,
+        inputValue,
         hovered: null,
         isOpen: true,
       },
