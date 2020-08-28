@@ -113,13 +113,15 @@ export default {
 
 ## Events
 
-| Name                 | Type    | Description                                              |
-| -------------------- | ------- | -------------------------------------------------------- |
-| change               | Any     | Emitted when the selected item changes                   |
-| input-value-change   | String  | Emitted when the input value changes                     |
-| is-open-change       | Boolean | Emitted when the isOpen value changes                    |
-| hovered-index-change | Number  | Emitted when the hoveredIndex value changes              |
-| state-change         | Object  | Emitted when the state changes. Contains all the changes |
+Emitted events return 2 parameters. First is the new value, and second is the [state change type](#stateChangeTypes).
+
+| Name                 | Type                                                             | Description                                              |
+| -------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
+| change               | seledtedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
+| input-value-change   | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
+| is-open-change       | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
+| hovered-index-change | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
+| state-change         | state:Object, type: [stateChangeType](#stateChangeTypes)         | Emitted when the state changes. Contains all the changes |
 
 ## Default Slot & returned props
 

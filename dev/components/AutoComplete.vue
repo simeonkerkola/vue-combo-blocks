@@ -238,7 +238,8 @@ export default {
     hideList() {
       // this.autocompleteRef.hideList();
     },
-    onInput(text) {
+    onInput(text, type) {
+      console.log({ text, type });
       this.setFilteredList(text);
       // Send the input value to parent. For search etc.
       this.$emit('update:search-input', text);

@@ -44,19 +44,19 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     selectedIndex() { return this.items.indexOf(this.selectedItem); },
   },
   methods: {
-    emitStateChanges(key, changes) {
+    emitStateChanges(key, changes, type) {
       switch (key) {
         case 'selectedItem':
-          this.$emit('change', changes[key]);
+          this.$emit('change', changes[key], type);
           break;
         case 'inputValue':
-          this.$emit('input-value-change', changes[key]);
+          this.$emit('input-value-change', changes[key], type);
           break;
         case 'isOpen':
-          this.$emit('is-open-change', changes[key]);
+          this.$emit('is-open-change', changes[key], type);
           break;
         case 'hoveredIndex':
-          this.$emit('hovered-index-change', changes[key]);
+          this.$emit('hovered-index-change', changes[key], type);
           break;
         default:
           break;
@@ -69,10 +69,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       Object.keys(newState).forEach((key) => {
         if (oldState[key] !== newState[key]) {
           this[key] = newState[key];
-          this.emitStateChanges(key, newState);
+          this.emitStateChanges(key, newState, type);
         }
       });
-      this.$emit('state-change', newState);
+      this.$emit('state-change', newState, type);
     },
     getComboboxProps() {
       return {
