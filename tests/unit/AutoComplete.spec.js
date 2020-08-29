@@ -39,7 +39,7 @@ describe('AutoComplete', () => {
     expect(item1.attributes().role).toBe('option');
     expect(item2.attributes().role).toBe('option');
 
-    expect(item0.attributes('aria-selected')).toBe('false');
+    expect(item0.attributes('aria-selected')).toBe('true');
     expect(item1.attributes('aria-selected')).toBe('false');
     expect(item2.attributes('aria-selected')).toBe('false');
   });

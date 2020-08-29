@@ -1,42 +1,28 @@
 <template>
   <div id="app">
-    <AutoComplete v-bind="props">
-    </AutoComplete>
-
-    <!-- <MultiSelect v-bind="props">
-    </MultiSelect> -->
+    <ul >
+      <li v-for="route in routes" :key="route.path">
+    <router-link  :to='route.path'>{{route.path}}</router-link>
+      </li>
+    </ul>
+    <router-view />
 
   </div>
 </template>
 
 <script>
-import AutoComplete from './components/AutoComplete.vue';
-// import MultiSelect from './components/MultiSelect.vue';
+import { routes } from './router';
 
 export default {
   name: 'App',
   components: {
-    // MultiSelect,
-    AutoComplete,
   },
   data() {
-    const list = [
-      { displayName: 'first', id: '123' },
-      { displayName: 'second', id: '456' },
-      { displayName: 'third', id: '789' },
-      { displayName: 'duplicate', id: '789' },
-      { displayName: 'duplicate', id: '789' },
-    ];
     return {
-      props: {
-        list,
-        value: list[0],
-
-        id: 'listId',
-        displayAttribute: 'displayName',
-      },
+      routes,
     };
   },
+
 };
 </script>
 

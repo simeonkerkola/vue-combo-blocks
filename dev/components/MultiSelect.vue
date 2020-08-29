@@ -1,260 +1,131 @@
 <template>
-  <div :id="`${id}-autocomplete`">
-    <VueComboBlocks
-      :ref="id"
-      :value="value"
-      :itemToString="itemToString"
-      :items='filteredList'
-      @change="onChange"
-      @focus="onFocus"
-      @hover="onHover"
-      :stateReducer="stateReducer"
-      @input-value-change="onInput"
-      v-slot="{
-        getInputProps,
-        getInputEventListeners,
-        selectedItem,
-        hoveredIndex,
-        isOpen,
-        inputValue,
-        getMenuProps,
-        getMenuEventListeners,
-        getItemProps,
-        getItemEventListeners,
-        getComboboxProps,
-        reset
-      }"
-      >
-      <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
-          <button @click="reset" data-testid="clear-button">clear</button>
-        <input
-          data-testid="combobox-input"
-          :id="id"
-          v-bind="getInputProps()"
-          :placeholder="placeholder"
-          :label="label"
-          autocomplete="off"
-          single-line
-          v-on="getInputEventListeners()"
-        />
-        <ul
-          v-show="isOpen && (list.length || !miscSlotsAreEmpty())"
-          class="list"
-          v-bind="getMenuProps()"
-          v-on="getMenuEventListeners()"
-        >
-          <li v-if="!filteredList.length" data-testid="no-results">
-            No results
-          </li>
-          <li
-          :data-testid="`vue-combo-blocks-item-${index}`"
-            v-for="(item, index) in filteredList"
-            :key="index"
-            class="list-item"
-            :class="{'selected':selectedItem  === item, 'hovered':hoveredIndex === index}"
-            :style="{
-              backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
-              fontWeight:
-                selectedItem  === item
-                  ? 'bold'
-                  : 'normal'
-            }"
-            v-bind="getItemProps({ item, index })"
-            v-on="getItemEventListeners({ item, index })"
-          >
-            <span :id="`${id}-suggest-item-${item[displayAttribute]}`">
-              {{ item[displayAttribute] }}
-            </span>
-          </li>
-          <slot name="prepend-item"></slot>
-        </ul>
-      </div>
-    </VueComboBlocks>
-
-    <button
-      v-if="cancelButton && !!value"
-      :id="`${id}-cancel`"
-      label="cancel"
-      @click="onCancel"
-    >
-      cancel
-    </button>
-
-    <button
-      v-if="dropdownIcon"
-      :id="`${id}-dropdown`"
-      label="dropdown"
-      @click="onDropdownIconClick"
-    >
-      open
-    </button>
-  </div>
+  <vue-combo-blocks
+   :value='null'
+    :itemToString="itemToString"
+    :items="filteredList"
+    :stateReducer='stateReducer'
+    @input-value-change="updateList"
+    @change="handleSelectedItemChange"
+    v-slot="{
+      getInputProps,
+      getInputEventListeners,
+      hoveredIndex,
+      isOpen,
+      getMenuProps,
+      getMenuEventListeners,
+      getItemProps,
+      getItemEventListeners,
+      getComboboxProps,
+      selectedItem,
+      reset,
+    }"
+  >
+    <div v-bind="getComboboxProps()">
+      <h2>MultiSelect</h2>
+      <button @click="reset">reset</button>
+      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
+      <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
+        <li
+          v-for="(item, index) in filteredList"
+          :key="item.id"
+          :style="{
+            backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
+            fontWeight: selectedItems.includes(item) ? 'bold' : 'normal',
+          }"
+          v-bind="getItemProps({ item, index })"
+          v-on="getItemEventListeners({ item, index })"
+        >        <input
+          type="checkbox"
+          :checked='selectedItems.includes(item)'
+          :value='item.value'
+          @change="checkClick"/>
+          {{ item.value }}</li>
+      </ul>
+      <h3>Selected items:</h3>
+      <ul>
+        <li :key="item.id" v-for="item in selectedItems">
+          {{item.value}}
+        </li>
+      </ul>
+    </div>
+  </vue-combo-blocks>
 </template>
 
 <script>
-/* eslint-disable no-param-reassign */
 import VueComboBlocks from '../../src/vue-combo-blocks';
 
+// This list could come from an external api
+const list = [
+  { value: 'Gretsch', id: '1' },
+  { value: 'Ludwig', id: '2' },
+  { value: 'Mapex', id: '3' },
+  { value: 'Pearl', id: '4' },
+  { value: 'Sonor', id: '5' },
+  { value: 'Tama', id: '6' },
+  { value: 'Zildjian', id: '7' },
+];
 export default {
   components: {
     VueComboBlocks,
   },
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    placeholder: {
-      type: String,
-      default: '',
-    },
-    list: {
-      type: [Array, Function],
-      required: true,
-    },
-    value: {
-      // Object or null
-      validator: (prop) => typeof prop === 'object',
-      default: null,
-    },
-    displayAttribute: {
-      type: String,
-      default: 'name',
-    },
-    cancelButton: {
-      type: Boolean,
-      default: false,
-    },
-    dropdownIcon: {
-      type: Boolean,
-      default: false,
-    },
-    debounce: {
-      type: Number,
-      default: 0,
-    },
-    clearAfterSelect: {
-      type: Boolean,
-      default: false,
-    },
-    searchInput: {
-      type: String,
-      default: '',
-    },
-  },
   data() {
     return {
-      filteredList: this.list,
+      selectedItems: [],
+      filteredList: list,
     };
   },
-  watch: {
-
-  },
-
   methods: {
-    stateReducer(oldState, { changes, type }) {
+    checkClick() {
+      // TODO: Fix me
+      console.log('check!!');
+    },
+    itemToString(item) {
+      return item ? item.value : '';
+    },
+    selectItem() {
+
+    },
+    handleSelectedItemChange(selectedItem) {
+      if (!selectedItem) return;
+
+      const index = this.selectedItems.indexOf(selectedItem);
+
+      if (index > 0) {
+        this.selectedItems = [
+          ...this.selectedItems.slice(0, index),
+          ...this.selectedItems.slice(index + 1),
+        ];
+      } else if (index === 0) {
+        this.selectedItems = [...this.selectedItems.slice(1)];
+      } else {
+        // Add item
+        this.selectedItems = [...this.selectedItems, selectedItem];
+      }
+    },
+    stateReducer(state, actionAndChanges) {
+      const { changes, type } = actionAndChanges;
       switch (type) {
         case VueComboBlocks.stateChangeTypes.InputKeyUpEnter:
         case VueComboBlocks.stateChangeTypes.ItemClick:
+
           return {
             ...changes,
-            isOpen: true,
-            inputValue: '',
+            isOpen: true, // keep menu open after selection.
+            hoveredIndex: state.hoveredIndex,
+            inputValue: '', // don't add the item string as input value at selection.
+          };
+        case VueComboBlocks.stateChangeTypes.InputBlur:
+          return {
+            ...changes,
+            inputValue: '', // don't add the item string as input value at selection.
           };
         default:
           return changes;
       }
     },
-    itemToString(item) {
-      return item ? item[this.displayAttribute] : '';
-    },
-    setFilteredList(text) {
-      console.log({ text });
-      this.filteredList = this.list.filter((item) => item[this.displayAttribute].includes(text));
-    },
-    onHover(suggestion, element) {
-      if (!element) {
-        this.$nextTick(() => {
-          const overlayElement = this.$refs[this.id].$el.querySelector('.list');
-          const hoveredElement = this.$refs[this.id].$el.querySelectorAll('.list-item')[
-            this.$refs[this.id].hoveredIndex
-          ];
-
-          this.scrollToElement(hoveredElement, overlayElement);
-        });
-      }
-      this.$emit('hover', suggestion, element);
-    },
-    scrollToElement(element, parentElement) {
-      if (parentElement && parentElement.contains(element)) {
-        const { clientHeight, scrollTop } = parentElement;
-        const { offsetHeight, offsetTop } = element;
-
-        if (offsetTop < scrollTop) {
-          // If scrilled down past the last item, scroll all the way to the top
-          if (this.$refs[this.id].hoveredIndex === 0) parentElement.scrollTop = 0;
-          else parentElement.scrollTop = offsetTop; // scroll up
-        } else {
-          const offsetBottom = offsetTop + offsetHeight;
-          const scrollBottom = scrollTop + clientHeight;
-          if (offsetBottom > scrollBottom) {
-            parentElement.scrollTop = offsetBottom - clientHeight; // scroll down
-          }
-        }
-      }
-    },
-    onFocus() {
-      // Select the text inside input to make it easier to clear
-      this.$refs[this.id].$el.querySelector('input').select();
-      // this.processAndShowList()
-    },
-    onChange(suggest) {
-      this.$emit('change', suggest);
-      if (this.clearAfterSelect) {
-        setTimeout(() => {
-          this.onCancel();
-        }, 0);
-      }
-    },
-    onCancel() {
-      this.$emit('change', null);
-
-      // Send the text to vue-simple-suggest as well to trigger a research
-      this.processAndShowList();
-    },
-    onInput(text) {
-      this.setFilteredList(text);
-      // Send the input value to parent. For search etc.
-      this.$emit('update:search-input', text);
-      this.$emit('input', text);
-    },
-    onDropdownIconClick() {
-      // Focus the input element, opening suggestions list and triggering onFocus()
-      this.processAndShowList();
-    },
-    isScopedSlotEmpty(slot) {
-      if (slot) {
-        const vNode = slot(this);
-        return !(Array.isArray(vNode) || (vNode && (vNode.tag || vNode.context
-            || vNode.text || vNode.children)));
-      }
-      return true;
-    },
-    miscSlotsAreEmpty() {
-      const slots = ['append-item', 'prepend-item'].map((s) => this.$scopedSlots[s]);
-      if (slots.every((s) => !!s)) {
-        return slots.every(this.isScopedSlotEmpty.bind(this));
-      }
-      const slot = slots.find((s) => !!s);
-      return this.isScopedSlotEmpty.call(this, slot);
+    // This could be a call to an api that returns the oprions
+    updateList(text) {
+      this.filteredList = list.filter((item) => item.value.includes(text));
     },
   },
 };

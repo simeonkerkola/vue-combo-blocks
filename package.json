@@ -54,7 +54,8 @@
     "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.11",
     "vue-cli-plugin-webpack-bundle-analyzer": "~2.0.0",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "vue-router": "^3.4.3"
   },
   "keywords": [
     "enhanced input",

@@ -67,10 +67,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       const newState = this.stateReducer(oldState, { changes, type });
 
       Object.keys(newState).forEach((key) => {
-        if (oldState[key] !== newState[key]) {
-          this[key] = newState[key];
-          this.emitStateChanges(key, newState, type);
-        }
+        // if (oldState[key] !== newState[key]) {
+        this[key] = newState[key];
+        this.emitStateChanges(key, newState, type);
+        // }
       });
       this.$emit('state-change', newState, type);
     },
