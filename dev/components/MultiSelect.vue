@@ -24,7 +24,7 @@
       <h2>MultiSelect</h2>
       <button @click="reset">reset</button>
       <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
-      <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
+      <ul v-show="true" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"
@@ -36,9 +36,9 @@
           v-on="getItemEventListeners({ item, index })"
         >        <input
           type="checkbox"
-          :checked='selectedItems.includes(item)'
-          :value='item.value'
-          @change="checkClick"/>
+          :checked='selectedItems.includes(item) '
+          :value='item'
+          />
           {{ item.value }}</li>
       </ul>
       <h3>Selected items:</h3>
@@ -75,17 +75,11 @@ export default {
     };
   },
   methods: {
-    checkClick() {
-      // TODO: Fix me
-      console.log('check!!');
-    },
     itemToString(item) {
       return item ? item.value : '';
     },
-    selectItem() {
-
-    },
     handleSelectedItemChange(selectedItem) {
+      console.log({ selectedItem });
       if (!selectedItem) return;
 
       const index = this.selectedItems.indexOf(selectedItem);
@@ -99,7 +93,7 @@ export default {
         this.selectedItems = [...this.selectedItems.slice(1)];
       } else {
         // Add item
-        this.selectedItems = [...this.selectedItems, selectedItem];
+        this.selectedItems.push(selectedItem);
       }
     },
     stateReducer(state, actionAndChanges) {

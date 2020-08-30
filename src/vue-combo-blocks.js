@@ -123,11 +123,11 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
             hovered: null,
           }, sct.MenuMouseLeave);
         },
-        // TODO: Prevent menu to close when clicking something
-        // on a menu but not necessarily menu item.
-        // This does the trick, but now you can't select and copy any text
-        // in the menu.
         mousedown(e) {
+          // TODO: Prevent menu to close when clicking something
+          // on a menu but not necessarily menu item.
+          // This does the trick, but now you can't select and copy any text
+          // in the menu.
           e.preventDefault();
         },
       };
@@ -141,6 +141,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       const vm = this;
       return {
         mousemove() {
+          if (vm.hoveredIndex === itemIndex) return;
           vm.setState({
             hoveredIndex: itemIndex,
             hovered: item,
@@ -149,8 +150,8 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         mousedown(e) {
           e.preventDefault();
         },
-        click(e) {
-          e.preventDefault();
+        click() {
+          // e.preventDefault();
           vm.setState({
             inputValue: vm.itemToString(item),
             selectedItem: item,
