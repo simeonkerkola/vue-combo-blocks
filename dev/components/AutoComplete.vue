@@ -2,7 +2,7 @@
   <div :id="`${id}-autocomplete`">
     <VueComboBlocks
       :ref="id"
-      :value="value"
+      :value="filteredList[0]"
       :itemToString="itemToString"
       :items='filteredList'
       @change="onChange"
@@ -26,6 +26,7 @@
       }"
       >
       <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
+        <h2>AutoComplete</h2>
           <button @click="reset" data-testid="clear-button">clear</button>
         <input
           data-testid="combobox-input"
@@ -38,7 +39,7 @@
           v-on="getInputEventListeners()"
         />
         <ul
-          v-show="isOpen && (list.length || !miscSlotsAreEmpty())"
+          v-show="isOpen"
           class="list"
           v-bind="getMenuProps()"
           v-on="getMenuEventListeners()"
@@ -95,6 +96,14 @@
 /* eslint-disable no-param-reassign */
 import VueComboBlocks from '../../src/vue-combo-blocks';
 
+const list = [
+  { displayName: 'first', id: '123' },
+  { displayName: 'second', id: '456' },
+  { displayName: 'third', id: '789' },
+  { displayName: 'duplicate', id: '789' },
+  { displayName: 'duplicate', id: '789' },
+];
+
 export default {
   components: {
     VueComboBlocks,
@@ -106,7 +115,7 @@ export default {
   props: {
     id: {
       type: String,
-      required: true,
+      default: 'listId',
     },
     label: {
       type: String,
@@ -116,10 +125,6 @@ export default {
       type: String,
       default: '',
     },
-    list: {
-      type: [Array, Function],
-      required: true,
-    },
     value: {
       // Object or null
       validator: (prop) => typeof prop === 'object',
@@ -127,7 +132,7 @@ export default {
     },
     displayAttribute: {
       type: String,
-      default: 'name',
+      default: 'displayName',
     },
     cancelButton: {
       type: Boolean,
@@ -152,7 +157,7 @@ export default {
   },
   data() {
     return {
-      filteredList: this.list,
+      filteredList: list,
     };
   },
   computed: {
@@ -177,7 +182,7 @@ export default {
     },
     setFilteredList(text) {
       console.log({ text });
-      this.filteredList = this.list.filter((item) => item[this.displayAttribute].includes(text));
+      this.filteredList = list.filter((item) => item[this.displayAttribute].includes(text));
     },
     onHover(suggestion, element) {
       if (!element) {

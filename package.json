@@ -1,6 +1,6 @@
 {
   "name": "vue-combo-blocks",
-  "version": "0.2.62",
+  "version": "0.2.7",
   "main": "build/vue-combo-blocks.umd.js",
   "module": "build/vue-combo-blocks.esm.js",
   "unpkg": "build/vue-combo-blocks.min.js",
@@ -54,7 +54,8 @@
     "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.11",
     "vue-cli-plugin-webpack-bundle-analyzer": "~2.0.0",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "vue-router": "^3.4.3"
   },
   "keywords": [
     "enhanced input",

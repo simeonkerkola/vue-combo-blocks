@@ -165,9 +165,9 @@ describe('comboblocks.js', () => {
   it('set right input value and emit evt', () => {
     const wrapper = factory();
     const text = 'some text';
-    wrapper.vm.setState({ inputValue: text });
+    wrapper.vm.setInputValue(text);
 
-    expect(wrapper.emitted()['input-value-change'][0]).toEqual([text]);
+    expect(wrapper.emitted()['input-value-change'][0]).toEqual([text, 'FunctionSetInputValue']);
   });
   it('clears the selection and emit change evt', () => {
     const wrapper = factory();
@@ -179,7 +179,7 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm.selectedItem).toBeNull();
     expect(wrapper.vm.selectedIndex).toBe(-1);
     expect(wrapper.vm.inputValue).toBe('');
-    expect(wrapper.emitted().change[0]).toEqual([null]);
+    expect(wrapper.emitted().change[0]).toEqual([null, 'FunctionReset']);
   });
   it('sets new selectedItem item', () => {
     const wrapper = factory();
@@ -188,7 +188,7 @@ describe('comboblocks.js', () => {
     wrapper.vm.select(item);
 
     expect(wrapper.vm.selectedItem).toEqual(item);
-    expect(wrapper.emitted().change[0]).toEqual([item]);
+    expect(wrapper.emitted().change[0]).toEqual([item, 'FunctionSelectItem']);
   });
   it('selects same item again', (done) => {
     const wrapper = factory();
@@ -201,7 +201,7 @@ describe('comboblocks.js', () => {
     setTimeout(() => {
       // expect(wrapper.vm.setState).toHaveBeenCalledTimes(2);
       expect(wrapper.vm.selectedItem).toEqual(item);
-      expect(wrapper.emitted().change.length).toBe(1);
+      expect(wrapper.emitted().change.length).toBe(2);
       done();
     }, 1);
 
