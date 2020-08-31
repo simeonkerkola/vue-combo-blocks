@@ -24,7 +24,7 @@
       <h2>MultiSelect</h2>
       <button @click="reset">reset</button>
       <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
-      <ul v-show="true" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
+      <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"
@@ -79,7 +79,6 @@ export default {
       return item ? item.value : '';
     },
     handleSelectedItemChange(selectedItem) {
-      console.log({ selectedItem });
       if (!selectedItem) return;
 
       const index = this.selectedItems.indexOf(selectedItem);

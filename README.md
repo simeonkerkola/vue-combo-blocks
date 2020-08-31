@@ -93,7 +93,7 @@ export default {
     itemToString(item) {
       return item ? item.value : '';
     },
-    // This could be a call to an api that returns the oprions
+    // This could be a call to an api that returns the options
     updateList(text) {
       this.filteredList = list.filter((item) => item.value.includes(text));
     },
