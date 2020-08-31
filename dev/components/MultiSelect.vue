@@ -118,7 +118,8 @@ export default {
     },
     // This could be a call to an api that returns the oprions
     updateList(text) {
-      this.filteredList = list.filter((item) => item.value.includes(text));
+      this.filteredList = list.filter((item) => item.value.toLowerCase()
+        .includes(text.toLowerCase()));
     },
   },
 };
