@@ -34,7 +34,8 @@
           }"
           v-bind="getItemProps({ item, index })"
           v-on="getItemEventListeners({ item, index })"
-        >        <input
+        >
+        <input
           type="checkbox"
           :checked='selectedItems.includes(item) '
           :value='item'
