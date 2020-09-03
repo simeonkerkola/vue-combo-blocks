@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 import Vue from 'vue';
 import {
-  controls, hasKeyCode, getItemIndex, requiredProp,
+  controls, hasKeyCode, getItemIndex, requiredProp, hasOwnProperty,
 } from './misc';
 import * as sct from './stateChangeTypes';
 
@@ -44,34 +44,44 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     selectedIndex() { return this.items.indexOf(this.selectedItem); },
   },
   methods: {
-    emitStateChanges(key, changes, type) {
-      switch (key) {
-        case 'selectedItem':
-          this.$emit('change', changes[key], type);
-          break;
-        case 'inputValue':
-          this.$emit('input-value-change', changes[key], type);
-          break;
-        case 'isOpen':
-          this.$emit('is-open-change', changes[key], type);
-          break;
-        case 'hoveredIndex':
-          this.$emit('hovered-index-change', changes[key], type);
-          break;
-        default:
-          break;
-      }
-    },
     setState(changes, type) {
       const oldState = this.$data;
       const newState = this.stateReducer(oldState, { changes, type });
 
-      Object.keys(newState).forEach((key) => {
-        // if (oldState[key] !== newState[key]) {
-        this[key] = newState[key];
-        this.emitStateChanges(key, newState, type);
-        // }
-      });
+      // selectedItem
+      if (hasOwnProperty(newState, 'selectedItem')) {
+        // Always emit the selectedItem, no matter has it changed
+        this.selectedItem = newState.selectedItem;
+        this.$emit('change', newState.selectedItem, type);
+      }
+      // inputValue
+      if (hasOwnProperty(newState, 'inputValue')) {
+        if (newState.inputValue !== oldState.inputValue) {
+          this.inputValue = newState.inputValue;
+          this.$emit('input-value-change', newState.inputValue, type);
+        }
+      }
+      // isOpen
+      if (hasOwnProperty(newState, 'isOpen')) {
+        if (newState.isOpen !== oldState.isOpen) {
+          this.isOpen = newState.isOpen;
+        }
+        this.$emit('is-open-change', newState.isOpen, type);
+      }
+      // hoveredIndex
+      if (hasOwnProperty(newState, 'hoveredIndex')) {
+        if (newState.hoveredIndex !== oldState.hoveredIndex) {
+          this.hoveredIndex = newState.hoveredIndex;
+          this.$emit('hovered-index-change', newState.hoveredIndex, type);
+        }
+      }
+      // hovered
+      if (hasOwnProperty(newState, 'hovered')) {
+        if (newState.hovered !== oldState.hovered) {
+          this.hovered = newState.hovered;
+        }
+      }
+      // All changes
       this.$emit('state-change', newState, type);
     },
     getComboboxProps() {

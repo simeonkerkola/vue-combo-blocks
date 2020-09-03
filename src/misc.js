@@ -20,6 +20,10 @@ export function getItemIndex(index, item, items) {
   return items.indexOf(item);
 }
 
+export function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
 export function requiredProp(fnName, propName) {
   // eslint-disable-next-line no-console
   console.error(`The property "${propName}" is required in "${fnName}"`);
