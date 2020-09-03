@@ -22,12 +22,15 @@
   >
     <div v-bind="getComboboxProps()">
       <h2>MultiSelect</h2>
-      <button @click="reset">reset</button>
-      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
+      <button data-testid="clear-button" @click="reset">reset</button>
+      <input data-testid='multiselect-input'
+      v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
       <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"
+          :data-testid="`vue-combo-blocks-item-${index}`"
+          :class="{selected: selectedItems.includes(item) ? 'bold' : 'normal'}"
           :style="{
             backgroundColor: hoveredIndex === index ? 'lightgray' : 'white',
             fontWeight: selectedItems.includes(item) ? 'bold' : 'normal',
@@ -43,7 +46,7 @@
           {{ item.value }}</li>
       </ul>
       <h3>Selected items:</h3>
-      <ul>
+      <ul data-testid='selected-items'>
         <li :key="item.id" v-for="item in selectedItems">
           {{item.value}}
         </li>
