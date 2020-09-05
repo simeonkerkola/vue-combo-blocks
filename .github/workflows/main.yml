@@ -16,12 +16,13 @@ jobs:
   run-tests:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v2-beta
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
@@ -36,4 +37,10 @@ jobs:
         run: npm run test:unit
       
       - name: Run e2e tests
-        run: npm run test:e2e
+        uses: cypress-io/github-action@v2
+        with:
+          command: npm run test:e2e -- --headless
+#           wait-on: 'http://localhost:8080'
+          # wait for 2 minutes for the server to respond
+#           wait-on-timeout: 60
+#         run: npm run test:e2e
