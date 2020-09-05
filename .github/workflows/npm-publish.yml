@@ -6,6 +6,8 @@ name: Node.js Package
 on:
   push:
     branches: [ master ]
+    pull_request:
+      branches: [ master ]
 
 jobs:
   build:
@@ -28,7 +30,8 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm publish
+      # - run: npm publish
+      - run: echo "I got here"
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
