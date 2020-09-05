@@ -65,8 +65,8 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       if (hasOwnProperty(newState, 'isOpen')) {
         if (newState.isOpen !== oldState.isOpen) {
           this.isOpen = newState.isOpen;
+          this.$emit('is-open-change', newState.isOpen, type);
         }
-        this.$emit('is-open-change', newState.isOpen, type);
       }
       // hoveredIndex
       if (hasOwnProperty(newState, 'hoveredIndex')) {
