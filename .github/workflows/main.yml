@@ -39,7 +39,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           command: npm run test:e2e
-          wait-on: 'http://localhost:8080'
+#           wait-on: 'http://localhost:8080'
           # wait for 2 minutes for the server to respond
-          wait-on-timeout: 60
+#           wait-on-timeout: 60
 #         run: npm run test:e2e
