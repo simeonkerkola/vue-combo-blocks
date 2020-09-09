@@ -1,38 +1,56 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Node.js Package
+name: Publish package
 
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2-beta
         with:
           node-version: 12
-      - run: npm ci
-      - run: npm run build-pkg
+        
+      - name: Check node v
+        run: node -v
+        
+      - name: Install deps
+        run: npm ci
+      
+      - name: Run unit tests
+        run: npm run test:unit
+      
+      - name: Run e2e tests
+        uses: cypress-io/github-action@v2
+        with:
+          command: npm run test:e2e -- --headless
 
-  publish-npm:
-    needs: build
+  publish:
+    needs: tests
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      # - run: npm publish
-      - run: echo "I got here?"
-      - run: ls -la build
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build-pkg
+
+      - name: Publish
+        run: npm publish --dry-run --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
