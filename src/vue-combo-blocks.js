@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import {
-  controls, hasKeyCode, getItemIndex, requiredProp, hasOwnProperty, scrollToElement,
+  controls, hasKeyCode, getItemIndex, requiredProp, hasOwnProperty,
+  // scrollToElement,
 } from './misc';
 import * as sct from './stateChangeTypes';
 
