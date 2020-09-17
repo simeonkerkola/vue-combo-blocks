@@ -123,7 +123,7 @@ Emitted events return 2 parameters. First is the new value, and second is the [s
 
 | Name                 | Type                                                             | Description                                              |
 | -------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
-| change               | seledtedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
+| change               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
 | input-value-change   | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
 | is-open-change       | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
 | hovered-index-change | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
