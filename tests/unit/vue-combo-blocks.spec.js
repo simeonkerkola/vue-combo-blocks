@@ -28,24 +28,33 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm).toBeDefined();
   });
 
+  it('creates 3 components with different ids', () => {
+    const wrapper = factory();
+    const wrapper2 = factory();
+    const wrapper3 = factory();
+    const isGreaterThan = wrapper3.vm.idCounter > wrapper2.vm.idCounter
+      && wrapper2.vm.idCounter > wrapper.vm.idCounter;
+    expect(isGreaterThan).toBe(true);
+  });
+
   // Props
   it('returns getComboboxProps', () => {
     const wrapper = factory();
-    const idPrefix = wrapper.vm._uid;
+    const idPrefix = wrapper.vm.idCounter;
 
     const comboboxProps = wrapper.vm.getComboboxProps();
     expect(comboboxProps).toEqual(
       {
         role: 'combobox',
         'aria-haspopup': 'listbox',
-        'aria-owns': `${idPrefix}-vue-combo-blocks-menu`,
+        'aria-owns': `v-${idPrefix}-vue-combo-blocks-menu`,
         'aria-expanded': 'false',
       },
     );
   });
   it('returns getInputProps', () => {
     const wrapper = factory();
-    const idPrefix = wrapper.vm._uid;
+    const idPrefix = wrapper.vm.idCounter;
 
     const comboboxProps = wrapper.vm.getInputProps();
     expect(comboboxProps).toEqual(
@@ -53,46 +62,47 @@ describe('comboblocks.js', () => {
         value: '',
         'aria-activedescendant': '',
         'aria-autocomplete': 'list',
-        'aria-controls': `${idPrefix}-vue-combo-blocks-menu`,
-        id: `${idPrefix}-vue-combo-blocks-input`,
+        'aria-controls': `v-${idPrefix}-vue-combo-blocks-menu`,
+        'aria-labelledby': `v-${idPrefix}-vue-combo-blocks-label`,
+        id: `v-${idPrefix}-vue-combo-blocks-input`,
         autocomplete: 'off',
       },
     );
   });
   it('returns getMenuProps', () => {
     const wrapper = factory();
-    const idPrefix = wrapper.vm._uid;
+    const idPrefix = wrapper.vm.idCounter;
 
     const comboboxProps = wrapper.vm.getMenuProps();
     expect(comboboxProps).toEqual(
       {
-        id: `${idPrefix}-vue-combo-blocks-menu`,
+        id: `v-${idPrefix}-vue-combo-blocks-menu`,
         role: 'listbox',
-        'aria-labelledby': `${idPrefix}-vue-combo-blocks-label`,
+        'aria-labelledby': `v-${idPrefix}-vue-combo-blocks-label`,
       },
     );
   });
   it('returns getLabelProps', () => {
     const wrapper = factory();
-    const idPrefix = wrapper.vm._uid;
+    const idPrefix = wrapper.vm.idCounter;
 
     const comboboxProps = wrapper.vm.getLabelProps();
     expect(comboboxProps).toEqual(
       {
-        id: `${idPrefix}-vue-combo-blocks-label`,
-        for: `${idPrefix}-vue-combo-blocks-input`,
+        id: `v-${idPrefix}-vue-combo-blocks-label`,
+        for: `v-${idPrefix}-vue-combo-blocks-input`,
       },
     );
   });
   it('returns getItemProps', () => {
     const wrapper = factory();
-    const idPrefix = wrapper.vm._uid;
+    const idPrefix = wrapper.vm.idCounter;
 
     const itemProps = wrapper.vm.getItemProps({ item: items[1] });
 
     expect(itemProps).toEqual(
       {
-        id: `${idPrefix}-vue-combo-blocks-item-1`,
+        id: `v-${idPrefix}-vue-combo-blocks-item-1`,
         role: 'option',
         'aria-selected': 'false',
       },
@@ -121,10 +131,7 @@ describe('comboblocks.js', () => {
   it('getMenuEventListeners call right methods', () => {
     const wrapper = factory();
 
-    wrapper.vm.hovered = item;
-
-    wrapper.vm.getMenuEventListeners().mouseleave();
-    expect(wrapper.vm.hovered).toBeNull();
+    expect(wrapper.vm.getMenuEventListeners).toBeDefined();
   });
   it('getItemEventListeners call right methods', () => {
     const fakeEvent = { preventDefault: () => {} };
@@ -144,6 +151,9 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm.hovered).toEqual(null);
     expect(wrapper.vm.hoveredIndex).toEqual(-1);
     expect(wrapper.vm.inputValue).toBe(item.name);
+
+    wrapper.vm.getItemEventListeners({ item }).mouseleave();
+    expect(wrapper.vm.hovered).toBeNull();
   });
 
   // helpers

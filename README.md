@@ -112,6 +112,10 @@ export default {
 | itemToString | Function                                          | `(item) => (item ? String(item) : '')` |                                                                                                                                                         |
 | value        | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                            |
 | stateReducer | Function(state: object, actionAndChanges: object) | optional                               | Very handy feature that gives you a complete control of the `vue-combo-blocks` state. Read more about it in the [State Reducer section](#state-reducer) |
+| inputId      | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`input`)                                                                                   |
+| labelId      | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`label`)                                                                                   |
+| menuId       | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`ul`)                                                                                      |
+| getItemId    | Function(index)                                   | optional                               | defaults to a function that generates an ID based on the index                                                                                          |
 
 ## Events
 
@@ -142,6 +146,7 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 | ---------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | getComboboxProps | function()                             | returns the props you should apply to an element that wraps the input element that you render.            |
 | getInputProps    | function()                             | returns the props you should apply to the input element that you render.                                  |
+| getLabelProps    | function()                             | returns the props you should apply to the label element that you render.                                  |
 | getItemProps     | function({ item: any, index: number }) | returns the props you should apply to any menu item elements you render. `item` property is **required**! |
 | getMenuProps     | function()                             | returns the props you should apply to the ul element (or root of your menu) that you render.              |
 
@@ -221,7 +226,7 @@ The list of all possible values this `type` property can take is defined in [thi
 - `VueComboBlocks.stateChangeTypes.InputKeyUpEnter`
 - `VueComboBlocks.stateChangeTypes.InputChange`
 - `VueComboBlocks.stateChangeTypes.InputBlur`
-- `VueComboBlocks.stateChangeTypes.MenuMouseLeave`
+- `VueComboBlocks.stateChangeTypes.ItemMouseLeave`
 - `VueComboBlocks.stateChangeTypes.ItemMouseMove`
 - `VueComboBlocks.stateChangeTypes.ItemClick`
 - `VueComboBlocks.stateChangeTypes.FunctionOpenMenu`

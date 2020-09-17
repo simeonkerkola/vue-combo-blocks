@@ -104,7 +104,6 @@ export default {
       switch (type) {
         case VueComboBlocks.stateChangeTypes.InputKeyUpEnter:
         case VueComboBlocks.stateChangeTypes.ItemClick:
-
           return {
             ...changes,
             isOpen: true, // keep menu open after selection.
