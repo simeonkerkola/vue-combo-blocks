@@ -1,10 +1,11 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_uid"] }] */
 import Vue from 'vue';
 import {
   controls, hasKeyCode, getItemIndex, requiredProp, hasOwnProperty,
+  // scrollToElement,
 } from './misc';
 import * as sct from './stateChangeTypes';
 
+let idCounter = 0;
 const VueComboBlocks = Vue.component('vue-combo-blocks', {
   model: {
     prop: 'value',
@@ -26,6 +27,33 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       type: Function,
       default: (s, a) => a.changes,
     },
+    getItemId: {
+      type: Function,
+      default(i) {
+        return `v-${this.idCounter}-vue-combo-blocks-item-${i}`;
+      },
+    },
+    menuId: {
+      type: String,
+      default: '',
+    },
+    inputId: {
+      type: String,
+      default: '',
+    },
+    labelId: {
+      type: String,
+      default: '',
+    },
+  },
+  beforeCreate() {
+    this.idCounter = idCounter.toString();
+    idCounter += 1;
+  },
+  mounted() {
+    // console.log(this.getItemId(2));
+    // console.log(this.some);
+    // console.log(this.idCounter);
   },
   data() {
     return {
@@ -38,10 +66,11 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     };
   },
   computed: {
-    menuId() { return `${this._uid}-vue-combo-blocks-menu`; },
-    inputId() { return `${this._uid}-vue-combo-blocks-input`; },
-    labelId() { return `${this._uid}-vue-combo-blocks-label`; },
+    computedMenuId() { return this.menuId || `v-${this.idCounter}-vue-combo-blocks-menu`; },
+    computedInputId() { return this.inputId || `v-${this.idCounter}-vue-combo-blocks-input`; },
+    computedLabelId() { return this.labelId || `v-${this.idCounter}-vue-combo-blocks-label`; },
     selectedIndex() { return this.items.indexOf(this.selectedItem); },
+    // menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },
   },
   methods: {
     setState(changes, type) {
@@ -88,7 +117,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       return {
         role: 'combobox',
         'aria-haspopup': 'listbox',
-        'aria-owns': this.menuId,
+        'aria-owns': this.computedMenuId,
         'aria-expanded': this.isOpen ? 'true' : 'false',
       };
     },
@@ -97,22 +126,23 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         value: this.inputValue || '',
         'aria-activedescendant': this.hovered ? this.getItemId(this.hoveredIndex) : '',
         'aria-autocomplete': 'list',
-        'aria-controls': this.menuId,
-        id: this.inputId,
+        'aria-controls': this.computedMenuId,
+        'aria-labelledby': this.computedLabelId,
+        id: this.computedInputId,
         autocomplete: 'off',
       };
     },
     getMenuProps() {
       return {
-        id: this.menuId,
+        id: this.computedMenuId,
         role: 'listbox',
-        'aria-labelledby': this.labelId,
+        'aria-labelledby': this.computedLabelId,
       };
     },
     getLabelProps() {
       return {
-        id: this.labelId,
-        for: this.inputId,
+        id: this.computedLabelId,
+        for: this.computedInputId,
       };
     },
     getInputEventListeners() {
@@ -125,14 +155,8 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       };
     },
     getMenuEventListeners() {
-      const vm = this;
+      // const vm = this;
       return {
-        mouseleave() {
-          vm.setState({
-            hoveredIndex: -1,
-            hovered: null,
-          }, sct.MenuMouseLeave);
-        },
         mousedown(e) {
           // TODO: Prevent menu to close when clicking something
           // on a menu but not necessarily menu item.
@@ -159,6 +183,12 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         },
         mousedown(e) {
           e.preventDefault();
+        },
+        mouseleave() {
+          vm.setState({
+            hoveredIndex: -1,
+            hovered: null,
+          }, sct.ItemMouseLeave);
         },
         click() {
           // e.preventDefault();
@@ -227,6 +257,14 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         isOpen: true,
       }, sct.FunctionOpenMenu);
     },
+    // scrollItemIntoView(index) {
+    //   setTimeout(() => {
+    //     const itemElement = this.$el.querySelector(`#${this.getItemId(index)}`);
+    //     // itemElement.scrollIntoView();
+    //     scrollToElement(itemElement, this.menuElement, index);
+    //   // console.log(itemElement, this.menuElement, this.hoveredIndex);
+    //   }, 0);
+    // },
     moveSelection(e) {
       if (!this.isOpen || !this.items.length) return;
       const isMovingDown = hasKeyCode(controls.arrowDownKey, e);
@@ -241,6 +279,9 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           : this.hoveredIndex > 0;
         const index = hoversBetweenEdges ? this.hoveredIndex + direction : menuEdge;
         const item = this.items[index];
+        // this.$nextTick(() => {
+        //   this.scrollItemIntoView(index);
+        // });
         this.setState({
           hoveredIndex: index,
           hovered: item,
@@ -307,9 +348,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         inputValue: value,
       }, sct.FunctionSetInputValue);
     },
-    getItemId(i) {
-      return `${this._uid}-vue-combo-blocks-item-${i}`;
-    },
+
   },
   render() {
     return this.$scopedSlots.default({
@@ -318,6 +357,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       getItemProps: this.getItemProps,
       getMenuProps: this.getMenuProps,
       getComboboxProps: this.getComboboxProps,
+      getLabelProps: this.getLabelProps,
 
       // event listeners
       getInputEventListeners: this.getInputEventListeners,

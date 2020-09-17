@@ -4,6 +4,7 @@ import Vue from 'vue';
 import AutoComplete from './components/AutoComplete.vue';
 import SimpleAutoComplete from './components/SimpleAutoComplete.vue';
 import MultiSelect from './components/MultiSelect.vue';
+import AutoScrollingList from './components/AutoScrollingList.vue';
 
 Vue.use(Router);
 export const routes = [
@@ -18,6 +19,10 @@ export const routes = [
   {
     path: '/multiselect',
     component: MultiSelect,
+  },
+  {
+    path: '/autoscrolling',
+    component: AutoScrollingList,
   },
 ];
 
