@@ -307,12 +307,16 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       const { enterKey, escKey } = controls;
       if (this.isOpen) {
         if (hasKeyCode(enterKey, e)) {
-          e.preventDefault();
-          this.setState({
-            inputValue: this.itemToString(this.hovered),
-            selectedItem: this.hovered,
-            isOpen: false,
-          }, sct.InputKeyUpEnter);
+          if (this.hoveredIndex >= 0) {
+            e.preventDefault();
+            this.setState({
+              inputValue: this.itemToString(this.hovered),
+              selectedItem: this.hovered,
+              hoveredIndex: -1,
+              hovered: null,
+              isOpen: false,
+            }, sct.InputKeyUpEnter);
+          }
         } else if (hasKeyCode(escKey, e)) {
           this.setState({
             hoveredIndex: -1,

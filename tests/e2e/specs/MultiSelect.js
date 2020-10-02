@@ -27,9 +27,9 @@ describe('MultiSelect', () => {
     cy.findByTestId('vue-combo-blocks-item-1').should('have.class', 'selected');
   });
 
-  it('can keep the input element empty', () => {
+  it('can keep the input element value when no selectable item', () => {
     cy.findByTestId('multiselect-input')
       .type('sec{downarrow}{enter}')
-      .should('have.value', '');
+      .should('have.value', 'sec');
   });
 });
