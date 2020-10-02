@@ -10,6 +10,8 @@
     "test:unit": "vue-cli-service test:unit",
     "test:unit:watch": "vue-cli-service test:unit --watch",
     "test:e2e": "vue-cli-service test:e2e",
+    "test:e2e:clear": "cypress cache clear",
+    "test:e2e:install": "cypress install",
     "lint": "vue-cli-service lint",
     "build-pkg": "rm -r build & npm run build-pkg:umd & npm run build-pkg:es & npm run build-pkg:unpkg",
     "build-pkg:umd": "rollup --config rollup.config.js --format umd --file build/vue-combo-blocks.umd.js",
@@ -46,7 +48,7 @@
     "core-js": "^3.6.5",
     "cypress-plugin-tab": "^1.0.5",
     "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-vue": "^6.2.2",
     "lodash": "^4.17.20",
     "rollup": "^1.17.0",
@@ -54,7 +56,7 @@
     "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.12",
     "vue-cli-plugin-webpack-bundle-analyzer": "~2.0.0",
-    "vue-router": "^3.4.3",
+    "vue-router": "^3.4.5",
     "vue-template-compiler": "^2.6.12"
   },
   "keywords": [
