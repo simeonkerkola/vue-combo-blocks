@@ -312,6 +312,8 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
             this.setState({
               inputValue: this.itemToString(this.hovered),
               selectedItem: this.hovered,
+              hoveredIndex: -1,
+              hovered: null,
               isOpen: false,
             }, sct.InputKeyUpEnter);
           }
