@@ -198,6 +198,7 @@ describe('comboblocks.js', () => {
     wrapper.vm.select(item);
 
     expect(wrapper.vm.selectedItem).toEqual(item);
+    expect(wrapper.vm.inputValue).toEqual(item.name);
     expect(wrapper.emitted().change[0]).toEqual([item, 'FunctionSelectItem']);
   });
   it('selects same item again', (done) => {

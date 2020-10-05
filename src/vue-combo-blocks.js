@@ -232,6 +232,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     select(item) {
       this.setState({
+        inputValue: this.itemToString(item),
         selectedItem: item,
         isOpen: false,
         hoveredIndex: -1,
