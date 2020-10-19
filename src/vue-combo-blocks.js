@@ -168,6 +168,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     getItemEventListeners({
       index,
+      disabled,
       item = process.env.NODE_ENV === 'production' ? undefined
         : requiredProp('getItemEventListeners', 'item'),
     } = {}) {
@@ -192,6 +193,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         },
         click() {
           // e.preventDefault();
+          if (disabled) return;
           vm.setState({
             inputValue: vm.itemToString(item),
             selectedItem: item,
@@ -204,6 +206,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     getItemProps({
       index,
+      disabled = false,
       item = process.env.NODE_ENV === 'production' ? undefined
         : requiredProp('getItemProps', 'item'),
     } = {}) {
@@ -211,6 +214,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       const id = this.getItemId(itemIndex);
       return {
         id,
+        disabled,
         role: 'option',
         'aria-selected': this.isHovered(itemIndex) || this.isSelected(itemIndex) ? 'true' : 'false',
       };
@@ -257,6 +261,9 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       this.setState({
         isOpen: true,
       }, sct.FunctionOpenMenu);
+    },
+    getItemNodeFromIndex(index) {
+      return document.getElementById(this.getItemId(index));
     },
     // scrollItemIntoView(index) {
     //   setTimeout(() => {
@@ -310,6 +317,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         if (hasKeyCode(enterKey, e)) {
           if (this.hoveredIndex >= 0) {
             e.preventDefault();
+            const itemNode = this.getItemNodeFromIndex(this.hoveredIndex);
+            if ((itemNode?.hasAttribute('disabled'))) {
+              return;
+            }
             this.setState({
               inputValue: this.itemToString(this.hovered),
               selectedItem: this.hovered,

@@ -60,8 +60,8 @@
                   ? 'bold'
                   : 'normal'
             }"
-            v-bind="getItemProps({ item, index })"
-            v-on="getItemEventListeners({ item, index })"
+            v-bind="getItemProps({ item, index, disabled:item.disabled })"
+            v-on="getItemEventListeners({ item, index, disabled:item.disabled })"
           >
             <span :id="`${id}-suggest-item-${item[displayAttribute]}`">
               {{ item[displayAttribute] }}
@@ -97,7 +97,7 @@
 import VueComboBlocks from '../../src/vue-combo-blocks';
 
 const list = [
-  { displayName: 'first', id: '123' },
+  { displayName: 'first', id: '123', disabled: true },
   { displayName: 'second', id: '456' },
   { displayName: 'third', id: '789' },
   { displayName: 'duplicate', id: '789' },

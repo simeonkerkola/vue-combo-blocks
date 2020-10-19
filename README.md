@@ -142,21 +142,21 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 <input v-bind="getInputProps()" v-on="getInputEventListeners()" />
 ```
 
-| Name             | Type                                   | Description                                                                                               |
-| ---------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| getComboboxProps | function()                             | returns the props you should apply to an element that wraps the input element that you render.            |
-| getInputProps    | function()                             | returns the props you should apply to the input element that you render.                                  |
-| getLabelProps    | function()                             | returns the props you should apply to the label element that you render.                                  |
-| getItemProps     | function({ item: any, index: number }) | returns the props you should apply to any menu item elements you render. `item` property is **required**! |
-| getMenuProps     | function()                             | returns the props you should apply to the ul element (or root of your menu) that you render.              |
+| Name             | Type                                                      | Description                                                                                               |
+| ---------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| getComboboxProps | function()                                                | returns the props you should apply to an element that wraps the input element that you render.            |
+| getInputProps    | function()                                                | returns the props you should apply to the input element that you render.                                  |
+| getLabelProps    | function()                                                | returns the props you should apply to the label element that you render.                                  |
+| getItemProps     | function({ item: any, index: number, disabled: boolean }) | returns the props you should apply to any menu item elements you render. `item` property is **required**! |
+| getMenuProps     | function()                                                | returns the props you should apply to the ul element (or root of your menu) that you render.              |
 
 ### Event listeners
 
-| Name                   | Type                                   | Description                                                      |
-| ---------------------- | -------------------------------------- | ---------------------------------------------------------------- |
-| getInputEventListeners | function()                             | Bind these to the `input` element.                               |
-| getItemEventListeners  | function({ item: any, index: number }) | Bind these to the `li` element. `item` property is **required**! |
-| getMenuEventListeners  | function()                             | Bind these to the `ul` element.                                  |
+| Name                   | Type                                                      | Description                                                      |
+| ---------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
+| getInputEventListeners | function()                                                | Bind these to the `input` element.                               |
+| getItemEventListeners  | function({ item: any, index: number, disabled: boolean }) | Bind these to the `li` element. `item` property is **required**! |
+| getMenuEventListeners  | function()                                                | Bind these to the `ul` element.                                  |
 
 ### State
 
