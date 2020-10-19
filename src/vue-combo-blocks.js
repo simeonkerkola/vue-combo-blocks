@@ -174,6 +174,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     } = {}) {
       const itemIndex = getItemIndex(index, item, this.items);
       const vm = this;
+      if (disabled) return {};
       return {
         mousemove() {
           if (vm.hoveredIndex === itemIndex) return;
@@ -193,7 +194,6 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         },
         click() {
           // e.preventDefault();
-          if (disabled) return;
           vm.setState({
             inputValue: vm.itemToString(item),
             selectedItem: item,
@@ -272,6 +272,13 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     //     scrollToElement(itemElement, this.menuElement, index);
     //   // console.log(itemElement, this.menuElement, this.hoveredIndex);
     //   }, 0);
+    // },
+    // getNextNonDisabledIndex(){
+    //   for (let index = baseIndex - 1; index >= 0; index--) {
+    //     if (!this.getItemNodeFromIndex(index).hasAttribute('disabled')) {
+    //       return index
+    //     }
+    //   }
     // },
     moveSelection(e) {
       if (!this.isOpen || !this.items.length) return;
