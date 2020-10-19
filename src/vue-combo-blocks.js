@@ -300,12 +300,12 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       // prevent form submit on keydown if Enter key registered in the keyup
       if (e.key === 'Enter' && this.isOpen) {
         e.preventDefault();
-      } else if (e.key === 'Tab' && this.hovered) {
-        this.setState({
-          inputValue: this.itemToString(this.hovered),
-          selectedItem: this.hovered,
-          isOpen: false,
-        }, sct.InputKeyDownTab);
+      // } else if (e.key === 'Tab' && this.hovered) {
+      //   this.setState({
+      //     inputValue: this.itemToString(this.hovered),
+      //     selectedItem: this.hovered,
+      //     isOpen: false,
+      //   }, sct.InputKeyDownTab);
       } else if (hasKeyCode(controls.arrowDownKey, e) && !this.isOpen) {
         this.setState({ isOpen: true }, sct.InputKeyDownArrowDown);
         this.moveSelection(e);
@@ -318,7 +318,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           if (this.hoveredIndex >= 0) {
             e.preventDefault();
             const itemNode = this.getItemNodeFromIndex(this.hoveredIndex);
-            if ((itemNode?.hasAttribute('disabled'))) {
+            if (itemNode?.hasAttribute('disabled')) {
               return;
             }
             this.setState({
