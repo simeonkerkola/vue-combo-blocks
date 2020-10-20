@@ -104,6 +104,7 @@ describe('comboblocks.js', () => {
       {
         id: `v-${idPrefix}-vue-combo-blocks-item-1`,
         role: 'option',
+        disabled: false,
         'aria-selected': 'false',
       },
     );

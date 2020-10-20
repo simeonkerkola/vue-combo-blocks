@@ -5,6 +5,7 @@ import AutoComplete from './components/AutoComplete.vue';
 import SimpleAutoComplete from './components/SimpleAutoComplete.vue';
 import MultiSelect from './components/MultiSelect.vue';
 import AutoScrollingList from './components/AutoScrollingList.vue';
+import DisabledItems from './components/DisabledItems.vue';
 
 Vue.use(Router);
 export const routes = [
@@ -23,6 +24,10 @@ export const routes = [
   {
     path: '/autoscrolling',
     component: AutoScrollingList,
+  },
+  {
+    path: '/disableditems',
+    component: DisabledItems,
   },
 ];
 

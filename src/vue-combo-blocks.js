@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import {
-  controls, hasKeyCode, getItemIndex, requiredProp, hasOwnProperty,
+  controls,
+  hasKeyCode,
+  getItemIndex,
+  requiredProp,
+  hasOwnProperty,
+  getNextNonDisabledIndex,
   // scrollToElement,
 } from './misc';
 import * as sct from './stateChangeTypes';
@@ -168,11 +173,13 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     getItemEventListeners({
       index,
+      disabled,
       item = process.env.NODE_ENV === 'production' ? undefined
         : requiredProp('getItemEventListeners', 'item'),
     } = {}) {
       const itemIndex = getItemIndex(index, item, this.items);
       const vm = this;
+      if (disabled) return {};
       return {
         mousemove() {
           if (vm.hoveredIndex === itemIndex) return;
@@ -204,6 +211,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     getItemProps({
       index,
+      disabled = false,
       item = process.env.NODE_ENV === 'production' ? undefined
         : requiredProp('getItemProps', 'item'),
     } = {}) {
@@ -211,6 +219,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       const id = this.getItemId(itemIndex);
       return {
         id,
+        disabled,
         role: 'option',
         'aria-selected': this.isHovered(itemIndex) || this.isSelected(itemIndex) ? 'true' : 'false',
       };
@@ -258,6 +267,9 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         isOpen: true,
       }, sct.FunctionOpenMenu);
     },
+    getItemNodeFromIndex(index) {
+      return document.getElementById(this.getItemId(index));
+    },
     // scrollItemIntoView(index) {
     //   setTimeout(() => {
     //     const itemElement = this.$el.querySelector(`#${this.getItemId(index)}`);
@@ -266,25 +278,35 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     //   // console.log(itemElement, this.menuElement, this.hoveredIndex);
     //   }, 0);
     // },
+
     moveSelection(e) {
-      if (!this.isOpen || !this.items.length) return;
+      const itemCount = this.items.length;
+      if (!this.isOpen || !itemCount) return;
       const isMovingDown = hasKeyCode(controls.arrowDownKey, e);
       const isMovingUp = hasKeyCode(controls.arrowUpKey, e);
 
       if (isMovingDown || isMovingUp) {
         e.preventDefault();
         const direction = isMovingDown * 2 - 1;
-        const menuEdge = isMovingDown ? 0 : this.items.length - 1;
+        const menuEdge = isMovingDown ? 0 : itemCount - 1;
         const hoversBetweenEdges = isMovingDown
-          ? this.hoveredIndex < this.items.length - 1
+          ? this.hoveredIndex < itemCount - 1
           : this.hoveredIndex > 0;
+
         const index = hoversBetweenEdges ? this.hoveredIndex + direction : menuEdge;
-        const item = this.items[index];
+        const nextIndex = getNextNonDisabledIndex(
+          direction,
+          index,
+          itemCount,
+          this.getItemNodeFromIndex,
+          true,
+        );
+        const item = this.items[nextIndex];
         // this.$nextTick(() => {
         //   this.scrollItemIntoView(index);
         // });
         this.setState({
-          hoveredIndex: index,
+          hoveredIndex: nextIndex,
           hovered: item,
         }, isMovingDown ? sct.InputKeyDownArrowDown : sct.InputKeyDownArrowUp);
       }
@@ -293,12 +315,12 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       // prevent form submit on keydown if Enter key registered in the keyup
       if (e.key === 'Enter' && this.isOpen) {
         e.preventDefault();
-      } else if (e.key === 'Tab' && this.hovered) {
-        this.setState({
-          inputValue: this.itemToString(this.hovered),
-          selectedItem: this.hovered,
-          isOpen: false,
-        }, sct.InputKeyDownTab);
+      // } else if (e.key === 'Tab' && this.hovered) {
+      //   this.setState({
+      //     inputValue: this.itemToString(this.hovered),
+      //     selectedItem: this.hovered,
+      //     isOpen: false,
+      //   }, sct.InputKeyDownTab);
       } else if (hasKeyCode(controls.arrowDownKey, e) && !this.isOpen) {
         this.setState({ isOpen: true }, sct.InputKeyDownArrowDown);
         this.moveSelection(e);
@@ -310,6 +332,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         if (hasKeyCode(enterKey, e)) {
           if (this.hoveredIndex >= 0) {
             e.preventDefault();
+            const itemNode = this.getItemNodeFromIndex(this.hoveredIndex);
+            if (itemNode?.hasAttribute('disabled')) {
+              return;
+            }
             this.setState({
               inputValue: this.itemToString(this.hovered),
               selectedItem: this.hovered,
