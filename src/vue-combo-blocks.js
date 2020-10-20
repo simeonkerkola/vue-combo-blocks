@@ -333,7 +333,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           if (this.hoveredIndex >= 0) {
             e.preventDefault();
             const itemNode = this.getItemNodeFromIndex(this.hoveredIndex);
-            if (itemNode?.hasAttribute('disabled')) {
+            if (itemNode && itemNode.hasAttribute('disabled')) {
               return;
             }
             this.setState({
