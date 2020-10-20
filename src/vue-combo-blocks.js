@@ -1,6 +1,11 @@
 import Vue from 'vue';
 import {
-  controls, hasKeyCode, getItemIndex, requiredProp, hasOwnProperty,
+  controls,
+  hasKeyCode,
+  getItemIndex,
+  requiredProp,
+  hasOwnProperty,
+  getNextNonDisabledIndex,
   // scrollToElement,
 } from './misc';
 import * as sct from './stateChangeTypes';
@@ -273,32 +278,35 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     //   // console.log(itemElement, this.menuElement, this.hoveredIndex);
     //   }, 0);
     // },
-    // getNextNonDisabledIndex(){
-    //   for (let index = baseIndex - 1; index >= 0; index--) {
-    //     if (!this.getItemNodeFromIndex(index).hasAttribute('disabled')) {
-    //       return index
-    //     }
-    //   }
-    // },
+
     moveSelection(e) {
-      if (!this.isOpen || !this.items.length) return;
+      const itemCount = this.items.length;
+      if (!this.isOpen || !itemCount) return;
       const isMovingDown = hasKeyCode(controls.arrowDownKey, e);
       const isMovingUp = hasKeyCode(controls.arrowUpKey, e);
 
       if (isMovingDown || isMovingUp) {
         e.preventDefault();
         const direction = isMovingDown * 2 - 1;
-        const menuEdge = isMovingDown ? 0 : this.items.length - 1;
+        const menuEdge = isMovingDown ? 0 : itemCount - 1;
         const hoversBetweenEdges = isMovingDown
-          ? this.hoveredIndex < this.items.length - 1
+          ? this.hoveredIndex < itemCount - 1
           : this.hoveredIndex > 0;
+
         const index = hoversBetweenEdges ? this.hoveredIndex + direction : menuEdge;
-        const item = this.items[index];
+        const nextIndex = getNextNonDisabledIndex(
+          direction,
+          index,
+          itemCount,
+          this.getItemNodeFromIndex,
+          true,
+        );
+        const item = this.items[nextIndex];
         // this.$nextTick(() => {
         //   this.scrollItemIntoView(index);
         // });
         this.setState({
-          hoveredIndex: index,
+          hoveredIndex: nextIndex,
           hovered: item,
         }, isMovingDown ? sct.InputKeyDownArrowDown : sct.InputKeyDownArrowUp);
       }
