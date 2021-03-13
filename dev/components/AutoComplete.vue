@@ -287,3 +287,10 @@ export default {
   },
 };
 </script>
+<style>
+.list {
+  margin: 0 auto;
+  max-width: 400px;
+  border: 1px solid;
+}
+</style>
