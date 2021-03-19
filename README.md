@@ -234,6 +234,7 @@ The list of all possible values this `type` property can take is defined in [thi
 - `VueComboBlocks.stateChangeTypes.FunctionSelectItem`
 - `VueComboBlocks.stateChangeTypes.FunctionSetInputValue`
 - `VueComboBlocks.stateChangeTypes.FunctionReset`
+- `VueComboBlocks.stateChangeTypes.ControlledPropUpdatedSelectedItem`
 
 [downloads-badge]: https://img.shields.io/npm/dm/vue-combo-blocks?color=indigo
 [gzip-badge]: https://img.shields.io/bundlephobia/minzip/vue-combo-blocks?color=blue&label=gzipped

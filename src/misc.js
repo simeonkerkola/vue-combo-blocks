@@ -6,6 +6,10 @@ export const controls = {
   showList: 40,
 };
 
+export function isControlledProp(props, key) {
+  return props[key] !== undefined;
+}
+
 export function hasKeyCode(keyCode, event) {
   return keyCode === event.keyCode;
 }

@@ -2,7 +2,7 @@
   <div :id="`${id}-autocomplete`">
     <VueComboBlocks
       :ref="id"
-      :value="selected"
+      v-model="selected"
       :itemToString="itemToString"
       :items='filteredList'
       @change="onChange"
@@ -26,13 +26,14 @@
       }"
       >
       <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
-        <h2>AutoComplete</h2>
+        <h2>Controlled Prop</h2>
           <button @click="reset" data-testid="clear-button">clear</button>
+          <button @click="next(selectedItem)" data-testid="clear-button">select next</button>
         <input
           data-testid="combobox-input"
           :id="id"
           v-bind="getInputProps()"
-          :placeholder="placeholder"
+          placeholder="Search"
           :label="label"
           autocomplete="off"
           single-line
@@ -72,23 +73,7 @@
       </div>
     </VueComboBlocks>
 
-    <button
-      v-if="cancelButton && !!value"
-      :id="`${id}-cancel`"
-      label="cancel"
-      @click="onCancel"
-    >
-      cancel
-    </button>
-
-    <button
-      v-if="dropdownIcon"
-      :id="`${id}-dropdown`"
-      label="dropdown"
-      @click="onDropdownIconClick"
-    >
-      open
-    </button>
+    <h3>{{selected ? selected.displayName: 'Nothing'}}</h3>
   </div>
 </template>
 
@@ -158,7 +143,7 @@ export default {
   data() {
     return {
       filteredList: list,
-      selected: list[0],
+      selected: null,
     };
   },
   computed: {
@@ -177,6 +162,17 @@ export default {
     stateReducer(oldState, { changes, type }) {
       console.log({ type });
       return changes;
+    },
+    next(selectedItem) {
+      // clear the list
+      this.setFilteredList('');
+
+      // Select next or first item
+      const next = this.filteredList[this.filteredList.indexOf(selectedItem) + 1]
+        ? this.filteredList[this.filteredList.indexOf(selectedItem) + 1]
+        : this.filteredList[0];
+      console.log({ next });
+      this.selected = next;
     },
     itemToString(item) {
       return item ? item[this.displayAttribute] : '';

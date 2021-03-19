@@ -25,4 +25,4 @@ export const FunctionSelectItem = 'FunctionSelectItem';
 export const FunctionSetInputValue = 'FunctionSetInputValue';
 
 export const FunctionReset = 'FunctionReset';
-// export const ControlledPropUpdatedSelectedItem = 'ControlledPropUpdatedSelectedItem';
+export const ControlledPropUpdatedSelectedItem = 'ControlledPropUpdatedSelectedItem';

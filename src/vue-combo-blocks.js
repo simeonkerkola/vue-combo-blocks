@@ -6,6 +6,7 @@ import {
   requiredProp,
   hasOwnProperty,
   getNextNonDisabledIndex,
+  isControlledProp,
   // scrollToElement,
 } from './misc';
 import * as sct from './stateChangeTypes';
@@ -51,14 +52,19 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       default: '',
     },
   },
+  watch: {
+    value(newValue) {
+      if (isControlledProp(this.$props, 'value')) {
+        this.setState({
+          inputValue: this.itemToString(newValue),
+          selectedItem: newValue,
+        }, sct.ControlledPropUpdatedSelectedItem);
+      }
+    },
+  },
   beforeCreate() {
     this.idCounter = idCounter.toString();
     idCounter += 1;
-  },
-  mounted() {
-    // console.log(this.getItemId(2));
-    // console.log(this.some);
-    // console.log(this.idCounter);
   },
   data() {
     return {
