@@ -10,6 +10,7 @@
       @focus="onFocus"
       @hover="onHover"
       @input-value-change="onInput"
+      :stateReducer="stateReducer"
       v-slot="{
         getInputProps,
         getInputEventListeners,

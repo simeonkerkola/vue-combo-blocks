@@ -7,12 +7,13 @@ const list = [
   { displayName: 'second', id: '456' },
   { displayName: 'third', id: '789' },
 ];
-const factory = () => mount(AutoComplete,
+const factory = ({ propsData } = {}) => mount(AutoComplete,
   {
     propsData: {
       id: 'listId',
       list,
       displayAttribute: 'displayName',
+      ...propsData,
     },
   });
 describe('AutoComplete', () => {

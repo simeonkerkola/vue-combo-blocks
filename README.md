@@ -121,13 +121,14 @@ export default {
 
 Emitted events return 2 parameters. First is the new value, and second is the [state change type](#stateChangeTypes).
 
-| Name                 | Type                                                             | Description                                              |
-| -------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
-| change               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
-| input-value-change   | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
-| is-open-change       | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
-| hovered-index-change | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
-| state-change         | state:Object, type: [stateChangeType](#stateChangeTypes)         | Emitted when the state changes. Contains all the changes |
+| Name                      | Type                                                             | Description                                              |
+| ------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
+| select **(New in 0.3.0)** | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the item is selected                        |
+| change                    | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
+| input-value-change        | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
+| is-open-change            | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
+| hovered-index-change      | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
+| state-change              | state:Object, type: [stateChangeType](#stateChangeTypes)         | Emitted when the state changes. Contains all the changes |
 
 ## Default Slot & returned props
 
