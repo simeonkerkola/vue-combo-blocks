@@ -2,7 +2,7 @@
   <div :id="`${id}-autocomplete`">
     <VueComboBlocks
       :ref="id"
-      v-model="selected"
+      :value="selected"
       :itemToString="itemToString"
       :items='filteredList'
       @change="onChange"
@@ -128,7 +128,7 @@ export default {
     value: {
       // Object or null
       validator: (prop) => typeof prop === 'object',
-      default: () => list[0],
+      default: null,
     },
     displayAttribute: {
       type: String,
@@ -158,7 +158,7 @@ export default {
   data() {
     return {
       filteredList: list,
-      selected: this.value,
+      selected: list[0],
     };
   },
   computed: {
@@ -222,7 +222,6 @@ export default {
       // this.processAndShowList()
     },
     onChange(suggest) {
-      console.log({ suggest });
       this.$emit('change', suggest);
       if (this.clearAfterSelect) {
         setTimeout(() => {
