@@ -213,7 +213,8 @@ describe('comboblocks.js', () => {
     setTimeout(() => {
       // expect(wrapper.vm.setState).toHaveBeenCalledTimes(2);
       expect(wrapper.vm.selectedItem).toEqual(item);
-      expect(wrapper.emitted().change.length).toBe(2);
+      expect(wrapper.emitted().change.length).toBe(1);
+      expect(wrapper.emitted().select.length).toBe(2);
       done();
     }, 1);
 

@@ -5,7 +5,7 @@
     :items="filteredList"
     :stateReducer='stateReducer'
     @input-value-change="updateList"
-    @change="handleSelectedItemChange"
+    @select="handleSelectedItemChange"
     v-slot="{
       getInputProps,
       getInputEventListeners,

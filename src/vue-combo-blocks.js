@@ -55,10 +55,9 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
   watch: {
     value(newValue) {
       if (isControlledProp(this.$props, 'value')) {
-        this.setState({
-          inputValue: this.itemToString(newValue),
-          selectedItem: newValue,
-        }, sct.ControlledPropUpdatedSelectedItem);
+        // Quietly set the internal state
+        this.inputValue = this.itemToString(newValue);
+        this.selectedItem = newValue;
       }
     },
   },
@@ -90,9 +89,16 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
 
       // selectedItem
       if (hasOwnProperty(newState, 'selectedItem')) {
-        // Always emit the selectedItem, no matter has it changed
+        const hasSelectedItemChanged = newState.selectedItem !== oldState.selectedItem;
+
         this.selectedItem = newState.selectedItem;
-        this.$emit('change', newState.selectedItem, type);
+
+        this.$emit('select', newState.selectedItem, type);
+
+        // Only emit 'change' if selectedItem has changed
+        if (hasSelectedItemChanged) {
+          this.$emit('change', newState.selectedItem, type);
+        }
       }
       // inputValue
       if (hasOwnProperty(newState, 'inputValue')) {
