@@ -160,8 +160,8 @@ export default {
   },
 
   methods: {
-    stateReducer(oldState, { changes, type }) {
-      console.log({ type });
+    stateReducer(oldState, { changes }) {
+      // console.log({ type });
       return changes;
     },
     next(selectedItem) {
@@ -172,14 +172,13 @@ export default {
       const next = this.filteredList[this.filteredList.indexOf(selectedItem) + 1]
         ? this.filteredList[this.filteredList.indexOf(selectedItem) + 1]
         : this.filteredList[0];
-      console.log({ next });
+
       this.selected = next;
     },
     itemToString(item) {
       return item ? item[this.displayAttribute] : '';
     },
     setFilteredList(text) {
-      console.log({ text });
       this.filteredList = list.filter((item) => item[this.displayAttribute].includes(text));
     },
     onHover(suggestion, element) {
@@ -241,8 +240,7 @@ export default {
     hideList() {
       // this.autocompleteRef.hideList();
     },
-    onInput(text, type) {
-      console.log({ text, type });
+    onInput(text) {
       this.setFilteredList(text);
       // Send the input value to parent. For search etc.
       this.$emit('update:search-input', text);
@@ -258,7 +256,7 @@ export default {
       });
     },
     repositionList() {
-      console.log('repositionList');
+
     },
     async processAndShowList() {
       // if (this.autocompleteRef) {
