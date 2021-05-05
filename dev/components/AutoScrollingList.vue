@@ -21,8 +21,9 @@
       <h2>AutoScrollingList</h2>
       <button @click="reset">reset</button>
       <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
-      <ul v-show="true" v-bind="getMenuProps()" v-on="getMenuEventListeners()"
-          style="height: 100px; overflow: auto; border: 1px solid">
+      <ul  v-show="true" v-bind="getMenuProps()" v-on="getMenuEventListeners()"
+          style="height: 100px; overflow: auto; border: 1px solid;
+          position: absolute; left: 50%; transform: translateX(-50%); width: 100%">
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"

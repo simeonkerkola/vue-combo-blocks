@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.0 (2021-05-5)
+
+### New
+
+- Scroll hovered item into view. Can be disabled with `scrollIntoView` prop.
+
 ## 0.3.0 (2021-04-26)
 
 ### Breaking change
@@ -9,5 +15,3 @@
 ### New
 
 - Emit `select` event when item is selected. Even if the item is same as previously selected item.
-
-https://github.com/vuejs/vue-next/compare/v3.0.10...v3.0.11

@@ -7,8 +7,8 @@ import {
   hasOwnProperty,
   getNextNonDisabledIndex,
   isControlledProp,
-  // scrollToElement,
-} from './misc';
+  scrollToElement,
+} from './utils';
 import * as sct from './stateChangeTypes';
 
 let idCounter = 0;
@@ -51,6 +51,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       type: String,
       default: '',
     },
+    scrollIntoView: {
+      type: Boolean,
+      default: true,
+    },
   },
   watch: {
     value(newValue) {
@@ -79,7 +83,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     computedInputId() { return this.inputId || `v-${this.idCounter}-vue-combo-blocks-input`; },
     computedLabelId() { return this.labelId || `v-${this.idCounter}-vue-combo-blocks-label`; },
     selectedIndex() { return this.items.indexOf(this.selectedItem); },
-    // menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },
+    menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },
   },
   methods: {
     setState(changes, type) {
@@ -267,14 +271,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     getItemNodeFromIndex(index) {
       return document.getElementById(this.getItemId(index));
     },
-    // scrollItemIntoView(index) {
-    //   setTimeout(() => {
-    //     const itemElement = this.$el.querySelector(`#${this.getItemId(index)}`);
-    //     // itemElement.scrollIntoView();
-    //     scrollToElement(itemElement, this.menuElement, index);
-    //   // console.log(itemElement, this.menuElement, this.hoveredIndex);
-    //   }, 0);
-    // },
+    scrollItemIntoView(index) {
+      const itemElement = this.$el.querySelector(`#${this.getItemId(index)}`);
+      scrollToElement(itemElement, this.menuElement, index);
+    },
 
     moveSelection(e) {
       const itemCount = this.items.length;
@@ -299,9 +299,11 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           true,
         );
         const item = this.items[nextIndex];
-        // this.$nextTick(() => {
-        //   this.scrollItemIntoView(index);
-        // });
+        if (this.scrollIntoView) {
+          this.$nextTick(() => {
+            this.scrollItemIntoView(index);
+          });
+        }
         this.setState({
           hoveredIndex: nextIndex,
           hovered: item,

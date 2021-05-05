@@ -83,33 +83,24 @@ export function getNextNonDisabledIndex(
         false,
       );
   }
-
   return -1;
 }
 
-// export function scrollToElement(element, parentElement, hoveredIndex) {
-//   console.log({ element, parentElement, hoveredIndex });
-//   /* eslint-disable no-param-reassign */
-//   const { clientHeight, scrollTop } = parentElement;
-//   const { offsetHeight, offsetTop } = element;
+export function scrollToElement(element, parentElement, hoveredIndex) {
+  /* eslint-disable no-param-reassign */
+  const { clientHeight, scrollTop } = parentElement;
+  const { offsetHeight, offsetTop } = element;
 
-//   console.log('parent', { clientHeight, scrollTop });
-//   console.log('element', { offsetHeight, offsetTop });
-
-//   if (offsetTop < scrollTop) {
-//     // If scrolled down past the last item, scroll all the way to the top
-//     console.log('up');
-//     if (hoveredIndex === 0) parentElement.scrollTop = 0;
-//     else parentElement.scrollTop = offsetTop; // scroll up
-//   } else {
-//     const offsetBottom = offsetTop + offsetHeight;
-//     const scrollBottom = scrollTop + clientHeight;
-//     if (offsetBottom > scrollBottom) {
-//       console.log('down');
-//       parentElement.scrollTop = offsetBottom - clientHeight; // scroll down
-//     }
-//   }
-//   console.log({ 'parentElement.scrollTop': parentElement.scrollTop });
-
-// /* eslint-enable no-param-reassign */
-// }
+  if (offsetTop < scrollTop) {
+    // If scrolled down past the last item, scroll all the way to the top
+    if (hoveredIndex === 0) parentElement.scrollTop = 0;
+    else parentElement.scrollTop = offsetTop; // scroll up
+  } else {
+    const offsetBottom = offsetTop + offsetHeight;
+    const scrollBottom = scrollTop + clientHeight;
+    if (offsetBottom > scrollBottom) {
+      parentElement.scrollTop = offsetBottom - clientHeight; // scroll down
+    }
+  }
+/* eslint-enable no-param-reassign */
+}
