@@ -2,7 +2,7 @@
 const bodyX = 100;
 const bodyY = 300;
 
-describe('My First Test', () => {
+describe('Auto Complete', () => {
   before(() => {
     cy.visit('/');
     // can read the initial value

@@ -7,8 +7,8 @@ import {
   hasOwnProperty,
   getNextNonDisabledIndex,
   isControlledProp,
-  // scrollToElement,
-} from './misc';
+  scrollToElement,
+} from './utils';
 import * as sct from './stateChangeTypes';
 
 let idCounter = 0;
@@ -51,6 +51,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       type: String,
       default: '',
     },
+    scrollIntoView: {
+      type: Boolean,
+      default: true,
+    },
   },
   watch: {
     value(newValue) {
@@ -72,7 +76,6 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       isOpen: false,
       inputValue: this.itemToString(this.value),
       hoveredIndex: -1,
-
     };
   },
   computed: {
@@ -80,55 +83,41 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     computedInputId() { return this.inputId || `v-${this.idCounter}-vue-combo-blocks-input`; },
     computedLabelId() { return this.labelId || `v-${this.idCounter}-vue-combo-blocks-label`; },
     selectedIndex() { return this.items.indexOf(this.selectedItem); },
-    // menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },
+    menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },
   },
   methods: {
     setState(changes, type) {
       const oldState = this.$data;
       const newState = this.stateReducer(oldState, { changes, type });
 
-      // selectedItem
-      if (hasOwnProperty(newState, 'selectedItem')) {
-        const hasSelectedItemChanged = newState.selectedItem !== oldState.selectedItem;
+      const isItemSelected = hasOwnProperty(newState, 'selectedItem');
+      const hasSelectedItemChanged = newState.selectedItem !== oldState.selectedItem;
 
-        this.selectedItem = newState.selectedItem;
-
+      // Emit select and change events
+      if (isItemSelected) {
         this.$emit('select', newState.selectedItem, type);
-
         // Only emit 'change' if selectedItem has changed
         if (hasSelectedItemChanged) {
           this.$emit('change', newState.selectedItem, type);
         }
       }
-      // inputValue
-      if (hasOwnProperty(newState, 'inputValue')) {
-        if (newState.inputValue !== oldState.inputValue) {
-          this.inputValue = newState.inputValue;
-          this.$emit('input-value-change', newState.inputValue, type);
+
+      const nextFullState = {};
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const prop in newState) {
+        if (hasOwnProperty(newState, prop)) {
+          if (oldState[prop] !== newState[prop]) {
+            nextFullState[prop] = newState[prop];
+            this[prop] = nextFullState[prop];
+            // Emit other events
+            if (prop === 'inputValue') this.$emit('input-value-change', newState[prop], type);
+            else if (prop === 'isOpen') this.$emit('is-open-change', newState[prop], type);
+            else if (prop === 'hoveredIndex') this.$emit('hovered-index-change', newState[prop], type);
+          }
         }
       }
-      // isOpen
-      if (hasOwnProperty(newState, 'isOpen')) {
-        if (newState.isOpen !== oldState.isOpen) {
-          this.isOpen = newState.isOpen;
-          this.$emit('is-open-change', newState.isOpen, type);
-        }
-      }
-      // hoveredIndex
-      if (hasOwnProperty(newState, 'hoveredIndex')) {
-        if (newState.hoveredIndex !== oldState.hoveredIndex) {
-          this.hoveredIndex = newState.hoveredIndex;
-          this.$emit('hovered-index-change', newState.hoveredIndex, type);
-        }
-      }
-      // hovered
-      if (hasOwnProperty(newState, 'hovered')) {
-        if (newState.hovered !== oldState.hovered) {
-          this.hovered = newState.hovered;
-        }
-      }
-      // All changes
-      this.$emit('state-change', newState, type);
+      this.$emit('state-change', nextFullState, type);
     },
     getComboboxProps() {
       return {
@@ -282,14 +271,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     getItemNodeFromIndex(index) {
       return document.getElementById(this.getItemId(index));
     },
-    // scrollItemIntoView(index) {
-    //   setTimeout(() => {
-    //     const itemElement = this.$el.querySelector(`#${this.getItemId(index)}`);
-    //     // itemElement.scrollIntoView();
-    //     scrollToElement(itemElement, this.menuElement, index);
-    //   // console.log(itemElement, this.menuElement, this.hoveredIndex);
-    //   }, 0);
-    // },
+    scrollItemIntoView(index) {
+      const itemElement = this.$el.querySelector(`#${this.getItemId(index)}`);
+      scrollToElement(itemElement, this.menuElement, index);
+    },
 
     moveSelection(e) {
       const itemCount = this.items.length;
@@ -314,9 +299,11 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           true,
         );
         const item = this.items[nextIndex];
-        // this.$nextTick(() => {
-        //   this.scrollItemIntoView(index);
-        // });
+        if (this.scrollIntoView) {
+          this.$nextTick(() => {
+            this.scrollItemIntoView(index);
+          });
+        }
         this.setState({
           hoveredIndex: nextIndex,
           hovered: item,
