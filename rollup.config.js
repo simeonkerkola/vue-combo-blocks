@@ -12,7 +12,7 @@ export default {
   plugins: [
     commonjs(),
     vue({
-      css: true, // Dynamically inject css as a <style> tag
+      css: false, // Dynamically inject css as a <style> tag
       compileTemplate: true, // Explicitly convert template to render function
     }),
     // babel({ babelHelpers: 'runtime' }),
