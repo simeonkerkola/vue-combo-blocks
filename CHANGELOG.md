@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.4.1 (2021-05-5)
+
+### New
+
+- Use terser for minified build.
 ## 0.4.0 (2021-05-5)
 
 ### New

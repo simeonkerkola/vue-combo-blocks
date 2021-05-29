@@ -1,6 +1,6 @@
 {
   "name": "vue-combo-blocks",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "main": "build/vue-combo-blocks.umd.js",
   "module": "build/vue-combo-blocks.esm.js",
   "unpkg": "build/vue-combo-blocks.min.js",
@@ -13,10 +13,7 @@
     "test:e2e:clear": "cypress cache clear",
     "test:e2e:install": "cypress install",
     "lint": "vue-cli-service lint",
-    "build-pkg": "rm -r build & npm run build-pkg:umd & npm run build-pkg:es & npm run build-pkg:unpkg",
-    "build-pkg:umd": "rollup --config rollup.config.js --format umd --file build/vue-combo-blocks.umd.js",
-    "build-pkg:es": "rollup --config rollup.config.js --format es --file build/vue-combo-blocks.esm.js",
-    "build-pkg:unpkg": "rollup --config rollup.config.js --format iife --file build/vue-combo-blocks.min.js"
+    "build-pkg": "rm -r build & rollup --config rollup.config.js"
   },
   "author": "Simeon Kerkola (https://simeon.fyi)",
   "license": "MIT",
@@ -53,6 +50,7 @@
     "lodash": "^4.17.20",
     "rollup": "^2.32.0",
     "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.12",
     "vue-cli-plugin-webpack-bundle-analyzer": "~2.0.0",
