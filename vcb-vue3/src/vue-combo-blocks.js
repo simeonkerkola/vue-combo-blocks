@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import {
   controls,
   hasKeyCode,
@@ -8,21 +8,26 @@ import {
   getNextNonDisabledIndex,
   isControlledProp,
   scrollToElement,
-} from './utils';
-import * as sct from './stateChangeTypes';
+} from '../../src/utils';
+import * as sct from '../../src/stateChangeTypes';
 
 let idCounter = 0;
-const VueComboBlocks = Vue.component('vue-combo-blocks', {
-  model: {
-    prop: 'value',
-    event: 'change',
+const VueComboBlocks = defineComponent({
+  name: 'vue-combo-blocks',
+  emits: {
+    select: null,
+    'update:modelValue': null,
+    'input-value-change': null,
+    'is-open-change': null,
+    'hovered-index-change': null,
+    'state-change': null,
   },
   props: {
     items: {
       type: Array,
       required: true,
     },
-    value: {
+    modelValue: {
       default: null,
     },
     itemToString: {
@@ -57,8 +62,8 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
   },
   watch: {
-    value(newValue) {
-      if (isControlledProp(this.$props, 'value')) {
+    modelValue(newValue) {
+      if (isControlledProp(this.$props, 'modelValue')) {
         // Quietly set the internal state
         this.inputValue = this.itemToString(newValue);
         this.selectedItem = newValue;
@@ -71,10 +76,10 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
   },
   data() {
     return {
-      selectedItem: this.value,
+      selectedItem: this.modelValue,
       hovered: null,
       isOpen: false,
-      inputValue: this.itemToString(this.value),
+      inputValue: this.itemToString(this.modelValue),
       hoveredIndex: -1,
     };
   },
@@ -83,10 +88,12 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     computedInputId() { return this.inputId || `v-${this.idCounter}-vue-combo-blocks-input`; },
     computedLabelId() { return this.labelId || `v-${this.idCounter}-vue-combo-blocks-label`; },
     selectedIndex() { return this.items.indexOf(this.selectedItem); },
-    menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },
+    menuElement() { return document.querySelector(`#${this.computedMenuId}`); },
+
   },
   methods: {
     setState(changes, type) {
+      console.log({ changes, type });
       const oldState = this.$data;
       const newState = this.stateReducer(oldState, { changes, type });
 
@@ -98,7 +105,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         this.$emit('select', newState.selectedItem, type);
         // Only emit 'change' if selectedItem has changed
         if (hasSelectedItemChanged) {
-          this.$emit('change', newState.selectedItem, type);
+          this.$emit('update:modelValue', newState.selectedItem, type);
         }
       }
 
@@ -161,8 +168,14 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       };
     },
     getMenuEventListeners() {
-      // const vm = this;
+      const vm = this;
       return {
+        mouseleave() {
+          vm.setState({
+            hoveredIndex: -1,
+            hovered: null,
+          }, sct.MenuMouseLeave);
+        },
         mousedown(e) {
           // TODO: Prevent menu to close when clicking something
           // on a menu but not necessarily menu item.
@@ -192,12 +205,6 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         mousedown(e) {
           e.preventDefault();
         },
-        mouseleave() {
-          vm.setState({
-            hoveredIndex: -1,
-            hovered: null,
-          }, sct.ItemMouseLeave);
-        },
         click() {
           // e.preventDefault();
           vm.setState({
@@ -212,7 +219,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     getItemProps({
       index,
-      disabled = false,
+      disabled,
       item = process.env.NODE_ENV === 'production' ? undefined
         : requiredProp('getItemProps', 'item'),
     } = {}) {
@@ -269,10 +276,11 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       }, sct.FunctionOpenMenu);
     },
     getItemNodeFromIndex(index) {
-      return document.getElementById(this.getItemId(index));
+      return this.menuElement.querySelector(`#${this.getItemId(index)}`);
     },
     scrollItemIntoView(index) {
-      const itemElement = this.$el.querySelector(`#${this.getItemId(index)}`);
+      console.log({ index });
+      const itemElement = this.getItemNodeFromIndex(index);
       scrollToElement(itemElement, this.menuElement, index);
     },
 
@@ -281,7 +289,6 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       if (!this.isOpen || !itemCount) return;
       const isMovingDown = hasKeyCode(controls.arrowDownKey, e);
       const isMovingUp = hasKeyCode(controls.arrowUpKey, e);
-
       if (isMovingDown || isMovingUp) {
         e.preventDefault();
         const direction = isMovingDown * 2 - 1;
@@ -291,6 +298,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           : this.hoveredIndex > 0;
 
         const index = hoversBetweenEdges ? this.hoveredIndex + direction : menuEdge;
+        console.log({ hoversBetweenEdges });
         const nextIndex = getNextNonDisabledIndex(
           direction,
           index,
@@ -299,7 +307,9 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
           true,
         );
         const item = this.items[nextIndex];
+        console.log({ item: item.value, hoveredIndex: nextIndex });
         if (this.scrollIntoView) {
+          console.log('scrolling');
           this.$nextTick(() => {
             this.scrollItemIntoView(index);
           });
@@ -381,7 +391,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
 
   },
   render() {
-    return this.$scopedSlots.default({
+    const slot = this.$slots.default({
       // prop getters
       getInputProps: this.getInputProps,
       getItemProps: this.getItemProps,
@@ -407,6 +417,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       openMenu: this.openMenu,
       closeMenu: this.closeMenu,
     });
+    return slot;
   },
 });
 

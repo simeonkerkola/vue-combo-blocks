@@ -212,7 +212,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     },
     getItemProps({
       index,
-      disabled = false,
+      disabled,
       item = process.env.NODE_ENV === 'production' ? undefined
         : requiredProp('getItemProps', 'item'),
     } = {}) {

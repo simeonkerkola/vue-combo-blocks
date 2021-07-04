@@ -4,7 +4,7 @@
     :itemToString="itemToString"
     :items="filteredList"
     @input-value-change="updateList"
-    v-slot="{
+    v-slot:default="{
       getInputProps,
       getInputEventListeners,
       hoveredIndex,
@@ -17,9 +17,9 @@
       reset,
     }"
   >
+    <h2>AutoScrollingList, selected: {{selected}}</h2>
+    <button @click="reset">reset</button>
     <div v-bind="getComboboxProps()">
-      <h2>AutoScrollingList</h2>
-      <button @click="reset">reset</button>
       <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
       <ul  v-show="true" v-bind="getMenuProps()" v-on="getMenuEventListeners()"
           style="height: 100px; overflow: auto; border: 1px solid;
@@ -53,6 +53,7 @@ const list = [
   { value: 'Zildjian', id: '7' },
 ];
 export default {
+  name: 'auto-scrolling-list',
   components: {
     VueComboBlocks,
   },

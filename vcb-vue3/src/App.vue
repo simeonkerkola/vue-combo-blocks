@@ -1,10 +1,13 @@
 <template>
-  <AutoScrollingList msg="Hello Vue 3 + Vite" />
+  <AutoScrollingList  />
 </template>
 
-<script setup>
+<script >
 import AutoScrollingList from './components/AutoScrollingList.vue';
 
+export default {
+  components: { AutoScrollingList },
+};
 // This starter template is using Vue 3 experimental <script setup> SFCs
 // Check out https://github.com/vuejs/rfcs/blob/script-setup-2/active-rfcs/0000-script-setup.md
 </script>
