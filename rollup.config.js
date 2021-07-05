@@ -35,6 +35,6 @@ export default {
       css: false, // Dynamically inject css as a <style> tag
       compileTemplate: true, // Explicitly convert template to render function
     }),
-    buble({ transforms: { templateString: true } }),
+    buble({ objectAssign: true, transforms: { templateString: true } }),
   ],
 };
