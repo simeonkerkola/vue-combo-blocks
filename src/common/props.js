@@ -29,4 +29,8 @@ export default {
     type: Boolean,
     default: true,
   },
+  circular: {
+    type: Boolean,
+    default: true,
+  },
 };

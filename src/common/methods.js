@@ -180,14 +180,17 @@ export default {
         : this.hoveredIndex > 0;
 
       const index = hoversBetweenEdges ? this.hoveredIndex + direction : menuEdge;
-
       const nextIndex = getNextNonDisabledIndex(
         direction,
         index,
         itemCount,
         this.getItemNodeFromIndex,
-        true,
+        this.circular,
       );
+      if (!this.circular) {
+        if (isMovingUp && nextIndex > this.hoveredIndex) return;
+        if (isMovingDown && nextIndex < this.hoveredIndex) return;
+      }
       const item = this.items[nextIndex];
 
       if (this.scrollIntoView) {

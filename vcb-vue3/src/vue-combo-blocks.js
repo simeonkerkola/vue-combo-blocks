@@ -12,6 +12,12 @@ import slot from '../../src/common/slot';
 import beforeCreate from '../../src/common/beforeCreate';
 import * as sct from '../../src/stateChangeTypes';
 
+const isVue3 = !!defineComponent;
+if (!isVue3 && process.env.NODE_ENV !== 'production') {
+  console.error(`Looks like your Vue version is 2.x, but you are using VueComboBlocks for Vue 3.
+Install the correct version for Vue 2.x: "npm i vue-combo-blocks@latest"`);
+}
+
 const VueComboBlocks = defineComponent({
   name: 'vue-combo-blocks',
   emits: {

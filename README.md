@@ -21,6 +21,10 @@ This library provides you the state and the controls for your combobox.
 You provide the elements and styles to build the thing you
 need.
 
+## Installation
+For vue 2.x use `npm i vue-combo-blocks`
+For vue 3.x use `npm i vue-combo-blocks@next`
+
 ## Usage
 
 [Try it out in codesandbox](https://codesandbox.io/s/autocomplete-with-vue-combo-blocks-ejpur?file=/src/components/Autocomplete.vue)
@@ -106,30 +110,31 @@ export default {
 
 ## Props
 
-| Name           | Type                                              | Default                                | description                                                                                                                                                                                               |
-| -------------- | ------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| items          | Array                                             | **required**                           |                                                                                                                                                                                                           |
-| itemToString   | Function                                          | `(item) => (item ? String(item) : '')` |                                                                                                                                                                                                           |
-| value          | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                                                                              |
-| stateReducer   | Function(state: object, actionAndChanges: object) | optional                               | Very handy feature that gives you a complete control of the `vue-combo-blocks` state. Read more about it in the [State Reducer section](#state-reducer)                                                   |
-| scrollIntoView | Boolean                                           | `true`                                 | Controls whether or not the hovered item is scrolled into view when navigating with up and down keys. **Note:** the menu (`ul`) element must be positioned either `relative` or `absolute` for it to work |
-| inputId        | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`input`)                                                                                                                                     |
-| labelId        | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`label`)                                                                                                                                     |
-| menuId         | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`ul`)                                                                                                                                        |
-| getItemId      | Function(index)                                   | optional                               | defaults to a function that generates an ID based on the index                                                                                                                                            |
+| Name                        | Type                                              | Default                                | description                                                                                                                                                                                               |
+| --------------------------- | ------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| items                       | Array                                             | **required**                           |                                                                                                                                                                                                           |
+| itemToString                | Function                                          | `(item) => (item ? String(item) : '')` |                                                                                                                                                                                                           |
+| value                       | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                                                                              |
+| stateReducer                | Function(state: object, actionAndChanges: object) | optional                               | Very handy feature that gives you a complete control of the `vue-combo-blocks` state. Read more about it in the [State Reducer section](#state-reducer)                                                   |
+| scrollIntoView              | Boolean                                           | `true`                                 | Controls whether or not the hovered item is scrolled into view when navigating with up and down keys. **Note:** the menu (`ul`) element must be positioned either `relative` or `absolute` for it to work |
+| circular **(New in 1.0.0)** | Boolean                                           | `true`                                 | Controls what happens when navigation with arrow keys and list bottom or top is reached                                                                                                                   |
+| inputId                     | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`input`)                                                                                                                                     |
+| labelId                     | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`label`)                                                                                                                                     |
+| menuId                      | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`ul`)                                                                                                                                        |
+| getItemId                   | Function(index)                                   | optional                               | defaults to a function that generates an ID based on the index                                                                                                                                            |
 
 ## Events
 
 Emitted events return 2 parameters. First is the new value, and second is the [state change type](#stateChangeTypes).
 
-| Name                      | Type                                                             | Description                                              |
-| ------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
-| select **(New in 0.3.0)** | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the item is selected                        |
-| change                    | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
-| input-value-change        | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
-| is-open-change            | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
-| hovered-index-change      | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
-| state-change              | state:Object, type: [stateChangeType](#stateChangeTypes)         | Emitted when the state changes. Contains all the changes |
+| Name                 | Type                                                             | Description                                              |
+| -------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
+| select               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the item is selected                        |
+| change               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
+| input-value-change   | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
+| is-open-change       | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
+| hovered-index-change | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
+| state-change         | state:Object, type: [stateChangeType](#stateChangeTypes)         | Emitted when the state changes. Contains all the changes |
 
 ## Default Slot & returned props
 
@@ -228,7 +233,7 @@ The list of all possible values this `type` property can take is defined in [thi
 - `VueComboBlocks.stateChangeTypes.InputKeyUpEnter`
 - `VueComboBlocks.stateChangeTypes.InputChange`
 - `VueComboBlocks.stateChangeTypes.InputBlur`
-- `VueComboBlocks.stateChangeTypes.ItemMouseLeave`
+- `VueComboBlocks.stateChangeTypes.MenuMouseLeave`
 - `VueComboBlocks.stateChangeTypes.ItemMouseMove`
 - `VueComboBlocks.stateChangeTypes.ItemClick`
 - `VueComboBlocks.stateChangeTypes.FunctionOpenMenu`
