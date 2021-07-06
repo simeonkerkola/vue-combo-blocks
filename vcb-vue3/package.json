@@ -24,7 +24,7 @@
     "build/*"
   ],
   "peerDependencies": {
-    "vue": "^2.6.0"
+    "vue": "^3.0.5"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
