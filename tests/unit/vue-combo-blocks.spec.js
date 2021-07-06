@@ -131,8 +131,11 @@ describe('comboblocks.js', () => {
   });
   it('getMenuEventListeners call right methods', () => {
     const wrapper = factory();
+    wrapper.vm.hoveredIndex = 0;
+    wrapper.vm.hovered = item;
     wrapper.vm.getMenuEventListeners({ item }).mouseleave();
     expect(wrapper.vm.hovered).toBeNull();
+    expect(wrapper.vm.hoveredIndex).toBe(-1);
   });
   it('getItemEventListeners call right methods', () => {
     const fakeEvent = { preventDefault: () => {} };
