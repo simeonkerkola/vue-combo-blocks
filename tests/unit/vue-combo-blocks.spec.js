@@ -104,7 +104,7 @@ describe('comboblocks.js', () => {
       {
         id: `v-${idPrefix}-vue-combo-blocks-item-1`,
         role: 'option',
-        disabled: false,
+        disabled: undefined,
         'aria-selected': 'false',
       },
     );
@@ -131,8 +131,11 @@ describe('comboblocks.js', () => {
   });
   it('getMenuEventListeners call right methods', () => {
     const wrapper = factory();
-
-    expect(wrapper.vm.getMenuEventListeners).toBeDefined();
+    wrapper.vm.hoveredIndex = 0;
+    wrapper.vm.hovered = item;
+    wrapper.vm.getMenuEventListeners({ item }).mouseleave();
+    expect(wrapper.vm.hovered).toBeNull();
+    expect(wrapper.vm.hoveredIndex).toBe(-1);
   });
   it('getItemEventListeners call right methods', () => {
     const fakeEvent = { preventDefault: () => {} };
@@ -152,9 +155,6 @@ describe('comboblocks.js', () => {
     expect(wrapper.vm.hovered).toEqual(null);
     expect(wrapper.vm.hoveredIndex).toEqual(-1);
     expect(wrapper.vm.inputValue).toBe(item.name);
-
-    wrapper.vm.getItemEventListeners({ item }).mouseleave();
-    expect(wrapper.vm.hovered).toBeNull();
   });
 
   // helpers

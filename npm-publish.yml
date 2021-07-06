@@ -8,7 +8,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  publish-npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,20 +17,19 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm run build-pkg
+      - run: npm publish
 
-  publish-npm:
-    needs: build
+  publish-next-npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: https://registry.npmjs.org/
+      - run: cd vcb-vue3
       - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - run: npm run build-pkg
+      - run: npm publish --tag next
 
 #   publish-gpr:
 #     needs: build

@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.0.0 (2021-7-6)
+### New
+
+Vue 3 support when using @next tag:
+
+`npm i vue-combo-blocks@next`
+
+### Changed
+**Removed:**
+- `ItemMouseLeave` state change type
+- Dropped support for IE11. (Unless you use babel, or similar to polyfill Object.assign)
+
+**Added:**
+- `MenuMouseLeave` state change type
+- `circular` prop controls what happens when navigation with arrow keys and list bottom or top is reached.
+
 ## 0.4.1 (2021-05-5)
 
 ### New

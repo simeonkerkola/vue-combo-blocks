@@ -9,7 +9,7 @@ export const InputKeyUpEnter = 'InputKeyUpEnter';
 export const InputChange = 'InputChange';
 export const InputBlur = 'InputBlur';
 
-export const ItemMouseLeave = 'ItemMouseLeave';
+export const MenuMouseLeave = 'MenuMouseLeave';
 
 export const ItemMouseMove = 'ItemMouseMove';
 export const ItemClick = 'ItemClick';
