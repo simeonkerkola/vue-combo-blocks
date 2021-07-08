@@ -60,7 +60,9 @@ export function getNextNonDisabledIndex(
 
   if (moveAmount > 0) {
     for (let index = baseIndex + 1; index < itemCount; index += 1) {
-      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
+      const itemNode = getItemNodeFromIndex(index);
+      const isDisabled = itemNode.hasAttribute('disabled');
+      if (!isDisabled) {
         return index;
       }
     }
