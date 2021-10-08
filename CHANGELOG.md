@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.0.1 (2021-10-8)
+### Fixed
+
+- Warning when compiling: `"export 'defineComponent' was not found in 'vue'` [Issue 24](https://github.com/sssmi/vue-combo-blocks/issues/24) 
+
 ## 1.0.0 (2021-7-6)
 ### New
 
