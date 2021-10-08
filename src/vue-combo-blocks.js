@@ -1,4 +1,4 @@
-import Vue, { defineComponent } from 'vue';
+import Vue from 'vue';
 
 import {
   hasOwnProperty,
@@ -13,7 +13,7 @@ import slot from './common/slot';
 import beforeCreate from './common/beforeCreate';
 import * as sct from './stateChangeTypes';
 
-const isVue3 = !!defineComponent;
+const isVue3 = !!Vue.defineComponent;
 if (isVue3 && process.env.NODE_ENV !== 'production') {
   console.error(`Looks like your Vue version is 3, but you are using VueComboBlocks for Vue 2.x.
 Install the correct version for Vue 3: "npm i vue-combo-blocks@next"`);
