@@ -1,5 +1,6 @@
 import * as sct from '../stateChangeTypes';
 import {
+  isFn,
   controls,
   hasKeyCode,
   getItemIndex,
@@ -41,64 +42,77 @@ export default {
       for: this.computedInputId,
     };
   },
-  getInputEventListeners() {
-    const vm = this;
+  getInputEventListeners({
+    blur,
+    input,
+    keydown,
+    keyup,
+  } = {}) {
     return {
-      blur: vm.onInputBlur,
-      input: vm.onInput,
-      keydown: vm.onInputKeyDown,
-      keyup: vm.onInputKeyUp,
+      blur: isFn(blur) ? blur : this.onInputBlur,
+      input: isFn(input) ? input : this.onInput,
+      keydown: isFn(keydown) ? keydown : this.onInputKeyDown,
+      keyup: isFn(keyup) ? keyup : this.onInputKeyUp,
     };
   },
-  getMenuEventListeners() {
-    const vm = this;
+  getMenuEventListeners({
+    mouseleave,
+    mousedown,
+  } = {}) {
     return {
-      mouseleave() {
-        vm.setState({
-          hoveredIndex: -1,
-          hovered: null,
-        }, sct.MenuMouseLeave);
-      },
-      mousedown(e) {
-        // TODO: Prevent menu to close when clicking something
-        // on a menu but not necessarily menu item.
-        // This does the trick, but now you can't select and copy any text
-        // in the menu.
-        e.preventDefault();
-      },
+      mouseleave: isFn(mouseleave) ? mouseleave : this.onMenuMouseLeave,
+      mousedown: isFn(mousedown) ? mousedown : this.onMenuMouseDown,
     };
+  },
+  onMenuMouseLeave() {
+    this.setState({
+      hoveredIndex: -1,
+      hovered: null,
+    }, sct.MenuMouseLeave);
+  },
+  onMenuMouseDown(e) {
+    // TODO: Prevent menu to close when clicking something
+    // on a menu but not necessarily menu item.
+    // This does the trick, but now you can't select and copy any text
+    // in the menu.
+    e.preventDefault();
   },
   getItemEventListeners({
     index,
     disabled,
     item = process.env.NODE_ENV === 'production' ? undefined
       : requiredProp('getItemEventListeners', 'item'),
+    mousemove,
+    mousedown,
+    click,
   } = {}) {
-    const itemIndex = getItemIndex(index, item, this.items);
-    const vm = this;
     if (disabled) return {};
     return {
-      mousemove() {
-        if (vm.hoveredIndex === itemIndex) return;
-        vm.setState({
-          hoveredIndex: itemIndex,
-          hovered: item,
-        }, sct.ItemMouseMove);
-      },
-      mousedown(e) {
-        e.preventDefault();
-      },
-      click() {
-        // e.preventDefault();
-        vm.setState({
-          inputValue: vm.itemToString(item),
-          selectedItem: item,
-          isOpen: false,
-          hoveredIndex: -1,
-          hovered: null,
-        }, sct.ItemClick);
-      },
+      mousemove: isFn(mousemove) ? mousemove : () => this.onItemMouseMove(index, item),
+      mousedown: isFn(mousedown) ? mousedown : this.onItemMouseDown,
+      click: isFn(click) ? click : () => this.onItemClick(item),
     };
+  },
+  onItemMouseMove(index, item) {
+    const itemIndex = getItemIndex(index, item, this.items);
+    if (this.hoveredIndex === itemIndex) return;
+    this.setState({
+      hoveredIndex: itemIndex,
+      hovered: item,
+    }, sct.ItemMouseMove);
+  },
+  onItemMouseDown(e) {
+    e.preventDefault();
+  },
+  onItemClick(item) {
+    // e.preventDefault();
+    this.setState({
+      inputValue: this.itemToString(item),
+      selectedItem: item,
+      isOpen: false,
+      hoveredIndex: -1,
+      hovered: null,
+    }, sct.ItemClick);
   },
   getItemProps({
     index,
@@ -255,6 +269,7 @@ export default {
     }, sct.InputBlur);
   },
   onInput(e) {
+    console.log('native input', { e });
     // Custom input component might return just the value
     const inputValue = e.target ? e.target.value : e;
     this.setState({

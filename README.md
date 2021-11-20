@@ -22,6 +22,7 @@ You provide the elements and styles to build the thing you
 need.
 
 ## Installation
+
 For vue 2.x use `npm i vue-combo-blocks`
 For vue 3.x use `npm i vue-combo-blocks@next`
 
@@ -100,7 +101,7 @@ export default {
     // This could be a call to an api that returns the options
     updateList(text) {
       this.filteredList = list.filter((item) =>
-        item.value.toLowerCase().includes(text.toLowerCase()),
+        item.value.toLowerCase().includes(text.toLowerCase())
       );
     },
   },
@@ -159,11 +160,39 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 
 ### Event listeners
 
-| Name                   | Type                                                      | Description                                                      |
-| ---------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| getInputEventListeners | function()                                                | Bind these to the `input` element.                               |
-| getItemEventListeners  | function({ item: any, index: number, disabled: boolean }) | Bind these to the `li` element. `item` property is **required**! |
-| getMenuEventListeners  | function()                                                | Bind these to the `ul` element.                                  |
+| Name                   | Type                                                                                                                                                      | Description                                                      |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| getInputEventListeners | `function({ blur?: (e: Event) => void, input?: (e: Event) => void, keydown?: (e: Event) => void, keyup?: (e: Event) => void })`                           | Bind these to the `input` element.                               |
+| getItemEventListeners  | `function({ item: any, index?: number, disabled?: boolean, mousemove?: (e: Event) => void, mousedown?: (e: Event) => void, click?: (e: Event) => void })` | Bind these to the `li` element. `item` property is **required**! |
+| getMenuEventListeners  | `function({ mouseleave?: (e: Event) => void, mousedown?: (e: Event) => void })`                                                                           | Bind these to the `ul` element.                                  |
+
+#### Custom Event Listeners
+
+You can add custom event listers with default event listeners. Your custom event listener will run before vue-combo-blocks internal event listener:
+
+```vue
+<vue-combo-blocks
+  v-slot="{
+      getInputProps,
+      getInputEventListeners,
+    }"
+>
+  <input v-bind="getInputProps()" v-on="getInputEventListeners()" @input="myInput" />
+</vue-combo-blocks>
+```
+
+You can also override, or just prevent the default event by providing you custom event listener as an argument:
+
+```vue
+<vue-combo-blocks
+  v-slot="{
+    getInputProps,
+    getInputEventListeners,
+  }"
+>
+    <input v-bind="getInputProps()" v-on="getInputEventListeners({ input: myInput })" />
+  </vue-combo-blocks>
+```
 
 ### State
 

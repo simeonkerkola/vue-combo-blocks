@@ -16,7 +16,6 @@
         selectedItem,
         hoveredIndex,
         isOpen,
-        inputValue,
         getMenuProps,
         getMenuEventListeners,
         getItemProps,
@@ -37,6 +36,7 @@
           autocomplete="off"
           single-line
           v-on="getInputEventListeners()"
+          @input="input"
         />
         <ul
           v-show="isOpen"
@@ -174,6 +174,12 @@ export default {
   },
 
   methods: {
+    prevent(e) {
+      console.log('custom prevent input', { e });
+    },
+    input(e) {
+      console.log('custom input', { e });
+    },
     stateReducer(oldState, { changes, type }) {
       console.log({ type });
       return changes;
