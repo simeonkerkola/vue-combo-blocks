@@ -5,9 +5,9 @@ import {
 } from '../../src/utils';
 
 import props from '../../src/common/props';
-import data from '../../src/common/data';
+import getInitialData from '../../src/common/data';
 import computed from '../../src/common/computed';
-import methods from '../../src/common/methods';
+import methods from '../../src/common/methods/methods';
 import slot from '../../src/common/slot';
 import beforeCreate from '../../src/common/beforeCreate';
 import * as sct from '../../src/stateChangeTypes';
@@ -51,9 +51,7 @@ const VueComboBlocks = defineComponent({
 
   data() {
     return {
-      selectedItem: this.modelValue,
-      inputValue: this.itemToString(this.modelValue),
-      ...data,
+      ...getInitialData(this.modelValue, this.itemToString),
     };
   },
   computed: {
