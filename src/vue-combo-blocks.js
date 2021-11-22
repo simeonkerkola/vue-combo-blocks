@@ -45,9 +45,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
   },
   beforeCreate,
   data() {
-    return {
-      ...getInitialData(this.value, this.itemToString),
-    };
+    return getInitialData(this.value, this.itemToString);
   },
   computed: {
     menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },

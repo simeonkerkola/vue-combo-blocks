@@ -81,7 +81,6 @@ export default {
     }, sct.InputBlur);
   },
   onInput(e) {
-    console.log('native input', { e });
     // Custom input component might return just the value
     const inputValue = e.target ? e.target.value : e;
     this.setState({
