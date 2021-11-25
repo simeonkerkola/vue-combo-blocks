@@ -22,6 +22,7 @@ You provide the elements and styles to build the thing you
 need.
 
 ## Installation
+
 For vue 2.x use `npm i vue-combo-blocks`
 For vue 3.x use `npm i vue-combo-blocks@next`
 
@@ -100,7 +101,7 @@ export default {
     // This could be a call to an api that returns the options
     updateList(text) {
       this.filteredList = list.filter((item) =>
-        item.value.toLowerCase().includes(text.toLowerCase()),
+        item.value.toLowerCase().includes(text.toLowerCase())
       );
     },
   },
@@ -110,31 +111,31 @@ export default {
 
 ## Props
 
-| Name                        | Type                                              | Default                                | description                                                                                                                                                                                               |
-| --------------------------- | ------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| items                       | Array                                             | **required**                           |                                                                                                                                                                                                           |
-| itemToString                | Function                                          | `(item) => (item ? String(item) : '')` |                                                                                                                                                                                                           |
-| value                       | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                                                                              |
-| stateReducer                | Function(state: object, actionAndChanges: object) | optional                               | Very handy feature that gives you a complete control of the `vue-combo-blocks` state. Read more about it in the [State Reducer section](#state-reducer)                                                   |
-| scrollIntoView              | Boolean                                           | `true`                                 | Controls whether or not the hovered item is scrolled into view when navigating with up and down keys. **Note:** the menu (`ul`) element must be positioned either `relative` or `absolute` for it to work |
-| circular **(New in 1.0.0)** | Boolean                                           | `true`                                 | Controls what happens when navigation with arrow keys and list bottom or top is reached                                                                                                                   |
-| inputId                     | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`input`)                                                                                                                                     |
-| labelId                     | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`label`)                                                                                                                                     |
-| menuId                      | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`ul`)                                                                                                                                        |
-| getItemId                   | Function(index)                                   | optional                               | defaults to a function that generates an ID based on the index                                                                                                                                            |
+| Name                           | Type                                              | Default                                | description                                                                                                                                                                                               |
+| ------------------------------ | ------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `items`                        | Array                                             | **required**                           |                                                                                                                                                                                                           |
+| `itemToString`                 | Function                                          | `(item) => (item ? String(item) : '')` |                                                                                                                                                                                                           |
+| `value` (`modelValue` in Vue3) | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                                                                              |
+| `stateReducer`                 | Function(state: object, actionAndChanges: object) | optional                               | Very handy feature that gives you a complete control of the `vue-combo-blocks` state. Read more about it in the [State Reducer section](#state-reducer)                                                   |
+| `scrollIntoView`               | Boolean                                           | `true`                                 | Controls whether or not the hovered item is scrolled into view when navigating with up and down keys. **Note:** the menu (`ul`) element must be positioned either `relative` or `absolute` for it to work |
+| `circular`                     | Boolean                                           | `true`                                 | Controls what happens when navigation with arrow keys and list bottom or top is reached                                                                                                                   |
+| `inputId`                      | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`input`)                                                                                                                                     |
+| `labelId`                      | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`label`)                                                                                                                                     |
+| `menuId`                       | String                                            | generated ID                           | Used for `aria` attributes and the `id` prop of the element (`ul`)                                                                                                                                        |
+| `getItemId`                    | Function(index)                                   | optional                               | defaults to a function that generates an ID based on the index                                                                                                                                            |
 
 ## Events
 
 Emitted events return 2 parameters. First is the new value, and second is the [state change type](#stateChangeTypes).
 
-| Name                 | Type                                                             | Description                                              |
-| -------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
-| select               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the item is selected                        |
-| change               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
-| input-value-change   | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
-| is-open-change       | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
-| hovered-index-change | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
-| state-change         | state:Object, type: [stateChangeType](#stateChangeTypes)         | Emitted when the state changes. Contains all the changes |
+| Name                   | Type                                                             | Description                                              |
+| ---------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
+| `select`               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the item is selected                        |
+| `change`               | selectedItem: Any, type: [stateChangeType](#stateChangeTypes)    | Emitted when the selected item changes                   |
+| `input-value-change`   | inputValue: String, type: [stateChangeType](#stateChangeTypes)   | Emitted when the input value changes                     |
+| `is-open-change`       | isOpen: Boolean, type: [stateChangeType](#stateChangeTypes)      | Emitted when the isOpen value changes                    |
+| `hovered-index-change` | hoveredIndex: Number, type: [stateChangeType](#stateChangeTypes) | Emitted when the hoveredIndex value changes              |
+| `state-change`         | state:Object, type: [stateChangeType](#stateChangeTypes)         | Emitted when the state changes. Contains all the changes |
 
 ## Default Slot & returned props
 
@@ -149,21 +150,51 @@ Bind the prop getters to their elements with `v-bind` and event listeners with
 <input v-bind="getInputProps()" v-on="getInputEventListeners()" />
 ```
 
-| Name             | Type                                                      | Description                                                                                               |
-| ---------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| getComboboxProps | function()                                                | returns the props you should apply to an element that wraps the input element that you render.            |
-| getInputProps    | function()                                                | returns the props you should apply to the input element that you render.                                  |
-| getLabelProps    | function()                                                | returns the props you should apply to the label element that you render.                                  |
-| getItemProps     | function({ item: any, index: number, disabled: boolean }) | returns the props you should apply to any menu item elements you render. `item` property is **required**! |
-| getMenuProps     | function()                                                | returns the props you should apply to the ul element (or root of your menu) that you render.              |
+| Name               | Type                                                      | Description                                                                                               |
+| ------------------ | --------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `getComboboxProps` | function()                                                | returns the props you should apply to an element that wraps the input element that you render.            |
+| `getInputProps`    | function()                                                | returns the props you should apply to the input element that you render.                                  |
+| `getLabelProps`    | function()                                                | returns the props you should apply to the label element that you render.                                  |
+| `getItemProps`     | function({ item: any, index: number, disabled: boolean }) | returns the props you should apply to any menu item elements you render. `item` property is **required**! |
+| `getMenuProps`     | function()                                                | returns the props you should apply to the ul element (or root of your menu) that you render.              |
 
 ### Event listeners
 
-| Name                   | Type                                                      | Description                                                      |
-| ---------------------- | --------------------------------------------------------- | ---------------------------------------------------------------- |
-| getInputEventListeners | function()                                                | Bind these to the `input` element.                               |
-| getItemEventListeners  | function({ item: any, index: number, disabled: boolean }) | Bind these to the `li` element. `item` property is **required**! |
-| getMenuEventListeners  | function()                                                | Bind these to the `ul` element.                                  |
+| Name                     | Type                                                                                                                                                      | Description                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `getInputEventListeners` | `function({ blur?: (e: Event) => void, input?: (e: Event) => void, keydown?: (e: Event) => void, keyup?: (e: Event) => void })`                           | Bind these to the `input` element.                               |
+| `getItemEventListeners`  | `function({ item: any, index?: number, disabled?: boolean, mousemove?: (e: Event) => void, mousedown?: (e: Event) => void, click?: (e: Event) => void })` | Bind these to the `li` element. `item` property is **required**! |
+| `getMenuEventListeners`  | `function({ mouseleave?: (e: Event) => void, mousedown?: (e: Event) => void })`                                                                           | Bind these to the `ul` element.                                  |
+
+#### Custom Event Listeners
+
+**(New in 1.1.0)**
+
+You can add custom event listers with default event listeners. Your custom event listener will run before vue-combo-blocks internal event listener:
+
+```vue
+<vue-combo-blocks
+  v-slot="{
+    getInputProps,
+    getInputEventListeners,
+  }"
+>
+  <input v-bind="getInputProps()" v-on="getInputEventListeners()" @input="myInput" />
+</vue-combo-blocks>
+```
+
+You can also override, or just prevent the default event by providing you custom event listener as an argument:
+
+```vue
+<vue-combo-blocks
+  v-slot="{
+    getInputProps,
+    getInputEventListeners,
+  }"
+>
+    <input v-bind="getInputProps()" v-on="getInputEventListeners({ input: myInput })" />
+  </vue-combo-blocks>
+```
 
 ### State
 

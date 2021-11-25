@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.0 & 2.1.0 (2021-11-25)
+### New
+- [Custom Event Listeners](./README.md#custom-event-listeners) support
+
 ## 1.0.1 (2021-10-8)
 ### Fixed
 

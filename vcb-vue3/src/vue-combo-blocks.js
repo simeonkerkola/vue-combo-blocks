@@ -4,10 +4,10 @@ import {
   isControlledProp,
 } from '../../src/utils';
 
-import props from '../../src/common/props';
-import data from '../../src/common/data';
+import getProps from '../../src/common/props';
+import getInitialData from '../../src/common/data';
 import computed from '../../src/common/computed';
-import methods from '../../src/common/methods';
+import methods from '../../src/common/methods/methods';
 import slot from '../../src/common/slot';
 import beforeCreate from '../../src/common/beforeCreate';
 import * as sct from '../../src/stateChangeTypes';
@@ -28,16 +28,7 @@ const VueComboBlocks = defineComponent({
     'hovered-index-change': null,
     'state-change': null,
   },
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
-    modelValue: {
-      default: null,
-    },
-    ...props,
-  },
+  props: getProps(isVue3),
   watch: {
     modelValue(newValue) {
       if (isControlledProp(this.$props, 'modelValue')) {
@@ -48,16 +39,10 @@ const VueComboBlocks = defineComponent({
     },
   },
   beforeCreate,
-
   data() {
-    return {
-      selectedItem: this.modelValue,
-      inputValue: this.itemToString(this.modelValue),
-      ...data,
-    };
+    return getInitialData(this.modelValue, this.itemToString);
   },
   computed: {
-    menuElement() { return document.querySelector(`#${this.computedMenuId}`); },
     ...computed,
 
   },

@@ -3,8 +3,11 @@ export const controls = {
   arrowDownKey: 40,
   escKey: 27,
   enterKey: 13,
-  showList: 40,
 };
+
+export function isFn(fn) {
+  return typeof fn === 'function';
+}
 
 export function isControlledProp(props, key) {
   return props[key] !== undefined;
