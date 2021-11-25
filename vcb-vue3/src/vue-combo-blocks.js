@@ -4,7 +4,7 @@ import {
   isControlledProp,
 } from '../../src/utils';
 
-import props from '../../src/common/props';
+import getProps from '../../src/common/props';
 import getInitialData from '../../src/common/data';
 import computed from '../../src/common/computed';
 import methods from '../../src/common/methods/methods';
@@ -28,16 +28,7 @@ const VueComboBlocks = defineComponent({
     'hovered-index-change': null,
     'state-change': null,
   },
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
-    modelValue: {
-      default: null,
-    },
-    ...props,
-  },
+  props: getProps(isVue3),
   watch: {
     modelValue(newValue) {
       if (isControlledProp(this.$props, 'modelValue')) {
@@ -48,12 +39,10 @@ const VueComboBlocks = defineComponent({
     },
   },
   beforeCreate,
-
   data() {
     return getInitialData(this.modelValue, this.itemToString);
   },
   computed: {
-    menuElement() { return document.querySelector(`#${this.computedMenuId}`); },
     ...computed,
 
   },

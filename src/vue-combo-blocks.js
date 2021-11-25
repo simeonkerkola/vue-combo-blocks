@@ -1,11 +1,9 @@
 import Vue from 'vue';
-
 import {
   hasOwnProperty,
   isControlledProp,
 } from './utils';
-
-import props from './common/props';
+import getProps from './common/props';
 import getInitialData from './common/data';
 import computed from './common/computed';
 import methods from './common/methods/methods';
@@ -24,16 +22,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     prop: 'value',
     event: 'change',
   },
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
-    value: {
-      default: null,
-    },
-    ...props,
-  },
+  props: getProps(isVue3),
   watch: {
     value(newValue) {
       if (isControlledProp(this.$props, 'value')) {
@@ -48,7 +37,6 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
     return getInitialData(this.value, this.itemToString);
   },
   computed: {
-    menuElement() { return this.$el.querySelector(`#${this.computedMenuId}`); },
     ...computed,
   },
   methods: {
