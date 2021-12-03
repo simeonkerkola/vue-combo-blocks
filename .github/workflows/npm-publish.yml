@@ -54,6 +54,24 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
+  publish-next-npm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: cd vcb-vue3
+      - run: npm ci
+      - run: npm run build-pkg
+
+      - name: Publish next
+        run: npm publish --tag next
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
 #   publish-gpr:
 #     needs: build
 #     runs-on: ubuntu-latest
