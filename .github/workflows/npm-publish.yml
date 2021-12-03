@@ -64,13 +64,8 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-      - run: cd vcb-vue3
-      - run: ls -la
-      - run: npm ci
-      - run: npm run build-pkg
-
       - name: Publish next
-        run: npm publish --tag next
+        run: cd vcb-vue3 && npm ci && npm run build-pkg && npm publish --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
