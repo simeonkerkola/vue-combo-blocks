@@ -1,7 +1,6 @@
 {
   "name": "vue-combo-blocks",
-  "version": "2.1.1",
-  "type": "module",
+  "version": "3.0.0",
   "main": "build/vue-combo-blocks.umd.js",
   "module": "build/vue-combo-blocks.esm.js",
   "unpkg": "build/vue-combo-blocks.min.js",
@@ -10,7 +9,7 @@
     "build": "vite build",
     "test:e2e": "cypress run",
     "serve": "vite preview",
-    "build-pkg": "rm -r build & rollup --config rollup.config.js"
+    "build-pkg": "rm -r build & rollup --config rollup.config.mjs"
   },
   "author": "Simeon Kerkola (https://simeon.fyi)",
   "license": "MIT",
