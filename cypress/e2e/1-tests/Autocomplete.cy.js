@@ -74,12 +74,12 @@ describe("Auto Complete", () => {
       .should("have.value", "fir")
       .click()
       .get("body")
-      .trigger("mouseup", bodyX, bodyY)
+      .trigger("mouseup", bodyX, bodyY, { force: true })
       .findByTestId("combobox-input")
       .should("have.value", "fir")
       .blur()
       .get("body")
-      .trigger("click", bodyX, bodyY)
+      .trigger("click", bodyX, bodyY, { force: true })
       .findByTestId("combobox-input")
       .should("have.value", "first");
   });
@@ -119,12 +119,14 @@ describe("Auto Complete", () => {
   });
 
   it("does not reset when swiping outside to scroll a touch screen", () => {
-    cy.findByTestId("combobox-input")
+    cy
+      .findByTestId("combobox-input")
       .type("fir")
       .get("body")
-      .trigger("touchstart", bodyX, bodyY)
-      .trigger("touchmove", bodyX, bodyY + 20)
-      .trigger("touchend", bodyX, bodyY + 20);
+      .trigger("touchstart", bodyX, bodyY, { force: true })
+      .trigger("touchmove", bodyX, bodyY + 20, { force: true })
+      .trigger("touchend", bodyX, bodyY + 20),
+      { force: true };
     cy.findByTestId("vue-combo-blocks-item-0", { timeout: 10 }).should("be.visible");
   });
 
@@ -133,8 +135,8 @@ describe("Auto Complete", () => {
   //   cy.findByTestId('combobox-input')
   //     .type('thir')
   //     .get('body')
-  //     .trigger('touchstart', bodyX, bodyY)
-  //     .trigger('touchend', bodyX, bodyY);
+  //     .trigger('touchstart', bodyX, bodyY,{force:true})
+  //     .trigger('touchend', bodyX, bodyY),{force:true};
   //   cy.findByTestId('vue-combo-blocks-item-0', { timeout: 100 }).should('not.be.visible');
   // });
 
