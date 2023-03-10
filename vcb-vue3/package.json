@@ -14,12 +14,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sssmi/vue-combo-blocks.git"
+    "url": "https://github.com/simeonkerkola/vue-combo-blocks.git"
   },
   "bugs": {
-    "url": "https://github.com/sssmi/vue-combo-blocks/issues"
+    "url": "https://github.com/simeonkerkola/vue-combo-blocks/issues"
   },
-  "homepage": "https://github.com/sssmi/vue-combo-blocks#readme",
+  "homepage": "https://github.com/simeonkerkola/vue-combo-blocks#readme",
   "files": [
     "build/*"
   ],
