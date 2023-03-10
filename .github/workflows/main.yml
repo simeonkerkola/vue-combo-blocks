@@ -24,12 +24,14 @@ jobs:
       # - name: Run unit tests
       #   run: npm run test:unit
 
-      - name: Start app in background
-        run: npm run dev &
+      # - name: Start app in background
+      #   run: npm run dev &
       
       - name: Run e2e tests
-        uses: cypress-io/github-action@v3
+        uses: cypress-io/github-action@v5
         with:
+          browser: chrome
+          start: npm run dev
           command: npm run test:e2e -- --headless
 
       - name: Upload test artifacts
