@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import VueComboBlocks from '../vue-combo-blocks';
+import VueComboBlocks from '../../../src/vue-combo-blocks';
 
 // This list could come from an external api
 const list = [

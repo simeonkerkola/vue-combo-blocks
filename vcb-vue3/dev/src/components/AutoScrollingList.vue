@@ -17,11 +17,13 @@
       reset,
     }"
   >
+    <h2>AutoScrollingList, selected: {{selected}}</h2>
+    <button @click="reset">reset</button>
     <div v-bind="getComboboxProps()">
-      <h2>Simple seach</h2>
-      <button @click="reset">reset</button>
       <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search">
-      <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
+      <ul  v-show="true" v-bind="getMenuProps()" v-on="getMenuEventListeners()"
+          style="height: 100px; overflow: auto; border: 1px solid;
+          position: absolute; left: 50%; transform: translateX(-50%); width: 100%">
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"
@@ -38,7 +40,7 @@
 </template>
 
 <script>
-import VueComboBlocks from '../vue-combo-blocks';
+import VueComboBlocks from '../../../src/vue-combo-blocks';
 
 // This list could come from an external api
 const list = [
@@ -51,6 +53,7 @@ const list = [
   { value: 'Zildjian', id: '7' },
 ];
 export default {
+  name: 'auto-scrolling-list',
   components: {
     VueComboBlocks,
   },

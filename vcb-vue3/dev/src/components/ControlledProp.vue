@@ -2,7 +2,7 @@
   <div :id="`${id}-autocomplete`">
     <VueComboBlocks
       :ref="id"
-      :model-value="selected"
+      v-model="selected"
       :itemToString="itemToString"
       :items='filteredList'
       @change="onChange"
@@ -10,12 +10,14 @@
       @focus="onFocus"
       @hover="onHover"
       @input-value-change="onInput"
-      v-slot="{
+      :stateReducer="stateReducer"
+      v-slot:default="{
         getInputProps,
         getInputEventListeners,
         selectedItem,
         hoveredIndex,
         isOpen,
+        inputValue,
         getMenuProps,
         getMenuEventListeners,
         getItemProps,
@@ -25,18 +27,18 @@
       }"
       >
       <div id="combobox" v-bind="getComboboxProps()" style="width: 100%">
-        <h2>AutoComplete</h2>
+        <h2>Controlled Prop</h2>
           <button @click="reset" data-testid="clear-button">clear</button>
+          <button @click="next(selectedItem)" data-testid="clear-button">select next</button>
         <input
           data-testid="combobox-input"
           :id="id"
           v-bind="getInputProps()"
-          :placeholder="placeholder"
+          placeholder="Search"
           :label="label"
           autocomplete="off"
           single-line
           v-on="getInputEventListeners()"
-          @input="input"
         />
         <ul
           v-show="isOpen"
@@ -72,29 +74,13 @@
       </div>
     </VueComboBlocks>
 
-    <button
-      v-if="cancelButton && !!value"
-      :id="`${id}-cancel`"
-      label="cancel"
-      @click="onCancel"
-    >
-      cancel
-    </button>
-
-    <button
-      v-if="dropdownIcon"
-      :id="`${id}-dropdown`"
-      label="dropdown"
-      @click="onDropdownIconClick"
-    >
-      open
-    </button>
+    <h3>{{selected ? selected.displayName: 'Nothing'}}</h3>
   </div>
 </template>
 
 <script>
 /* eslint-disable no-param-reassign */
-import VueComboBlocks from '../vue-combo-blocks';
+import VueComboBlocks from '../../../src/vue-combo-blocks';
 
 const list = [
   { displayName: 'first', id: '123' },
@@ -158,7 +144,7 @@ export default {
   data() {
     return {
       filteredList: list,
-      selected: list[0],
+      selected: null,
     };
   },
   computed: {
@@ -174,21 +160,25 @@ export default {
   },
 
   methods: {
-    prevent(e) {
-      console.log('custom prevent input', { e });
-    },
-    input(e) {
-      console.log('custom input', { e });
-    },
-    stateReducer(oldState, { changes, type }) {
-      console.log({ type });
+    stateReducer(oldState, { changes }) {
+      // console.log({ type });
       return changes;
+    },
+    next(selectedItem) {
+      // clear the list
+      this.setFilteredList('');
+
+      // Select next or first item
+      const next = this.filteredList[this.filteredList.indexOf(selectedItem) + 1]
+        ? this.filteredList[this.filteredList.indexOf(selectedItem) + 1]
+        : this.filteredList[0];
+
+      this.selected = next;
     },
     itemToString(item) {
       return item ? item[this.displayAttribute] : '';
     },
     setFilteredList(text) {
-      console.log({ text });
       this.filteredList = list.filter((item) => item[this.displayAttribute].includes(text));
     },
     onHover(suggestion, element) {
@@ -250,8 +240,7 @@ export default {
     hideList() {
       // this.autocompleteRef.hideList();
     },
-    onInput(text, type) {
-      console.log({ text, type });
+    onInput(text) {
       this.setFilteredList(text);
       // Send the input value to parent. For search etc.
       this.$emit('update:search-input', text);
@@ -267,7 +256,7 @@ export default {
       });
     },
     repositionList() {
-      console.log('repositionList');
+
     },
     async processAndShowList() {
       // if (this.autocompleteRef) {
