@@ -119,14 +119,12 @@ describe("Auto Complete", () => {
   });
 
   it("does not reset when swiping outside to scroll a touch screen", () => {
-    cy
-      .findByTestId("combobox-input")
+    cy.findByTestId("combobox-input")
       .type("fir")
       .get("body")
       .trigger("touchstart", bodyX, bodyY, { force: true })
       .trigger("touchmove", bodyX, bodyY + 20, { force: true })
-      .trigger("touchend", bodyX, bodyY + 20),
-      { force: true };
+      .trigger("touchend", bodyX, bodyY + 20, { force: true });
     cy.findByTestId("vue-combo-blocks-item-0", { timeout: 10 }).should("be.visible");
   });
 
