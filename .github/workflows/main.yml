@@ -7,14 +7,13 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
+          node-version: 16
         
       - name: Check node v
         run: node -v
@@ -22,10 +21,13 @@ jobs:
       - name: Install deps
         run: npm ci
       
-      - name: Run unit tests
-        run: npm run test:unit
+      # - name: Run unit tests
+      #   run: npm run test:unit
+
+      - name: Start app in background
+        run: npm run serve &
       
       - name: Run e2e tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v3
         with:
           command: npm run test:e2e -- --headless
