@@ -30,6 +30,8 @@ jobs:
       - name: Run e2e tests
         uses: cypress-io/github-action@v5
         with:
+          # packages already installed
+          install: false
           browser: chrome
           start: npm run dev
           wait-on: 'http://127.0.0.1:5173/'

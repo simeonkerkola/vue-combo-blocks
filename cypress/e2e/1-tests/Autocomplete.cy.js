@@ -3,102 +3,105 @@
 const bodyX = 100;
 const bodyY = 300;
 
-describe('Auto Complete', () => {
+describe("Auto Complete", () => {
   before(() => {
-    cy.visit('http://127.0.0.1:5173/');
+    cy.visit("http://127.0.0.1:5173/");
     // can read the initial value
-    cy.findByTestId('combobox-input')
-      .should('have.value', 'first');
+    cy.findByTestId("combobox-input").should("have.value", "first");
   });
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5173/');
-    cy.findByTestId('clear-button').click();
+    cy.visit("http://127.0.0.1:5173/");
+    cy.findByTestId("clear-button").click();
   });
 
-  it('can read the initial value', () => {
-    cy.findByTestId('combobox-input')
-      .should('have.value', '');
+  it("can read the initial value", () => {
+    cy.findByTestId("combobox-input").should("have.value", "");
   });
-  it('can select an item', () => {
-    cy.findByTestId('combobox-input')
-      .type('sec{downarrow}{enter}')
-      .should('have.value', 'second');
+
+  it("can select an item", () => {
+    cy.findByTestId("combobox-input").type("sec{downarrow}{enter}").should("have.value", "second");
   });
-  it('can arrow up to select last item', () => {
-    cy.findByTestId('combobox-input')
-      .type('{downarrow}{uparrow}{enter}') // open menu, last option is focused
-      .should('have.value', 'duplicate');
+
+  it("can arrow up to select last item", () => {
+    cy.findByTestId("combobox-input")
+      .type("{downarrow}{uparrow}{enter}") // open menu, last option is focused
+      .should("have.value", "duplicate");
   });
-  it('can arrow down to select first item', () => {
-    cy.findByTestId('combobox-input')
-      .type('{downarrow}{enter}') // open menu, first option is focused
-      .should('have.value', 'first');
+
+  it("can arrow down to select first item", () => {
+    cy.findByTestId("combobox-input")
+      .type("{downarrow}{enter}") // open menu, first option is focused
+      .should("have.value", "first");
   });
-  it('can down arrow to select an item', () => {
-    cy.findByTestId('combobox-input')
-      .type('{downarrow}{downarrow}{enter}') // open and select second item
-      .should('have.value', 'second');
+
+  it("can down arrow to select an item", () => {
+    cy.findByTestId("combobox-input")
+      .type("{downarrow}{downarrow}{enter}") // open and select second item
+      .should("have.value", "second");
   });
-  it('resets the item on blur', () => {
-    cy.findByTestId('combobox-input')
-      .type('{downarrow}{enter}') // open and select first item
-      .should('have.value', 'first')
-      .type('eee') // type some rubbish
-      .get('body')
-      .click(bodyX, bodyY)
-      .findByTestId('combobox-input')
-      .should('have.value', 'first');
+
+  it("resets the item on blur", () => {
+    cy.findByTestId("combobox-input")
+      .type("{downarrow}{enter}") // open and select first item
+      .should("have.value", "first")
+      .type("eee") // type some rubbish
+      .get("body")
+      .click(bodyX, bodyY, { force: true })
+      .findByTestId("combobox-input")
+      .should("have.value", "first");
   });
-  it('can use the mouse to click an item', () => {
-    cy.findByTestId('combobox-input').type('second');
-    cy.findByTestId('vue-combo-blocks-item-0').click();
-    cy.findByTestId('combobox-input').should('have.value', 'second');
+
+  it("can use the mouse to click an item", () => {
+    cy.findByTestId("combobox-input").type("second");
+    cy.findByTestId("vue-combo-blocks-item-0").click();
+    cy.findByTestId("combobox-input").should("have.value", "second");
   });
-  it('keeps the list open when focus is inside the list', () => {
-    cy.findByTestId('combobox-input').type('asdfasdf');
-    cy.findByTestId('no-results').click().click();
-    cy.findByTestId('combobox-input').should('have.value', 'asdfasdf');
-    cy.get('body')
-      .click(bodyX, bodyY);
-    cy.findByTestId('combobox-input').should('have.value', '');
+
+  it("keeps the list open when focus is inside the list", () => {
+    cy.findByTestId("combobox-input").type("asdfasdf");
+    cy.findByTestId("no-results").click().click();
+    cy.findByTestId("combobox-input").should("have.value", "asdfasdf");
+    cy.get("body").click(bodyX, bodyY, { force: true });
+    cy.findByTestId("combobox-input").should("have.value", "");
   });
-  it('does not reset the input when mouseup outside while the input is focused', () => {
-    cy.findByTestId('combobox-input').type('first');
-    cy.findByTestId('vue-combo-blocks-item-0').click();
-    cy.findByTestId('combobox-input')
-      .should('have.value', 'first')
-      .type('{backspace}{backspace}')
-      .should('have.value', 'fir')
+
+  it("does not reset the input when mouseup outside while the input is focused", () => {
+    cy.findByTestId("combobox-input").type("first");
+    cy.findByTestId("vue-combo-blocks-item-0").click();
+    cy.findByTestId("combobox-input")
+      .should("have.value", "first")
+      .type("{backspace}{backspace}")
+      .should("have.value", "fir")
       .click()
-      .get('body')
-      .trigger('mouseup', bodyX, bodyY)
-      .findByTestId('combobox-input')
-      .should('have.value', 'fir')
+      .get("body")
+      .trigger("mouseup", bodyX, bodyY)
+      .findByTestId("combobox-input")
+      .should("have.value", "fir")
       .blur()
-      .get('body')
-      .trigger('click', bodyX, bodyY)
-      .findByTestId('combobox-input')
-      .should('have.value', 'first');
+      .get("body")
+      .trigger("click", bodyX, bodyY)
+      .findByTestId("combobox-input")
+      .should("have.value", "first");
   });
-  it('resets when bluring the input', () => {
-    cy.findByTestId('combobox-input')
-      .type('fir')
+
+  it("resets when bluring the input", () => {
+    cy.findByTestId("combobox-input")
+      .type("fir")
       .blur()
       // https://github.com/kentcdodds/cypress-testing-library/issues/13
       .wait(1)
-      .should('have.value', '')
-      .findByTestId('vue-combo-blocks-item-0', { timeout: 10 })
-      .should('not.be.null');
+      .should("have.value", "")
+      .findByTestId("vue-combo-blocks-item-0", { timeout: 10 })
+      .should("not.be.null");
   });
-  it('shows selected item styles', () => {
-    cy.findByTestId('combobox-input')
-      .type('sec');
-    cy.findByTestId('vue-combo-blocks-item-0').click();
-    cy.findByTestId('combobox-input').clear()
-      .type('{downarrow}');
-    cy.findByTestId('vue-combo-blocks-item-0').should('not.have.class', 'selected');
-    cy.findByTestId('vue-combo-blocks-item-1').should('have.class', 'selected');
-    cy.findByTestId('vue-combo-blocks-item-2').should('not.have.class', 'selected');
+
+  it("shows selected item styles", () => {
+    cy.findByTestId("combobox-input").type("sec");
+    cy.findByTestId("vue-combo-blocks-item-0").click();
+    cy.findByTestId("combobox-input").clear().type("{downarrow}");
+    cy.findByTestId("vue-combo-blocks-item-0").should("not.have.class", "selected");
+    cy.findByTestId("vue-combo-blocks-item-1").should("have.class", "selected");
+    cy.findByTestId("vue-combo-blocks-item-2").should("not.have.class", "selected");
   });
   // TODO: tabbing is not currently supported in cypress
   // it('autocompletes the hovered when tabbed', () => {
@@ -107,21 +110,22 @@ describe('Auto Complete', () => {
   //   cy.findByTestId('combobox-input')
   //     .should('have.value', 'first');
   // });
-  it('shows hovered item styles', () => {
-    cy.findByTestId('combobox-input')
-      .type('{downarrow}{downarrow}');
-    cy.findByTestId('vue-combo-blocks-item-0').should('not.have.class', 'hovered');
-    cy.findByTestId('vue-combo-blocks-item-1').should('have.class', 'hovered');
-    cy.findByTestId('vue-combo-blocks-item-2').should('not.have.class', 'hovered');
+
+  it("shows hovered item styles", () => {
+    cy.findByTestId("combobox-input").type("{downarrow}{downarrow}");
+    cy.findByTestId("vue-combo-blocks-item-0").should("not.have.class", "hovered");
+    cy.findByTestId("vue-combo-blocks-item-1").should("have.class", "hovered");
+    cy.findByTestId("vue-combo-blocks-item-2").should("not.have.class", "hovered");
   });
-  it('does not reset when swiping outside to scroll a touch screen', () => {
-    cy.findByTestId('combobox-input')
-      .type('fir')
-      .get('body')
-      .trigger('touchstart', bodyX, bodyY)
-      .trigger('touchmove', bodyX, bodyY + 20)
-      .trigger('touchend', bodyX, bodyY + 20);
-    cy.findByTestId('vue-combo-blocks-item-0', { timeout: 10 }).should('be.visible');
+
+  it("does not reset when swiping outside to scroll a touch screen", () => {
+    cy.findByTestId("combobox-input")
+      .type("fir")
+      .get("body")
+      .trigger("touchstart", bodyX, bodyY)
+      .trigger("touchmove", bodyX, bodyY + 20)
+      .trigger("touchend", bodyX, bodyY + 20);
+    cy.findByTestId("vue-combo-blocks-item-0", { timeout: 10 }).should("be.visible");
   });
 
   // TODO: Touch event support
