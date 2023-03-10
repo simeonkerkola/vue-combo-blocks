@@ -1,19 +1,15 @@
 {
   "name": "vue-combo-blocks",
-  "version": "1.1.1",
+  "version": "3.0.0",
   "main": "build/vue-combo-blocks.umd.js",
   "module": "build/vue-combo-blocks.esm.js",
   "unpkg": "build/vue-combo-blocks.min.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:unit:watch": "vue-cli-service test:unit --watch",
-    "test:e2e": "vue-cli-service test:e2e",
-    "test:e2e:clear": "cypress cache clear",
-    "test:e2e:install": "cypress install",
-    "lint": "vue-cli-service lint",
-    "build-pkg": "rm -r build & rollup --config rollup.config.js"
+    "dev": "vite",
+    "build": "vite build",
+    "test:e2e": "cypress run",
+    "serve": "vite preview",
+    "build-pkg": "rm -r build & rollup --config rollup.config.mjs"
   },
   "author": "Simeon Kerkola (https://simeon.fyi)",
   "license": "MIT",
@@ -29,48 +25,20 @@
     "build/*"
   ],
   "peerDependencies": {
-    "vue": "^2.6.0"
+    "vue": "^3.2.25"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.1.0",
-    "@testing-library/cypress": "^6.0.1",
-    "@vue/cli-plugin-babel": "~4.4.0",
-    "@vue/cli-plugin-e2e-cypress": "~4.4.0",
-    "@vue/cli-plugin-eslint": "~4.4.0",
-    "@vue/cli-plugin-unit-jest": "~4.4.0",
-    "@vue/cli-service": "~4.4.0",
-    "@vue/eslint-config-airbnb": "^5.0.2",
-    "@vue/test-utils": "^1.1.0",
-    "babel-eslint": "^10.1.0",
-    "core-js": "^3.6.5",
+    "@rollup/plugin-buble": "^1.0.2",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-terser": "^0.4.0",
+    "@testing-library/cypress": "^9.0.0",
+    "@vitejs/plugin-vue": "^4.0.0",
+    "cypress": "^12.7.0",
     "cypress-plugin-tab": "^1.0.5",
-    "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-vue": "^6.2.2",
-    "lodash": "^4.17.20",
-    "rollup": "^2.32.0",
-    "rollup-plugin-buble": "^0.19.8",
-    "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-vue": "^5.0.1",
-    "vue": "^2.6.12",
-    "vue-cli-plugin-webpack-bundle-analyzer": "~2.0.0",
-    "vue-router": "^3.4.5",
-    "vue-template-compiler": "^2.6.12"
-  },
-  "keywords": [
-    "enhanced input",
-    "vue",
-    "autocomplete",
-    "autosuggest",
-    "typeahead",
-    "dropdown",
-    "select",
-    "combobox",
-    "omnibox",
-    "accessibility",
-    "WAI-ARIA",
-    "multiselect",
-    "downshift",
-    "multiple selection"
-  ]
+    "rollup": "^3.19.0",
+    "rollup-plugin-vue": "^6.0.0",
+    "vite": "^4.1.4",
+    "vue": "^3.2.25",
+    "vue-router": "^4.1.6"
+  }
 }

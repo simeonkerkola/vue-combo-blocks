@@ -53,7 +53,7 @@ export default {
     const id = this.getItemId(itemIndex);
     return {
       id,
-      disabled,
+      disabled: disabled ? true : undefined,
       role: 'option',
       'aria-selected': this.hoveredIndex === itemIndex || this.selectedItem === item ? 'true' : 'false',
     };
