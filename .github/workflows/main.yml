@@ -31,3 +31,12 @@ jobs:
         uses: cypress-io/github-action@v3
         with:
           command: npm run test:e2e -- --headless
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: e2e_test_report
+          path: cypress/videos
+          # Keep the test report artifact for 5 days
+          retention-days: 2
