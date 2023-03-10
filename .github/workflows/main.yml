@@ -32,6 +32,7 @@ jobs:
         with:
           browser: chrome
           start: npm run dev
+          wait-on: 'http://127.0.0.1:5173/'
           command: npm run test:e2e -- --headless
 
       - name: Upload test artifacts
