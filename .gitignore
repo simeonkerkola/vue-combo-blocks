@@ -1,4 +1,3 @@
-.DS_Store
 node_modules
 .DS_Store
 dist
@@ -29,13 +28,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-.DS_Store
-dist
-dist-ssr
-*.local
-build
-/dist
-/build
 
 /cypress/videos/
 /cypress/screenshots/
+
+/haters
