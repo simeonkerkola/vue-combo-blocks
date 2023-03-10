@@ -5,13 +5,13 @@ const bodyY = 300;
 
 describe('DisabledItems', () => {
   before(() => {
-    cy.visit('http://127.0.0.1:5175/disableditems');
+    cy.visit('http://127.0.0.1:5173/disableditems');
     // can read the initial value
     cy.findByPlaceholderText(/Search/i)
       .should('have.value', '');
   });
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5175/disableditems');
+    cy.visit('http://127.0.0.1:5173/disableditems');
     cy.findByRole('button', { name: /reset/i }).click();
   });
 

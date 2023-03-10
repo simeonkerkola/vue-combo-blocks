@@ -7,7 +7,7 @@ function searchInput() { return cy.findByPlaceholderText(/Search/i); }
 
 describe('Auto scrolling', () => {
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5175/autoscrolling');
+    cy.visit('http://127.0.0.1:5173/autoscrolling');
     cy.findByRole('button', { name: /reset/i }).click();
   });
 

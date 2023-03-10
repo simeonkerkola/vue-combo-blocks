@@ -5,13 +5,13 @@ const bodyY = 300;
 
 describe('Control Props', () => {
   before(() => {
-    cy.visit('http://127.0.0.1:5175/controlledprop');
+    cy.visit('http://127.0.0.1:5173/controlledprop');
     // can read the initial value
     cy.findByPlaceholderText(/Search/i)
       .should('have.value', '');
   });
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5175/controlledprop');
+    cy.visit('http://127.0.0.1:5173/controlledprop');
     cy.findByRole('button', { name: /clear/i }).click();
   });
 

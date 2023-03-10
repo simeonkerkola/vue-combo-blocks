@@ -5,13 +5,13 @@ const bodyY = 300;
 
 describe('Auto Complete', () => {
   before(() => {
-    cy.visit('http://127.0.0.1:5175/');
+    cy.visit('http://127.0.0.1:5173/');
     // can read the initial value
     cy.findByTestId('combobox-input')
       .should('have.value', 'first');
   });
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5175/');
+    cy.visit('http://127.0.0.1:5173/');
     cy.findByTestId('clear-button').click();
   });
 

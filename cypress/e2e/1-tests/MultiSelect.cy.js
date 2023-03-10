@@ -3,13 +3,13 @@
 
 describe('MultiSelect', () => {
   before(() => {
-    cy.visit('http://127.0.0.1:5175/multiselect');
+    cy.visit('http://127.0.0.1:5173/multiselect');
     // can read the initial value
     cy.findByTestId('multiselect-input')
       .should('have.value', '');
   });
   beforeEach(() => {
-    cy.visit('http://127.0.0.1:5175/multiselect');
+    cy.visit('http://127.0.0.1:5173/multiselect');
     cy.findByTestId('clear-button').click();
   });
 
