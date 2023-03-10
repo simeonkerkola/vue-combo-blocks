@@ -28,7 +28,7 @@ jobs:
       #   run: npm run test:unit
 
       - name: Start app in background
-        run: npm run serve &
+        run: npm run dev &
       
       - name: Run e2e tests
         uses: cypress-io/github-action@v3

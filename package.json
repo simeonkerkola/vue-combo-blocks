@@ -6,6 +6,7 @@
   "unpkg": "build/vue-combo-blocks.min.js",
   "scripts": {
     "dev": "vite",
+    "build": "vite build",
     "test:e2e": "cypress run",
     "serve": "vite preview",
     "build-pkg": "rm -r build & rollup --config rollup.config.js"
