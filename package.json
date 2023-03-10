@@ -1,6 +1,7 @@
 {
   "name": "vue-combo-blocks",
   "version": "2.1.1",
+  "type": "module",
   "main": "build/vue-combo-blocks.umd.js",
   "module": "build/vue-combo-blocks.esm.js",
   "unpkg": "build/vue-combo-blocks.min.js",
