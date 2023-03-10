@@ -23,8 +23,8 @@ need.
 
 ## Installation
 
-For vue 2.x use `npm i vue-combo-blocks`
-For vue 3.x use `npm i vue-combo-blocks@next`
+For vue 3.x use `npm i vue-combo-blocks`
+For vue 2.x use `npm i vue-combo-blocks@vue2`
 
 ## Usage
 
@@ -37,7 +37,7 @@ For vue 3.x use `npm i vue-combo-blocks@next`
     :itemToString="itemToString"
     :items="filteredList"
     @input-value-change="updateList"
-    v-slot="{
+    v-slot:default="{
       getInputProps,
       getInputEventListeners,
       hoveredIndex,
@@ -52,8 +52,16 @@ For vue 3.x use `npm i vue-combo-blocks@next`
   >
     <div v-bind="getComboboxProps()">
       <button @click="reset">reset</button>
-      <input v-bind="getInputProps()" v-on="getInputEventListeners()" placeholder="Search" />
-      <ul v-show="isOpen" v-bind="getMenuProps()" v-on="getMenuEventListeners()">
+      <input
+        v-bind="getInputProps()"
+        v-on="getInputEventListeners()"
+        placeholder="Search"
+      />
+      <ul
+        v-show="isOpen"
+        v-bind="getMenuProps()"
+        v-on="getMenuEventListeners()"
+      >
         <li
           v-for="(item, index) in filteredList"
           :key="item.id"
@@ -101,7 +109,7 @@ export default {
     // This could be a call to an api that returns the options
     updateList(text) {
       this.filteredList = list.filter((item) =>
-        item.value.toLowerCase().includes(text.toLowerCase())
+        item.value.toLowerCase().includes(text.toLowerCase()),
       );
     },
   },
@@ -115,7 +123,7 @@ export default {
 | ------------------------------ | ------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `items`                        | Array                                             | **required**                           |                                                                                                                                                                                                           |
 | `itemToString`                 | Function                                          | `(item) => (item ? String(item) : '')` |                                                                                                                                                                                                           |
-| `value` (`modelValue` in Vue3) | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                                                                              |
+| `modelValue` (`value` in Vue2) | Any                                               | `null`                                 | Sets the selected item. Prop part of v-model                                                                                                                                                              |
 | `stateReducer`                 | Function(state: object, actionAndChanges: object) | optional                               | Very handy feature that gives you a complete control of the `vue-combo-blocks` state. Read more about it in the [State Reducer section](#state-reducer)                                                   |
 | `scrollIntoView`               | Boolean                                           | `true`                                 | Controls whether or not the hovered item is scrolled into view when navigating with up and down keys. **Note:** the menu (`ul`) element must be positioned either `relative` or `absolute` for it to work |
 | `circular`                     | Boolean                                           | `true`                                 | Controls what happens when navigation with arrow keys and list bottom or top is reached                                                                                                                   |
@@ -174,7 +182,7 @@ You can add custom event listers with default event listeners. Your custom event
 
 ```vue
 <vue-combo-blocks
-  v-slot="{
+  v-slot:default="{
     getInputProps,
     getInputEventListeners,
   }"
@@ -187,7 +195,7 @@ You can also override, or just prevent the default event by providing you custom
 
 ```vue
 <vue-combo-blocks
-  v-slot="{
+  v-slot:default="{
     getInputProps,
     getInputEventListeners,
   }"
@@ -255,7 +263,7 @@ and keep the input value empty
 
 ## stateChangeTypes
 
-The list of all possible values this `type` property can take is defined in [this file](https://github.com/sssmi/vue-combo-blocks/blob/master/src/stateChangeTypes.js) and is as follows:
+The list of all possible values this `type` property can take is defined in [this file](https://github.com/simeonkerkola/vue-combo-blocks/blob/master/src/stateChangeTypes.js) and is as follows:
 
 - `VueComboBlocks.stateChangeTypes.InputKeyDownArrowDown`
 - `VueComboBlocks.stateChangeTypes.InputKeyDownArrowUp`

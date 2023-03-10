@@ -27,6 +27,11 @@ const VueComboBlocks = defineComponent({
     'is-open-change': null,
     'hovered-index-change': null,
     'state-change': null,
+    change: null,
+    'show-list': null,
+    focus: null,
+    hover: null,
+
   },
   props: getProps(isVue3),
   watch: {
