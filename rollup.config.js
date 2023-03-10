@@ -1,8 +1,8 @@
 import commonjs from '@rollup/plugin-commonjs'; // Convert CommonJS modules to ES6
 import vue from 'rollup-plugin-vue'; // Handle .vue SFC files
 // Transpile/polyfill with reasonable browser support
-import buble from 'rollup-plugin-buble';
-import { terser } from 'rollup-plugin-terser';
+import buble from '@rollup/plugin-buble';
+import terser from '@rollup/plugin-terser';
 
 const name = 'VueComboBlocks';
 const filePrefix = 'build/vue-combo-blocks';
