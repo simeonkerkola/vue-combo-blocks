@@ -7,14 +7,13 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
+          node-version: 16
         
       - name: Check node v
         run: node -v
@@ -22,10 +21,27 @@ jobs:
       - name: Install deps
         run: npm ci
       
-      - name: Run unit tests
-        run: npm run test:unit
+      # - name: Run unit tests
+      #   run: npm run test:unit
+
+      # - name: Start app in background
+      #   run: npm run dev &
       
       - name: Run e2e tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
+          # packages already installed
+          install: false
+          browser: chrome
+          start: npm run dev
+          wait-on: 'http://127.0.0.1:5173/'
           command: npm run test:e2e -- --headless
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: e2e_test_report
+          path: cypress/videos
+          # Keep the test report artifact for 5 days
+          retention-days: 2

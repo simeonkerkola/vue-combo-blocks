@@ -1,8 +1,9 @@
-import Vue from 'vue';
+import { defineComponent } from 'vue';
 import {
   hasOwnProperty,
   isControlledProp,
 } from './utils';
+
 import getProps from './common/props';
 import getInitialData from './common/data';
 import computed from './common/computed';
@@ -11,21 +12,31 @@ import slot from './common/slot';
 import beforeCreate from './common/beforeCreate';
 import * as sct from './stateChangeTypes';
 
-const isVue3 = !!Vue.defineComponent;
-if (isVue3 && process.env.NODE_ENV !== 'production') {
-  console.error(`Looks like your Vue version is 3, but you are using VueComboBlocks for Vue 2.x.
-Install the correct version for Vue 3: "npm i vue-combo-blocks@next"`);
+const isVue3 = !!defineComponent;
+if (!isVue3 && process.env.NODE_ENV !== 'production') {
+  console.error(`Looks like your Vue version is 2.x, but you are using VueComboBlocks for Vue 3.
+Install the correct version for Vue 2.x: "npm i vue-combo-blocks@vue2"`);
 }
 
-const VueComboBlocks = Vue.component('vue-combo-blocks', {
-  model: {
-    prop: 'value',
-    event: 'change',
+const VueComboBlocks = defineComponent({
+  name: 'vue-combo-blocks',
+  emits: {
+    select: null,
+    'update:modelValue': null,
+    'input-value-change': null,
+    'is-open-change': null,
+    'hovered-index-change': null,
+    'state-change': null,
+    change: null,
+    'show-list': null,
+    focus: null,
+    hover: null,
+
   },
   props: getProps(isVue3),
   watch: {
-    value(newValue) {
-      if (isControlledProp(this.$props, 'value')) {
+    modelValue(newValue) {
+      if (isControlledProp(this.$props, 'modelValue')) {
         // Quietly set the internal state
         this.inputValue = this.itemToString(newValue);
         this.selectedItem = newValue;
@@ -34,10 +45,11 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
   },
   beforeCreate,
   data() {
-    return getInitialData(this.value, this.itemToString);
+    return getInitialData(this.modelValue, this.itemToString);
   },
   computed: {
     ...computed,
+
   },
   methods: {
     setState(changes, type) {
@@ -52,7 +64,7 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
         this.$emit('select', newState.selectedItem, type);
         // Only emit 'change' if selectedItem has changed
         if (hasSelectedItemChanged) {
-          this.$emit('change', newState.selectedItem, type);
+          this.$emit('update:modelValue', newState.selectedItem, type);
         }
       }
 
@@ -74,10 +86,9 @@ const VueComboBlocks = Vue.component('vue-combo-blocks', {
       this.$emit('state-change', nextFullState, type);
     },
     ...methods,
-
   },
   render() {
-    return this.$scopedSlots.default(slot(this));
+    return this.$slots.default(slot(this));
   },
 });
 
